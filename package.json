@@ -32,7 +32,7 @@
     "@rjsf/daisyui": "^6.0.0-beta.11",
     "@rjsf/utils": "^6.0.0-beta.11",
     "@rjsf/validator-ajv8": "^6.0.0-beta.11",
-    "@serwist/next": "^9.0.14",
+    "@serwist/next": "^9.0.15",
     "@simplewebauthn/browser": "^13.1.0",
     "@simplewebauthn/server": "^13.1.1",
     "@t3-oss/env-nextjs": "^0.12.0",

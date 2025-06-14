@@ -1333,52 +1333,52 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@serwist/build@npm:9.0.14":
-  version: 9.0.14
-  resolution: "@serwist/build@npm:9.0.14"
+"@serwist/build@npm:9.0.15":
+  version: 9.0.15
+  resolution: "@serwist/build@npm:9.0.15"
   dependencies:
     common-tags: "npm:1.8.2"
     glob: "npm:10.4.5"
     pretty-bytes: "npm:6.1.1"
     source-map: "npm:0.8.0-beta.0"
-    zod: "npm:3.24.3"
+    zod: "npm:3.25.63"
   peerDependencies:
     typescript: ">=5.0.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/73cc875c014f877bc7060cac364241a5caee2b08cd464b5cb316452ef6c3b48ca5a2550004f7af364bf5efa75a0e8d9bb13b578e8f42e37787cdf3fdf0c960e7
+  checksum: 10c0/fe27ae64e01bab5865b9773f09b37c75301607a2aee19e84978faf782003fff631a6d5ef6844dbac7586f9bbdd1a19ee92251a660f30b63d4205ea4eb529cd69
   languageName: node
   linkType: hard
 
-"@serwist/next@npm:^9.0.14":
-  version: 9.0.14
-  resolution: "@serwist/next@npm:9.0.14"
+"@serwist/next@npm:^9.0.15":
+  version: 9.0.15
+  resolution: "@serwist/next@npm:9.0.15"
   dependencies:
-    "@serwist/build": "npm:9.0.14"
-    "@serwist/webpack-plugin": "npm:9.0.14"
-    "@serwist/window": "npm:9.0.14"
+    "@serwist/build": "npm:9.0.15"
+    "@serwist/webpack-plugin": "npm:9.0.15"
+    "@serwist/window": "npm:9.0.15"
     chalk: "npm:5.4.1"
     glob: "npm:10.4.5"
-    serwist: "npm:9.0.14"
-    zod: "npm:3.24.3"
+    serwist: "npm:9.0.15"
+    zod: "npm:3.25.63"
   peerDependencies:
     next: ">=14.0.0"
     typescript: ">=5.0.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/586e0e606372801eb11ec82d1b7021f323726f9a944fc031cab22046304d9c23d145dd7fa3d175d265285c66eaf26224b36a1ca102f8b1510e87bc0242c6ecdb
+  checksum: 10c0/90a4c2876484eb8a8646fb9a71b953b269521673504cff842bd53939b0bf0ac433feb8e2611b7c3160e33180381713cfd3cda084ad0b2bcd6794126923ccb275
   languageName: node
   linkType: hard
 
-"@serwist/webpack-plugin@npm:9.0.14":
-  version: 9.0.14
-  resolution: "@serwist/webpack-plugin@npm:9.0.14"
+"@serwist/webpack-plugin@npm:9.0.15":
+  version: 9.0.15
+  resolution: "@serwist/webpack-plugin@npm:9.0.15"
   dependencies:
-    "@serwist/build": "npm:9.0.14"
+    "@serwist/build": "npm:9.0.15"
     pretty-bytes: "npm:6.1.1"
-    zod: "npm:3.24.3"
+    zod: "npm:3.25.63"
   peerDependencies:
     typescript: ">=5.0.0"
     webpack: 4.4.0 || ^5.9.0
@@ -1387,22 +1387,22 @@ __metadata:
       optional: true
     webpack:
       optional: true
-  checksum: 10c0/ca310fbc44c9224009b568d3e3ea585abce08bd425a44f4457e6d5373be997417cb8d29b654a4ba108c1ca168e68b004c96a8e1dffd0e843dc078158cc9f0802
+  checksum: 10c0/cb0f409c0f7ddcc3885db9c454b08c72f5bd27e451b55ae58e5db56cb0d64b72ea358b4280d497eeb757293287a03843fa46a8ce3aa4950369118a352e3f940f
   languageName: node
   linkType: hard
 
-"@serwist/window@npm:9.0.14":
-  version: 9.0.14
-  resolution: "@serwist/window@npm:9.0.14"
+"@serwist/window@npm:9.0.15":
+  version: 9.0.15
+  resolution: "@serwist/window@npm:9.0.15"
   dependencies:
     "@types/trusted-types": "npm:2.0.7"
-    serwist: "npm:9.0.14"
+    serwist: "npm:9.0.15"
   peerDependencies:
     typescript: ">=5.0.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/689b0160520e9d1281905d57a4609fd55dddca36eae8b26fbf9750fe4e069dd9b09a176a36177e589ecbd6a88903dc54a6bea13ec7aa7f8cecb39a324d8bcddf
+  checksum: 10c0/5056409cd2981ad3822699097c11918e5d7befb26cae4d27b3c89e1e280629b48e01d9f020c918788ba913804b738752cfbe263a6d6850dbe90dfd4a06abdce4
   languageName: node
   linkType: hard
 
@@ -4527,10 +4527,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"idb@npm:8.0.2":
-  version: 8.0.2
-  resolution: "idb@npm:8.0.2"
-  checksum: 10c0/ffb0f0c82d36a250801e023eee11a2740b44c58d3506d480a2d9082d0ca8a16c44f4f8201712236ca22488a0c6ae6e93b9b061a291fd238dbe70c1ee16e18e96
+"idb@npm:8.0.3":
+  version: 8.0.3
+  resolution: "idb@npm:8.0.3"
+  checksum: 10c0/421cd9a3281b7564528857031cc33fd9e95753f8191e483054cb25d1ceea7303a0d1462f4f69f5b41606f0f066156999e067478abf2460dfcf9cab80dae2a2b2
   languageName: node
   linkType: hard
 
@@ -7458,17 +7458,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"serwist@npm:9.0.14":
-  version: 9.0.14
-  resolution: "serwist@npm:9.0.14"
+"serwist@npm:9.0.15":
+  version: 9.0.15
+  resolution: "serwist@npm:9.0.15"
   dependencies:
-    idb: "npm:8.0.2"
+    idb: "npm:8.0.3"
   peerDependencies:
     typescript: ">=5.0.0"
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/14bc392b07b7fc66299ca9baec3419e7fc215e711545320050780a6e8d1e45941208c2373a43aea6f6a5e9d3097906754c9f84ce91fce347107a915f41834d38
+  checksum: 10c0/32f8011705d524a7c7d587cfb698580fc9f8fc511cf4dd4ede24c71cd0e60d4f45319b31369155bb19a193d72e3cbffcad015fd2205bd14db4314a69f83c8ef4
   languageName: node
   linkType: hard
 
@@ -8631,7 +8631,7 @@ __metadata:
     "@rjsf/daisyui": "npm:^6.0.0-beta.11"
     "@rjsf/utils": "npm:^6.0.0-beta.11"
     "@rjsf/validator-ajv8": "npm:^6.0.0-beta.11"
-    "@serwist/next": "npm:^9.0.14"
+    "@serwist/next": "npm:^9.0.15"
     "@simplewebauthn/browser": "npm:^13.1.0"
     "@simplewebauthn/server": "npm:^13.1.1"
     "@t3-oss/env-nextjs": "npm:^0.12.0"
@@ -9151,14 +9151,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:3.24.3":
-  version: 3.24.3
-  resolution: "zod@npm:3.24.3"
-  checksum: 10c0/ab0369810968d0329a1a141e9418e01e5c9c2a4905cbb7cb7f5a131d6e9487596e1400e21eeff24c4a8ee28dacfa5bd6103893765c055b7a98c2006a5a4fc68d
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.22.4, zod@npm:^3.24.2":
+"zod@npm:3.25.63, zod@npm:^3.22.4, zod@npm:^3.24.2":
   version: 3.25.63
   resolution: "zod@npm:3.25.63"
   checksum: 10c0/ce09c6ae327a66629e67340856ec19b6b4ba2c28691a2de1e618a5cc717685c2b4e9baa370cf81c34f453fc652733ecfc9a7d5d966570a22472999931abd5ada
