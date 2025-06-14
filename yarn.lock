@@ -1700,13 +1700,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/client@npm:^11.0.0":
-  version: 11.3.1
-  resolution: "@trpc/client@npm:11.3.1"
+"@trpc/client@npm:^11.4.1":
+  version: 11.4.1
+  resolution: "@trpc/client@npm:11.4.1"
   peerDependencies:
-    "@trpc/server": 11.3.1
+    "@trpc/server": 11.4.1
     typescript: ">=5.7.2"
-  checksum: 10c0/fd249de46c49837e8e1447b648b2ba66d8f02d29be0146c5d4eebab4da7ae7b7266fda018045fd8af69cb8863974c97c356396713fcb392e7e6caa4d5e6e6c1e
+  checksum: 10c0/c95bab624ad3cb2d85a31820ddfe809d4466452194e15c3add562af8b2f0b0b65fb707a5703d26a9ed1aa43279f21a1b789b3374083b5e9bfbc68ac15fbae46a
   languageName: node
   linkType: hard
 
@@ -8637,7 +8637,7 @@ __metadata:
     "@t3-oss/env-nextjs": "npm:^0.12.0"
     "@tailwindcss/postcss": "npm:^4.0.15"
     "@tanstack/react-query": "npm:^5.69.0"
-    "@trpc/client": "npm:^11.0.0"
+    "@trpc/client": "npm:^11.4.1"
     "@trpc/react-query": "npm:^11.4.1"
     "@trpc/server": "npm:^11.0.0"
     "@types/fs-extra": "npm:^11"
