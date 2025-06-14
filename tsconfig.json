@@ -37,7 +37,7 @@
         "./src/*"
       ],
       "@gen/*": [
-        "./src/server/api/generated/*"
+        "./generated/*"
       ]
     },
     "types": [

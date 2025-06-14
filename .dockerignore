@@ -2,7 +2,6 @@
 !companions
 !docs
 !prisma/schema.prisma
-!public/favicon.ico
 !src
 !.yarnrc.yml
 !cache-handler.mjs
@@ -13,3 +12,4 @@
 !postcss.config.js
 !tsconfig.json
 !yarn.lock
+!schema.zmodel

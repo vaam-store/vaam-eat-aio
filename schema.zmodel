@@ -5,10 +5,10 @@ generator client {
 
 plugin trpc {
     provider = '@zenstackhq/trpc'
-    output = 'src/server/api/generated'
+    output = 'generated'
     version = 'v11'
-    importCreateRouter = "../../trpc"
-    importProcedure = "../../trpc"
+    importCreateRouter = "@app/server/api/trpc"
+    importProcedure = "@app/server/api/trpc"
 }
 
 datasource db {

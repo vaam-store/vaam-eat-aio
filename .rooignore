@@ -45,7 +45,7 @@ yarn-error.log*
 # idea files
 .idea
 
-src/server/api/generated
+generated
 prisma
 
 .yarn

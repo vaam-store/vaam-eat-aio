@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { env } from "@app/env";
-import { api } from "@app/trpc/server";
 import { VariationStatus } from "@prisma/client";
+import { db } from "@app/server/db";
 
 const MAX_PER_SITEMAP = 50_000;
 
 export async function generateSitemaps() {
-  const result = await api.zen.product.count({
+  const result = await db.product.count({
     where: {
       status: VariationStatus.PUBLIC,
     },
@@ -21,7 +21,7 @@ export default async function sitemap({
   id: number;
 }): Promise<MetadataRoute.Sitemap> {
   const start = id * MAX_PER_SITEMAP;
-  const products = await api.zen.product.findMany({
+  const products = await db.product.findMany({
     take: MAX_PER_SITEMAP,
     skip: start,
     include: {
@@ -32,7 +32,7 @@ export default async function sitemap({
   return products.map((product) => ({
     url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/p/${product.id}`,
     lastModified: product.updatedAt,
-    images: (product as any).images.map(({ url }: any) => url as string),
+    images: product.images.map(({ url }: any) => url as string),
     changeFrequency: "weekly",
     priority: 0.6,
   }));

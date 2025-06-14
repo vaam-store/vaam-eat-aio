@@ -1,5 +1,5 @@
 import { api } from "@app/trpc/react";
-import type { Product, ProductImage, Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 type UseProducts = {
   take?: number;
@@ -13,5 +13,14 @@ export function useProducts({ take = 6 }: UseProducts = {}) {
     },
   });
 
-  return { ...result, data: data as unknown as Array<Product & { thumbnail: ProductImage }> };
+  return {
+    ...result,
+    data: data as unknown as Array<
+      Prisma.ProductGetPayload<{
+        include: {
+          thumbnail: true;
+        };
+      }>
+    >,
+  };
 }

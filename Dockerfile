@@ -17,9 +17,11 @@ RUN \
   --mount=type=bind,source=.yarnrc.yml,target=/app/.yarnrc.yml \
   --mount=type=bind,source=yarn.lock,target=/app/yarn.lock \
   --mount=type=bind,source=package.json,target=/app/package.json \
+  --mount=type=bind,source=schema.zmodel,target=/app/schema.zmodel \
   --mount=type=cache,target=/app/node_modules \
   yarn install --immutable \
-  && cp -R /app/node_modules /app/deps
+  && cp -R /app/node_modules /app/deps \
+  && cp -R /app/generated /app/dep-gen
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -40,17 +42,20 @@ ENV NEXT_PUBLIC_EMGR_CDN="https://emgr.ssegning.com/api/images/resize"
 ENV NEXT_PUBLIC_EMGR_APP_URL="https://eat.vaam.store"
 
 COPY --from=deps /app/deps ./node_modules
+COPY --from=deps /app/dep-gen ./generated
 
 RUN \
   --mount=type=bind,source=./docs,target=/app/docs \
-  --mount=type=bind,source=./public/favicon.ico,target=/app/public/favicon.ico \
+  --mount=type=bind,source=./schema.zmodel,target=/app/schema.zmodel \
   --mount=type=bind,source=./src,target=/app/src \
+  --mount=type=bind,source=./eslint.config.js,target=/app/eslint.config.js \
   --mount=type=bind,source=./.yarnrc.yml,target=/app/.yarnrc.yml \
   --mount=type=bind,source=./cache-handler.mjs,target=/app/cache-handler.mjs \
   --mount=type=bind,source=./image-loader.mjs,target=/app/image-loader.mjs \
   --mount=type=bind,source=./next.config.ts,target=/app/next.config.ts \
   --mount=type=bind,source=./package.json,target=/app/package.json \
   --mount=type=bind,source=./postcss.config.js,target=/app/postcss.config.js \
+  --mount=type=bind,source=./prettier.config.js,target=/app/prettier.config.js \
   --mount=type=bind,source=./tsconfig.json,target=/app/tsconfig.json \
   --mount=type=bind,source=./yarn.lock,target=/app/yarn.lock \
   --mount=type=cache,target=/app/.next \
@@ -66,6 +71,11 @@ LABEL org.opencontainers.image.description="NextJS frontend for the SSchool"
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN \
+  --mount=type=cache,target=/var/cache/apk,sharing=locked \
+  apk add libc6-compat
+
 #
 WORKDIR /app
 

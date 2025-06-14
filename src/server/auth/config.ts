@@ -3,6 +3,13 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 import { db } from "@app/server/db";
+import type { Prisma } from "@prisma/client";
+
+type PrismaUser = Prisma.UserGetPayload<{
+  include: {
+    vendorMembership: true,
+  }
+}>;
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -12,11 +19,7 @@ import { db } from "@app/server/db";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-      username?: string;
-      // ...other properties
-    } & DefaultSession["user"];
+    user: PrismaUser & DefaultSession["user"];
   }
 
   // interface User {

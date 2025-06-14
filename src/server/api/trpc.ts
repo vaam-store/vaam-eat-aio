@@ -32,7 +32,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 
   return {
     db,
-    prisma: enhance(db, { user: session?.user }),
+    prisma: enhance(db as any, { user: session?.user as any }),
     session,
     ...opts,
   };

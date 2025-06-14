@@ -6,7 +6,7 @@
   "scripts": {
     "build": "next build",
     "check": "next lint && tsc --noEmit",
-    "clean": "rimraf src/server/api/generated",
+    "clean": "rimraf generated",
     "db:generate": "npm run clean && zenstack generate",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
@@ -79,7 +79,7 @@
     "@types/node": "^24.0.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vymalo/ui-preset": "^2.0.2",
+    "@vymalo/ui-preset": "^2.0.3",
     "@zenstackhq/trpc": "^2.15.1",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.2.3",
