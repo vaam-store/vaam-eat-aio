@@ -1,0 +1,749 @@
+generator client {
+    provider = "prisma-client-js"
+    previewFeatures = ["fullTextSearchPostgres"]
+}
+
+plugin trpc {
+    provider = '@zenstackhq/trpc'
+    output = 'src/server/api/generated'
+    version = 'v11'
+    importCreateRouter = "../../trpc"
+    importProcedure = "../../trpc"
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id          Int      @id @default(autoincrement())
+    name        String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdBy   User     @relation(fields: [createdById], references: [id])
+    createdById String   @omit // Audit field
+    @@index([name])
+}
+
+// Necessary for Next auth
+model Account {
+    id                       String  @id @default(cuid())
+    userId                   String
+    type                     String
+    provider                 String
+    providerAccountId        String
+    refresh_token            String? // @db.Text
+    access_token             String? // @db.Text
+    expires_at               Int?
+    token_type               String?
+    scope                    String?
+    id_token                 String? // @db.Text
+    session_state            String?
+    user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    refresh_token_expires_in Int?
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id                            String                  @id @default(cuid())
+    name                          String?
+    username                      String?                 @unique
+    email                         String?                 @unique
+    emailVerified                 DateTime?
+    image                         String?
+    accounts                      Account[]
+    sessions                      Session[]
+    posts                         Post[]
+    vendorMembership              VendorMembership[]
+    carts                         Cart[]
+    checkoutSessions              CheckoutSession[]
+
+    order                         Order[]                 @relation("UserOrder")
+    createdByOrder                Order[]                 @relation("OrderCreatedBy") @omit
+    updatedByOrder                Order[]                 @relation("OrderUpdatedBy") @omit
+    // Relations for audit fields across different models - apply @omit
+    createdLocations              Location[]              @relation("LocationCreatedBy") @omit
+    updatedLocations              Location[]              @relation("LocationUpdatedBy") @omit
+    createdProductCategories      ProductCategory[]       @relation("ProductCategoryCreatedBy") @omit
+    updatedProductCategories      ProductCategory[]       @relation("ProductCategoryUpdatedBy") @omit
+    createdProductTags            ProductTag[]            @relation("ProductTagCreatedBy") @omit
+    updatedProductTags            ProductTag[]            @relation("ProductTagUpdatedBy") @omit
+    createdProducts               Product[]               @relation("ProductCreatedBy") @omit
+    updatedProducts               Product[]               @relation("ProductUpdatedBy") @omit
+    createdProductImages          ProductImage[]          @relation("ProductImageCreatedBy") @omit
+    updatedProductImages          ProductImage[]          @relation("ProductImageUpdatedBy") @omit
+    createdProductOptions         ProductOption[]         @relation("ProductOptionCreatedBy") @omit
+    updatedProductOptions         ProductOption[]         @relation("ProductOptionUpdatedBy") @omit
+    createdProductOptionValues    ProductOptionValue[]    @relation("ProductOptionValueCreatedBy") @omit
+    updatedProductOptionValues    ProductOptionValue[]    @relation("ProductOptionValueUpdatedBy") @omit
+    createdProductVariations      ProductVariation[]      @relation("ProductVariationCreatedBy") @omit
+    updatedProductVariations      ProductVariation[]      @relation("ProductVariationUpdatedBy") @omit
+    createdProductVariationStocks ProductVariationStock[] @relation("ProductVariationStockCreatedBy") @omit
+    updatedProductVariationStocks ProductVariationStock[] @relation("ProductVariationStockUpdatedBy") @omit
+    createdVendorPaymentMethods   VendorPaymentMethod[]   @relation("VendorPaymentMethodCreatedBy") @omit
+    updatedVendorPaymentMethods   VendorPaymentMethod[]   @relation("VendorPaymentMethodUpdatedBy") @omit
+    createdCoupons                Coupon[]                @relation("CouponCreatedBy") @omit
+    updatedCoupons                Coupon[]                @relation("CouponUpdatedBy") @omit
+    createdFulfillments           Fulfillment[]           @relation("FulfillmentCreatedBy") @omit
+    updatedFulfillments           Fulfillment[]           @relation("FulfillmentUpdatedBy") @omit
+
+    // everyone can signup, and user profile is also publicly readable
+    @@allow('create,read', true)
+    // only the user can update or delete their own profile
+    @@allow('update,delete', auth().id == this.id)
+}
+
+// Reusable type for contact information
+type ContactInfo {
+    email String  @email
+    phone String?
+    name  String?
+}
+
+// Reusable type for address information, including geographical coordinates
+type Address {
+    street    String
+    city      String
+    state     String?
+    zip       String
+    country   String
+    latitude  Decimal? // For geo-queries (requires raw query or PostGIS for advanced use)
+    longitude Decimal? // For geo-queries
+}
+
+model Vendor {
+    id             String                @id @default(cuid())
+    enabled        Boolean               @default(false)
+    name           String?
+    contacts       VendorContact[] // Multiple contacts for a vendor
+    members        VendorMembership[]
+    products       Product[]
+    categories     ProductCategory[]
+    tags           ProductTag[]
+    locations      Location[]
+    paymentMethods VendorPaymentMethod[]
+    coupon         Coupon[]
+    orders         Order[]               @relation("VendorOrders") // Orders processed by this vendor
+    createdAt      DateTime              @default(now())
+    updatedAt      DateTime              @updatedAt
+
+    // ACL: Vendors can read their own data, staff/admin can manage.
+    @@allow('read', this.enabled == true || (auth().id != null && this.members?[userId == auth().id && role == 'ADMIN']))
+    @@allow('create', auth().emailVerified != null)
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.id && role == 'ADMIN'])
+}
+
+model VendorContact {
+    id          String      @id @default(cuid())
+    vendorId    String
+    vendor      Vendor      @relation(fields: [vendorId], references: [id])
+    type        String?     // e.g., "Sales", "Support", "Billing"
+    contactInfo ContactInfo @json // Embed reusable contact information type
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+
+    @@map("vendor_contacts")
+    @@index([vendorId])
+
+    // ACL: Vendor staff/admin can manage their contacts.
+    @@allow('read', auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+enum VendorMemberRole {
+    ADMIN
+    STAFF
+}
+
+model VendorMembership {
+    id       String           @id @default(cuid())
+    role     VendorMemberRole @default(STAFF)
+    vendor   Vendor           @relation(fields: [vendorId], references: [id])
+    vendorId String
+    user     User             @relation(fields: [userId], references: [id])
+    userId   String
+
+    @@unique([vendorId, userId]) // A user can only have one role per vendor
+
+    // ACL: Users can read their own memberships. Admins can manage memberships for their vendor.
+    @@allow('read', auth().id == this.userId || auth().vendorMembership?[vendorId == this.vendorId && role == 'ADMIN'])
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && role == 'ADMIN'])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && role == 'ADMIN'])
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
+
+// --- Product Catalog Models ---
+enum VariationStatus {
+    PUBLIC
+    PRIVATE
+    DRAFT
+}
+
+enum PaymentMethodType {
+    ONLINE_ONLY
+    OFFLINE_ONLY
+    ALL
+}
+
+enum CouponDiscountType {
+    FIXED
+    PERCENT
+}
+
+enum OrderStatus {
+    PENDING_PAYMENT
+    PROCESSING
+    PAID
+    FULFILLED
+    CANCELLED
+    REFUNDED
+}
+
+enum FulfillmentStatus {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+}
+
+model Location {
+    id                     String                  @id @default(cuid())
+    name                   String                  @map("name")
+    address                Address                 @json // Reusing Address type
+    productVariationStocks ProductVariationStock[]
+    products               Product[]               @relation("ProductPrimaryLocation") // Products mainly associated with this location
+    vendorId               String                  // Location belongs to a vendor
+    vendor                 Vendor                  @relation(fields: [vendorId], references: [id])
+    createdById            String                  @omit // Audit field
+    createdBy              User                    @relation("LocationCreatedBy", fields: [createdById], references: [id])
+    updatedById            String?                 @omit // Audit field
+    updatedBy              User?                   @relation("LocationUpdatedBy", fields: [updatedById], references: [id])
+    createdAt              DateTime                @default(now())
+    updatedAt              DateTime                @updatedAt
+
+    @@map("locations")
+    @@unique([vendorId, name]) // Name must be unique per vendor
+    @@index([vendorId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Read access is public for store locators. Staff can manage their own vendor's locations.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductCategory {
+    id               String            @id @default(cuid())
+    name             String            @map("name")
+    slug             String            @map("slug")
+    description      String?
+    parentCategory   ProductCategory?  @relation("SubCategories", fields: [parentCategoryId], references: [id])
+    parentCategoryId String?
+    subCategories    ProductCategory[] @relation("SubCategories")
+    products         Product[]
+    vendorId         String          // Category belongs to a vendor
+    vendor           Vendor            @relation(fields: [vendorId], references: [id])
+    createdById      String            @omit // Audit field
+    createdBy        User              @relation("ProductCategoryCreatedBy", fields: [createdById], references: [id])
+    updatedById      String?           @omit // Audit field
+    updatedBy        User?             @relation("ProductCategoryUpdatedBy", fields: [updatedById], references: [id])
+    createdAt        DateTime          @default(now())
+    updatedAt        DateTime          @updatedAt
+
+    @@map("product_categories")
+    @@unique([vendorId, name]) // Name must be unique per vendor
+    @@unique([vendorId, slug]) // Slug must be unique per vendor
+    @@index([parentCategoryId])
+    @@index([vendorId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Everyone can read product categories. Staff can manage their own vendor's categories.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductTag {
+    id          String    @id @default(cuid())
+    name        String    @map("name")
+    products    Product[] @relation("ProductTags")
+    vendorId    String    // Tag belongs to a vendor
+    vendor      Vendor    @relation(fields: [vendorId], references: [id])
+    createdById String    @omit // Audit field
+    createdBy   User      @relation("ProductTagCreatedBy", fields: [createdById], references: [id])
+    updatedById String?   @omit // Audit field
+    updatedBy   User?     @relation("ProductTagUpdatedBy", fields: [updatedById], references: [id])
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    @@map("product_tags")
+    @@unique([vendorId, name]) // Name must be unique per vendor
+    @@index([vendorId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Everyone can read product tags. Staff can manage their own vendor's tags.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model Product {
+    id                String             @id @default(cuid())
+    name              String             @map("name")
+    slug              String             @map("slug")
+    description       String?
+    price             Decimal            @default(0.00) // Base price for the product, before variation adjustments
+    available         Boolean            @default(true) // Product level availability toggle (independent of variation availability)
+    status            VariationStatus    @default(PUBLIC) // Visibility status (public, private, draft) for the product itself
+    // Relations
+    categoryId        String?
+    category          ProductCategory?   @relation(fields: [categoryId], references: [id])
+    tags              ProductTag[]       @relation("ProductTags")
+    images            ProductImage[]     @relation("ProductImages")
+    thumbnail         ProductImage?      @relation("ProductThumbnail")
+    options           ProductOption[]
+    variations        ProductVariation[]
+    vendorId          String
+    vendor            Vendor             @relation(fields: [vendorId], references: [id])
+    primaryLocationId String?
+    primaryLocation   Location?          @relation("ProductPrimaryLocation", fields: [primaryLocationId], references: [id])
+    createdById       String             @omit // Audit field
+    createdBy         User               @relation("ProductCreatedBy", fields: [createdById], references: [id])
+    updatedById       String?            @omit // Audit field
+    updatedBy         User?              @relation("ProductUpdatedBy", fields: [updatedById], references: [id])
+    createdAt         DateTime           @default(now())
+    updatedAt         DateTime           @updatedAt
+
+    @@map("products")
+    @@unique([vendorId, slug]) // Slug must be unique per vendor
+    @@index([name])
+    @@index([categoryId])
+    @@index([vendorId])
+    @@index([primaryLocationId])
+    @@index([createdById])
+    @@index([updatedById])
+    @@index([status]) // Index for filtering by status
+
+    // ACL: Read access conditional on product status. Staff can manage their own vendor's products.
+    @@allow('read', this.status == PUBLIC || (auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductImage {
+    id                 String            @id @default(cuid())
+    url                String            @map("url")
+    altText            String?
+    isFeatured         Boolean           @default(false)
+
+    productId          String
+    product            Product?          @relation("ProductImages", fields: [productId], references: [id])
+
+    thumbnailProductId String            @unique
+    thumbnailProduct   Product?          @relation("ProductThumbnail", fields: [thumbnailProductId], references: [id])
+
+    productVariationId String?
+    productVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])
+    createdById        String            @omit // Audit field
+    createdBy          User              @relation("ProductImageCreatedBy", fields: [createdById], references: [id])
+    updatedById        String?           @omit // Audit field
+    updatedBy          User?             @relation("ProductImageUpdatedBy", fields: [updatedById], references: [id])
+    createdAt          DateTime          @default(now())
+    updatedAt          DateTime          @updatedAt
+
+    @@map("product_images")
+    @@index([productId])
+    @@index([productVariationId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Everyone can read product images. Staff can manage their own vendor's product images.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductOption {
+    id          String               @id @default(cuid())
+    name        String               @map("name") // e.g., "Color", "Size", "Material"
+    productId   String
+    product     Product              @relation(fields: [productId], references: [id])
+    values      ProductOptionValue[]
+    createdById String               @omit // Audit field
+    createdBy   User                 @relation("ProductOptionCreatedBy", fields: [createdById], references: [id])
+    updatedById String?              @omit // Audit field
+    updatedBy   User?                @relation("ProductOptionUpdatedBy", fields: [updatedById], references: [id])
+    createdAt   DateTime             @default(now())
+    updatedAt   DateTime             @updatedAt
+
+    @@map("product_options")
+    @@unique([productId, name]) // A product cannot have two options with the same name
+    @@index([productId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Everyone can read product options. Staff can manage their own vendor's product options.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductOptionValue {
+    id                String             @id @default(cuid())
+    value             String             @map("value") // e.g., "Red", "Blue", "Small", "Large"
+    productOptionId   String
+    productOption     ProductOption      @relation(fields: [productOptionId], references: [id])
+    // Many-to-many relationship with ProductVariation to define a variation's characteristics
+    productVariations ProductVariation[] @relation("ProductVariationOptionValues")
+    createdById       String             @omit // Audit field
+    createdBy         User               @relation("ProductOptionValueCreatedBy", fields: [createdById], references: [id])
+    updatedById       String?            @omit // Audit field
+    updatedBy         User?              @relation("ProductOptionValueUpdatedBy", fields: [updatedById], references: [id])
+    createdAt         DateTime           @default(now())
+    updatedAt         DateTime           @updatedAt
+
+    @@map("product_option_values")
+    @@unique([productOptionId, value]) // An option cannot have two identical values for the same option type
+    @@index([productOptionId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Everyone can read product option values. Staff can manage their own vendor's product option values.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.productOption.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.productOption.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductVariation {
+    id              String                  @id @default(cuid())
+    sku             String                  @map("sku") // Stock Keeping Unit - unique identifier for each variation (unique per product for simplicity or global)
+    priceAdjustment Decimal                 @default(0.00) // Price adjustment for this variation (added to base product price)
+    available       Boolean                 @default(true) // Toggle: is this specific variation available? (independent of stock)
+    status          VariationStatus         @default(PUBLIC) // Visibility status (public, private, draft)
+    // Relations
+    productId       String
+    product         Product                 @relation(fields: [productId], references: [id])
+    // Links to the specific option values that define this variation (e.g., Color: Red, Size: Large)
+    options         ProductOptionValue[]    @relation("ProductVariationOptionValues")
+    images          ProductImage[]
+    stocks          ProductVariationStock[]
+    cartItems       CartItem[]
+    createdById     String                  @omit // Audit field
+    createdBy       User                    @relation("ProductVariationCreatedBy", fields: [createdById], references: [id])
+    updatedById     String?                 @omit // Audit field
+    updatedBy       User?                   @relation("ProductVariationUpdatedBy", fields: [updatedById], references: [id])
+    createdAt       DateTime                @default(now())
+    updatedAt       DateTime                @updatedAt
+
+    @@map("product_variations")
+    @@unique([productId, sku]) // SKU unique per product, allowing different products to have same SKU if needed, but not common. If global unique, remove productId from @@unique.
+    @@index([productId])
+    @@index([sku])
+    @@index([createdById])
+    @@index([updatedById])
+    @@index([status])
+
+    // ACL: Read access conditional on variation status. Staff can manage their own vendor's product variations.
+    @@allow('read', this.status == PUBLIC || (auth().id != null && this.product.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    @@allow('create', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model ProductVariationStock {
+    id                 String           @id @default(cuid())
+    quantity           Int              @default(0)
+    minStockAlert      Int?             // Optional threshold for low stock alerts
+    lastRestockDate    DateTime?
+    // Relations
+    productVariationId String
+    productVariation   ProductVariation @relation(fields: [productVariationId], references: [id])
+    locationId         String
+    location           Location         @relation(fields: [locationId], references: [id])
+    createdById        String           @omit // Audit field
+    createdBy          User             @relation("ProductVariationStockCreatedBy", fields: [createdById], references: [id])
+    updatedById        String?          @omit // Audit field
+    updatedBy          User?            @relation("ProductVariationStockUpdatedBy", fields: [updatedById], references: [id])
+    createdAt          DateTime         @default(now())
+    updatedAt          DateTime         @updatedAt
+
+    @@map("product_variation_stocks")
+    @@unique([productVariationId, locationId]) // A variation can have only one stock entry per location
+    @@index([productVariationId])
+    @@index([locationId])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Read access conditional on the associated product variation being public OR vendor staff. Staff can manage their own vendor's stocks.
+    @@allow('read', this.productVariation.status == PUBLIC || (auth().id != null && this.productVariation.product.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    @@allow('create', auth().vendorMembership?[vendorId == this.productVariation.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.productVariation.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+// --- Cart Models ---
+model Cart {
+    id              String           @id @default(cuid())
+    userId          String?          @unique // A cart can belong to a user, or be anonymous (e.g., for guest checkouts)
+    user            User?            @relation(fields: [userId], references: [id])
+    items           CartItem[]
+    checkoutSession CheckoutSession?
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+
+    @@map("carts")
+    @@index([userId])
+
+    // ACL: Users can only manage their own cart. Anonymous carts are managed via session (application logic).
+    // For anonymous carts, ZenStack won't have `auth().userId` so access would be handled by your API layer.
+    @@allow('all', auth().id == this.userId)
+}
+
+model CartItem {
+    id                  String           @id @default(cuid())
+    cartId              String
+    cart                Cart             @relation(fields: [cartId], references: [id], onDelete: Cascade) // If cart is deleted, items are too
+    productVariationId  String
+    productVariation    ProductVariation @relation(fields: [productVariationId], references: [id])
+    quantity            Int              @default(1) @gt(0) // Quantity must be greater than 0
+    reductionCouponCode String?        // Optional: coupon applied specifically to this item
+    createdAt           DateTime         @default(now())
+    updatedAt           DateTime         @updatedAt
+
+    @@map("cart_items")
+    // A cart item is unique by the variation it refers to within a given cart, and optionally by a specific coupon
+    // If multiple distinct cart items can refer to the same variation but with different coupons, then the unique constraint needs adjustment.
+    // Assuming coupon applied at cart level for simplicity here. If `reductionCouponCode` makes it a distinct item for the user's intent, then add it to unique.
+    @@unique([cartId, productVariationId])
+    @@index([cartId])
+    @@index([productVariationId])
+
+    // ACL: Cart items are managed by the cart's owner.
+    @@allow('all', auth().id == this.cart.userId)
+}
+
+// --- Payment & Checkout Models ---
+model VendorPaymentMethod {
+    id                 String            @id @default(cuid())
+    vendorId           String
+    vendor             Vendor            @relation(fields: [vendorId], references: [id])
+    name               String            @map("name")        // e.g., "Stripe", "Cash on Delivery", "Bank Transfer"
+    type               PaymentMethodType @default(ONLINE_ONLY)
+    maxPrice           Decimal?              // Optional: Max transaction price for this method
+    requiresOnboarding Boolean           @default(false)
+    // Vendor-specific configurations for this payment method type
+    onboardingData     Json?                 // Data needed for initial setup/onboarding (e.g., Stripe Connect client_id)
+    accountData        Json?                 // Data related to the connected account (e.g., Stripe account ID, secret keys - sensitive, handle with care)
+    accountId          String?               // External account ID (e.g., Stripe Account ID)
+    checkoutSessions   CheckoutSession[]
+    createdById        String            @omit // Audit field
+    createdBy          User              @relation("VendorPaymentMethodCreatedBy", fields: [createdById], references: [id])
+    updatedById        String?           @omit // Audit field
+    updatedBy          User?             @relation("VendorPaymentMethodUpdatedBy", fields: [updatedById], references: [id])
+    createdAt          DateTime          @default(now())
+    updatedAt          DateTime          @updatedAt
+
+    @@map("vendor_payment_methods")
+    @@unique([vendorId, name]) // A vendor can't have two payment methods with the same name
+    @@index([vendorId])
+    @@index([createdById])
+    @@index([updatedById])
+    @@index([type])
+
+    // ACL: Public can read, Vendor Staff/Admin can manage their payment methods.
+    @@allow('read', true) // Correct, public for read
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model Coupon {
+    id               String             @id @default(cuid())
+    code             String             @unique @map("code")
+    discountType     CouponDiscountType @default(FIXED)
+    discountValue    Decimal
+    expiresAt        DateTime?
+    isActive         Boolean            @default(true)
+    minOrderValue    Decimal?           // Optional: minimum order value for the coupon to apply
+    vendorId         String?            // Optional: coupon can be vendor-specific
+    vendor           Vendor?            @relation(fields: [vendorId], references: [id])
+    checkoutSessions CheckoutSession[]
+    orders           Order[]
+    createdById      String             @omit // Audit field
+    createdBy        User               @relation("CouponCreatedBy", fields: [createdById], references: [id])
+    updatedById      String?            @omit // Audit field
+    updatedBy        User?              @relation("CouponUpdatedBy", fields: [updatedById], references: [id])
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
+
+    @@map("coupons")
+    @@index([vendorId])
+    @@index([code])
+    @@index([expiresAt])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Public can read active, non-vendor-specific coupons. Vendor staff can manage their own.
+    @@allow('read', (this.isActive == true && (this.expiresAt == null || this.expiresAt >= now())) || (auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    // Note: If vendorId is null (not vendor-specific), this check bypasses it, which might be desired.
+    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
+
+model CheckoutSession {
+    id              String              @id @default(cuid())
+    cartId          String              @unique // One-to-one with cart during checkout
+    cart            Cart                @relation(fields: [cartId], references: [id])
+    userId          String?             // Can be a guest checkout, but if user is logged in, link it
+    user            User?               @relation(fields: [userId], references: [id])
+    status          OrderStatus         @default(PENDING_PAYMENT)
+    totalPrice      Decimal
+    deliveryAddress Address             @json // Mutable during checkout
+    paymentMethodId String
+    paymentMethod   VendorPaymentMethod @relation(fields: [paymentMethodId], references: [id])
+    couponId        String?
+    coupon          Coupon?             @relation(fields: [couponId], references: [id])
+    notes           String?             // Customer notes for the order
+    order           Order?              // Link to the resulting order after successful payment
+    createdAt       DateTime            @default(now())
+    updatedAt       DateTime            @updatedAt
+
+    @@map("checkout_sessions")
+    @@index([userId])
+    @@index([paymentMethodId])
+    @@index([couponId])
+    @@index([status])
+
+    // ACL: Only the owning user (or system/admin) can create/read/update their checkout session.
+    @@allow('all', auth().id == this.userId)
+}
+
+// --- Order & Fulfillment Models ---
+model Order {
+    id                   String           @id @default(cuid())
+    userId               String?             // If placed by a registered user
+    user                 User?            @relation("UserOrder", fields: [userId], references: [id])
+    vendorId             String              // Denormalized: which vendor this order belongs to
+    vendor               Vendor           @relation("VendorOrders", fields: [vendorId], references: [id])
+    status               OrderStatus      @default(PROCESSING)
+    totalPrice           Decimal
+    deliveryAddress      Address          @json // Immutable copy of the address at checkout
+    paymentMethodDetails Json               // Immutable copy of the payment method used
+    notes                String?             // Immutable copy of customer notes
+    items                OrderItem[]
+    fulfillments         Fulfillment[]
+    checkoutSessionId    String?          @unique // Optional link to the original checkout session (if not deleted immediately)
+    checkoutSession      CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
+    createdById          String           @omit // Audit field
+    createdBy            User             @relation("OrderCreatedBy", fields: [createdById], references: [id]) // Assuming user creates, not staff
+    updatedById          String?          @omit // Audit field
+    updatedBy            User?            @relation("OrderUpdatedBy", fields: [updatedById], references: [id])
+    createdAt            DateTime         @default(now())
+    updatedAt            DateTime         @updatedAt
+    coupon               Coupon?          @relation(fields: [couponId], references: [id])
+    couponId             String?
+
+    @@map("orders")
+    @@index([userId])
+    @@index([vendorId])
+    @@index([status])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Users can read their own orders. Vendor staff/admin can read/manage orders for their vendor.
+    @@allow('read', auth().id == this.userId || (auth().id != null && this.vendor.members?[userId == auth().id]))
+    @@allow('update', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('delete', auth().vendorMembership?[vendorId == this.vendorId && role == 'ADMIN'] && this.status == CANCELLED)
+}
+
+model OrderItem {
+    id                      String            @id @default(cuid())
+    orderId                 String
+    order                   Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    productVariationDetails Json               // Immutable copy of the product variation at the time of order
+    quantity                Int
+    unitPrice               Decimal              // Price of the item at the time of order
+    totalItemPrice          Decimal              // quantity * unitPrice (after any item-specific coupon)
+    couponCodeUsed          String?              // Denormalized: if an item-specific coupon was used
+    fulfillmentItems        FulfillmentItem[]    // Link to fulfillments that include this item
+    createdAt               DateTime          @default(now())
+
+    @@map("order_items")
+    @@index([orderId])
+
+    // ACL: Read access tied to the parent Order.
+    @@allow('read', auth().id == this.order.userId || (auth().id != null && this.order.vendor.members?[userId == auth().id]))
+}
+
+model Fulfillment {
+    id              String            @id @default(cuid())
+    orderId         String
+    order           Order             @relation(fields: [orderId], references: [id])
+    status          FulfillmentStatus @default(PENDING)
+    notes           String?
+    fulfillmentDate DateTime?       // When the fulfillment was completed (shipped/delivered)
+    shippedDate     DateTime?
+    deliveredDate   DateTime?
+    items           FulfillmentItem[] // Which specific order items are part of this fulfillment
+    createdById     String            @omit // Audit field
+    createdBy       User              @relation("FulfillmentCreatedBy", fields: [createdById], references: [id])
+    updatedById     String?           @omit // Audit field
+    updatedBy       User?             @relation("FulfillmentUpdatedBy", fields: [updatedById], references: [id])
+    createdAt       DateTime          @default(now())
+    updatedAt       DateTime          @updatedAt
+
+    @@map("fulfillments")
+    @@index([orderId])
+    @@index([status])
+    @@index([createdById])
+    @@index([updatedById])
+
+    // ACL: Customers can read fulfillments of their orders. Vendor staff can manage fulfillments for their vendor.
+    @@allow('read', auth().id == this.order.userId || (auth().id != null && this.order.vendor.members?[userId == auth().id]))
+    @@allow('create', auth().vendorMembership?[vendorId == this.order.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('update', auth().vendorMembership?[vendorId == this.order.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('delete', auth().vendorMembership?[vendorId == this.order.vendorId && role == 'ADMIN'] && this.status == CANCELLED)
+}
+
+model FulfillmentItem {
+    id            String      @id @default(cuid())
+    fulfillmentId String
+    fulfillment   Fulfillment @relation(fields: [fulfillmentId], references: [id], onDelete: Cascade)
+    orderItemId   String
+    orderItem     OrderItem   @relation(fields: [orderItemId], references: [id])
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+
+    @@map("fulfillment_items")
+    @@unique([fulfillmentId, orderItemId]) // An order item can only be part of a specific fulfillment once
+    @@index([fulfillmentId])
+    @@index([orderItemId])
+
+    // ACL: Access tied to the parent Fulfillment.
+    @@allow('read', auth().id == this.fulfillment.order.userId || (auth().id != null && this.fulfillment.order.vendor.members?[userId == auth().id]))
+    @@allow('create', auth().vendorMembership?[vendorId == this.fulfillment.order.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('delete', auth().vendorMembership?[vendorId == this.fulfillment.order.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+}
