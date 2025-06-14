@@ -1,14 +1,14 @@
 type EditProductPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>
 };
 
-export default function EditProductPage({ params }: EditProductPageProps) {
+export default async function EditProductPage({ params }: EditProductPageProps) {
   return (
     <div>
-      <h1>Edit Product: {params.id}</h1>
-      <p>Modify the details of your product listing {params.id}.</p>
+      <h1>Edit Product: {(await params).id}</h1>
+      <p>Modify the details of your product listing {(await params).id}.</p>
       {/* TODO: Display form to edit an existing product */}
     </div>
   );

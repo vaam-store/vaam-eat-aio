@@ -5,9 +5,7 @@ import type {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-type SectionOwnProps = {};
-
-type SectionProps<As extends ElementType = "section"> = SectionOwnProps &
+type SectionProps<As extends ElementType = "section"> =
   ComponentPropsWithoutRef<As> & {
     as?: As;
   };

@@ -1,15 +1,10 @@
-import type {
-  ButtonColor,
-  ButtonShape,
-  ButtonSize,
-  ButtonVariant,
-} from "./types";
+import type { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from "./types";
 
 /**
  * Returns the appropriate button size class
  */
 export function getButtonSizeClasses(
-  size: ButtonSize | string | undefined,
+  size: ButtonSize | undefined,
 ): string {
   if (!size) return "";
 
@@ -32,9 +27,7 @@ export function getButtonSizeClasses(
 /**
  * Returns the appropriate button color class
  */
-export function getButtonColorClasses(
-  color: ButtonColor | string,
-): string | null {
+export function getButtonColorClasses(color: ButtonColor): string | null {
   switch (color) {
     case "primary":
       return "btn-primary";
@@ -60,9 +53,7 @@ export function getButtonColorClasses(
 /**
  * Returns the appropriate button variant class
  */
-export function getButtonVariantClasses(
-  variant: ButtonVariant | string,
-): string | null {
+export function getButtonVariantClasses(variant: ButtonVariant): string | null {
   switch (variant) {
     case "outline":
       return "btn-outline";
@@ -84,9 +75,7 @@ export function getButtonVariantClasses(
 /**
  * Returns the appropriate loading size class based on button size
  */
-export function getLoadingSizeClasses(
-  size: ButtonSize | string | undefined,
-): string {
+export function getLoadingSizeClasses(size: ButtonSize | undefined): string {
   if (!size) return "loading-md";
 
   switch (size) {
@@ -108,7 +97,7 @@ export function getLoadingSizeClasses(
 /**
  * Returns the appropriate icon size based on button size
  */
-export function getIconSize(size: ButtonSize | string | undefined): number {
+export function getIconSize(size: ButtonSize | undefined): number {
   switch (size) {
     case "xs":
       return 12;
@@ -127,7 +116,7 @@ export function getIconSize(size: ButtonSize | string | undefined): number {
  * Returns the appropriate icon size based on button size
  */
 export function getButtonShape(
-  shape: ButtonShape | string | undefined,
+  shape: ButtonShape | undefined,
 ): string | undefined {
   switch (shape) {
     case "circle":

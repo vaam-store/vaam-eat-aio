@@ -294,7 +294,7 @@ model Product {
     description       String?
     price             Decimal            @default(0.00) // Base price for the product, before variation adjustments
     available         Boolean            @default(true) // Product level availability toggle (independent of variation availability)
-    status            VariationStatus    @default(PUBLIC) // Visibility status (public, private, draft) for the product itself
+    status            VariationStatus    @default(DRAFT) // Visibility status (public, private, draft) for the product itself
     // Relations
     categoryId        String?
     category          ProductCategory?   @relation(fields: [categoryId], references: [id])
@@ -325,7 +325,7 @@ model Product {
     @@index([status]) // Index for filtering by status
 
     // ACL: Read access conditional on product status. Staff can manage their own vendor's products.
-    @@allow('read', this.status == PUBLIC || (auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    @@allow('read', this.status == PUBLIC || this.status == PRIVATE || (auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
     @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
     @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
 }
@@ -444,7 +444,7 @@ model ProductVariation {
     @@index([status])
 
     // ACL: Read access conditional on variation status. Staff can manage their own vendor's product variations.
-    @@allow('read', this.status == PUBLIC || (auth().id != null && this.product.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
+    @@allow('read', this.status == PUBLIC || this.status == PRIVATE || (auth().id != null && this.product.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
     @@allow('create', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
     @@allow('update,delete', auth().vendorMembership?[vendorId == this.product.vendorId && (role == 'ADMIN' || role == 'STAFF')])
 }

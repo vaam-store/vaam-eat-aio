@@ -9,27 +9,40 @@
     "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-
     /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-
     /* Bundled projects */
-    "lib": ["dom", "dom.iterable", "ES2022"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022",
+      "webworker"
+    ],
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
-    "plugins": [{ "name": "next" }],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "incremental": true,
-
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["./src/*"],
-      "@gen/*": ["./src/server/api/generated/*"]
-    }
+      "@app/*": [
+        "./src/*"
+      ],
+      "@gen/*": [
+        "./src/server/api/generated/*"
+      ]
+    },
+    "types": [
+      "@serwist/next/typings"
+    ]
   },
   "include": [
     "next-env.d.ts",
@@ -39,5 +52,14 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "coverage",
+    "storybook-static",
+    ".next",
+    "out",
+    "public",
+    "public/sw.js",
+    "**/*.test.{ts,tsx}"
+  ]
 }

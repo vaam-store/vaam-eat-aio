@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { env } from "@app/env";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
       url: `${env.NEXT_PUBLIC_EMGR_APP_URL}`,

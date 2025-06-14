@@ -4,8 +4,7 @@ import { signIn } from "next-auth/webauthn";
 import { useRedirects } from "@app/components/auth/utils";
 
 export function Login() {
-  //const router = useRouter();
-  const { redirectUrl, nextQueryString, queryString } = useRedirects();
+  const { redirectUrl } = useRedirects();
 
   return (
     <form

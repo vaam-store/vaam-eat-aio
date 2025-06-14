@@ -53,7 +53,7 @@ export function Button<As extends ElementType = "button">({
 
   const colorClasses = getButtonColorClasses(color);
   const variantClasses = getButtonVariantClasses(variant);
-  const sizeClasses = getButtonSizeClasses(size ?? "");
+  const sizeClasses = getButtonSizeClasses(size);
   const shapeClasses = getButtonShape(shape);
 
   return (

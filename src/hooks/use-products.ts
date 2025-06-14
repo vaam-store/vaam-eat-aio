@@ -1,16 +1,17 @@
 import { api } from "@app/trpc/react";
+import type { Product, ProductImage, Prisma } from "@prisma/client";
 
 type UseProducts = {
   take?: number;
 };
 
 export function useProducts({ take = 6 }: UseProducts = {}) {
-  const [, result] = api.zen.product.findMany.useSuspenseQuery({
+  const [data, result] = api.zen.product.findMany.useSuspenseQuery({
     take,
-    select: {
+    include: {
       thumbnail: true,
     },
   });
 
-  return result;
+  return { ...result, data: data as unknown as Array<Product & { thumbnail: ProductImage }> };
 }
