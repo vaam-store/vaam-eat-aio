@@ -1724,12 +1724,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/server@npm:^11.0.0":
-  version: 11.3.1
-  resolution: "@trpc/server@npm:11.3.1"
+"@trpc/server@npm:^11.4.1":
+  version: 11.4.1
+  resolution: "@trpc/server@npm:11.4.1"
   peerDependencies:
     typescript: ">=5.7.2"
-  checksum: 10c0/9e4ae2d86de5229aed52b38e7c7ef8d72a09144d45f7e543f32ef67e584b7b5177ccb7b060120685e8cf0fdc1f281d41f5186bebf93bf5109a2f4a4be6b5e7ef
+  checksum: 10c0/80f36a170688e429f5084321a13f54fae0de429272c6c7aa184affd76a79d638f60799f26d8819b61f4e09142afcc3440ca73ea867604047cbf1132de66becc6
   languageName: node
   linkType: hard
 
@@ -8639,7 +8639,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.69.0"
     "@trpc/client": "npm:^11.0.0"
     "@trpc/react-query": "npm:^11.4.1"
-    "@trpc/server": "npm:^11.0.0"
+    "@trpc/server": "npm:^11.4.1"
     "@types/fs-extra": "npm:^11"
     "@types/lodash": "npm:^4"
     "@types/node": "npm:^24.0.1"
