@@ -1,3 +1,3 @@
 export function AppName() {
-	return <>VaamFood</>;
+  return <>VaamFood</>;
 }

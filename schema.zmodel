@@ -78,10 +78,6 @@ model User {
     // Relations for audit fields across different models - apply @omit
     createdLocations              Location[]              @relation("LocationCreatedBy") @omit
     updatedLocations              Location[]              @relation("LocationUpdatedBy") @omit
-    createdProductCategories      ProductCategory[]       @relation("ProductCategoryCreatedBy") @omit
-    updatedProductCategories      ProductCategory[]       @relation("ProductCategoryUpdatedBy") @omit
-    createdProductTags            ProductTag[]            @relation("ProductTagCreatedBy") @omit
-    updatedProductTags            ProductTag[]            @relation("ProductTagUpdatedBy") @omit
     createdProducts               Product[]               @relation("ProductCreatedBy") @omit
     updatedProducts               Product[]               @relation("ProductUpdatedBy") @omit
     createdProductImages          ProductImage[]          @relation("ProductImageCreatedBy") @omit
@@ -109,17 +105,17 @@ model User {
 
 // Reusable type for contact information
 type ContactInfo {
-    email String  @email
-    phone String?
+    email String?  @email
+    phone String[]
     name  String?
 }
 
 // Reusable type for address information, including geographical coordinates
 type Address {
-    street    String
+    street    String?
     city      String
     state     String?
-    zip       String
+    zip       String?
     country   String
     latitude  Decimal? // For geo-queries (requires raw query or PostGIS for advanced use)
     longitude Decimal? // For geo-queries
@@ -132,8 +128,6 @@ model Vendor {
     contacts       VendorContact[] // Multiple contacts for a vendor
     members        VendorMembership[]
     products       Product[]
-    categories     ProductCategory[]
-    tags           ProductTag[]
     locations      Location[]
     paymentMethods VendorPaymentMethod[]
     coupon         Coupon[]
@@ -265,52 +259,32 @@ model ProductCategory {
     parentCategoryId String?
     subCategories    ProductCategory[] @relation("SubCategories")
     products         Product[]
-    vendorId         String          // Category belongs to a vendor
-    vendor           Vendor            @relation(fields: [vendorId], references: [id])
-    createdById      String            @omit // Audit field
-    createdBy        User              @relation("ProductCategoryCreatedBy", fields: [createdById], references: [id])
-    updatedById      String?           @omit // Audit field
-    updatedBy        User?             @relation("ProductCategoryUpdatedBy", fields: [updatedById], references: [id])
     createdAt        DateTime          @default(now())
     updatedAt        DateTime          @updatedAt
 
     @@map("product_categories")
-    @@unique([vendorId, name]) // Name must be unique per vendor
-    @@unique([vendorId, slug]) // Slug must be unique per vendor
     @@index([parentCategoryId])
-    @@index([vendorId])
-    @@index([createdById])
-    @@index([updatedById])
+    @@index([name])
+    @@index([slug])
 
     // ACL: Everyone can read product categories. Staff can manage their own vendor's categories.
     @@allow('read', true) // Correct, public for read
-    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
-    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('create,update,delete', false)
 }
 
 model ProductTag {
     id          String    @id @default(cuid())
     name        String    @map("name")
     products    Product[] @relation("ProductTags")
-    vendorId    String    // Tag belongs to a vendor
-    vendor      Vendor    @relation(fields: [vendorId], references: [id])
-    createdById String    @omit // Audit field
-    createdBy   User      @relation("ProductTagCreatedBy", fields: [createdById], references: [id])
-    updatedById String?   @omit // Audit field
-    updatedBy   User?     @relation("ProductTagUpdatedBy", fields: [updatedById], references: [id])
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
 
     @@map("product_tags")
-    @@unique([vendorId, name]) // Name must be unique per vendor
-    @@index([vendorId])
-    @@index([createdById])
-    @@index([updatedById])
+    @@index([name])
 
     // ACL: Everyone can read product tags. Staff can manage their own vendor's tags.
     @@allow('read', true) // Correct, public for read
-    @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
-    @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('create,update,delete', false)
 }
 
 model Product {

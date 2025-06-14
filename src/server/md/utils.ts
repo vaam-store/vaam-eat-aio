@@ -1,16 +1,16 @@
 import "server-only";
 
-import { readFileSync } from 'fs-extra';
-import matter from 'gray-matter';
-import * as path from 'node:path';
-import { markdownToHtml } from './converter';
+import { readFileSync } from "fs-extra";
+import matter from "gray-matter";
+import * as path from "node:path";
+import { markdownToHtml } from "./converter";
 
 export async function loadDocMd(
-  res: 'res' = 'res',
+  res: "res" = "res",
   slug: string,
 ): Promise<Record<string, string>> {
-  const fullPath = path.join(process.cwd(), 'docs', res, `${slug}.md`);
-  const fileContents = readFileSync(fullPath, 'utf8');
+  const fullPath = path.join(process.cwd(), "docs", res, `${slug}.md`);
+  const fileContents = readFileSync(fullPath, "utf8");
 
   // Use gray-matter to parse the post metadata section
   const matterResult = matter(fileContents);
@@ -25,5 +25,5 @@ export async function loadDocMd(
 }
 
 export async function loadRes(slug: string): Promise<Record<string, string>> {
-  return loadDocMd('res', slug);
+  return loadDocMd("res", slug);
 }

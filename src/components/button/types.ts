@@ -3,35 +3,31 @@
  */
 
 // Button sizes
-export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type ButtonShape = 'circle' | 'square';
+export type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
+export type ButtonShape = "circle" | "square";
 
 // Button colors
 export type ButtonColor =
-	| 'primary'
-	| 'secondary'
-	| 'accent'
-	| 'neutral'
-	| 'info'
-	| 'success'
-	| 'warning'
-	| 'error';
+  | "primary"
+  | "secondary"
+  | "accent"
+  | "neutral"
+  | "info"
+  | "success"
+  | "warning"
+  | "error";
 
 // Button variants
 export type ButtonVariant =
-	| 'outline'
-	| 'fill'
-	| 'soft'
-	| 'ghost'
-	| 'link'
-	| 'dash';
+  | "outline"
+  | "fill"
+  | "soft"
+  | "ghost"
+  | "link"
+  | "dash";
 
 // Icon sizes mapped to button sizes
-export type IconSizeMap = {
-	[key in ButtonSize]: number;
-};
+export type IconSizeMap = Record<ButtonSize, number>;
 
 // CSS class maps for different button properties
-export type ButtonClassMap = {
-	[key: string]: string;
-};
+export type ButtonClassMap = Record<string, string>;

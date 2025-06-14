@@ -1,5 +1,5 @@
-'use client';
+"use client";
 
 export function ShoppingCart() {
-	return <>Some content</>;
+  return <>Some content</>;
 }

@@ -13,8 +13,8 @@ export const env = createEnv({
         : z.string().optional(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
+      .enum(["development", "test", "production"])
+      .default("development"),
     S3_ENDPOINT: z.string(),
     S3_ACCESS_KEY: z.string(),
     S3_SECRET_KEY: z.string(),

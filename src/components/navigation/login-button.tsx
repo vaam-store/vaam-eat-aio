@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@app/components/button";
 import Link from "next/link";
@@ -35,5 +35,5 @@ export function LoginButton() {
         </Button>
       )}
     </>
-  )
+  );
 }
