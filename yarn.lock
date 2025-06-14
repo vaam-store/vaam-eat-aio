@@ -1868,7 +1868,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^24.0.1":
   version: 24.0.1
   resolution: "@types/node@npm:24.0.1"
   dependencies:
@@ -1877,7 +1877,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.12.7, @types/node@npm:^20.14.10":
+"@types/node@npm:^20.12.7":
   version: 20.19.0
   resolution: "@types/node@npm:20.19.0"
   dependencies:
@@ -8714,7 +8714,7 @@ __metadata:
     "@trpc/server": "npm:^11.0.0"
     "@types/fs-extra": "npm:^11"
     "@types/lodash": "npm:^4"
-    "@types/node": "npm:^20.14.10"
+    "@types/node": "npm:^24.0.1"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     "@vercel/otel": "npm:^1.13.0"

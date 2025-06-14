@@ -76,7 +76,7 @@
     "@tailwindcss/postcss": "^4.0.15",
     "@types/fs-extra": "^11",
     "@types/lodash": "^4",
-    "@types/node": "^20.14.10",
+    "@types/node": "^24.0.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vymalo/ui-preset": "^2.0.2",
