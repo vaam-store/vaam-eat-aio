@@ -1,45 +1,14 @@
-# General rules
-
-- This project is using `@app` as prefix
-- always use function components
-- never export default components
-- medusaj is defined using a hoo. Check the medusa and the hooks folder.
-- always think about server components fwhere required, with suspense to stream
-- Always while naming files, use kebab-case.
-- Dumb components might be better off being server components.
-- Smart components if having browser logic, shall be client components.
-- Always use react-feather for basic icons (import { <Icon's name> } from 'react-feather')
-- this project make use of tailwind and daisyui. Check the corresponding rules.
-- Always check the project architecture, expressed through the file ARCHITECHTURE.md
-- Doing things like string concatenation with tailwind won't work. Always use full class name
-- Never write README files, unless asked to.
-- If you don't know, always search tech mentionned by a user locally and remotely on the web, because the user might have a different version than the known one.
-- Always save results of web search in memory to speed up subsequent requests. Also save every information possible that might be important.
-- Always think sequentially to realise a task and explicit steps.
-
-- Use functional components and React Hooks, avoiding class components.
-- Manage state using Zustand or React Query, if appropriate.
-- Ensure that the code is modular and easily testable.
-- Follow TypeScript best practices for typing components and state.
-- Keep business logic separate from the UI layer.
-- Implement lazy loading to improve performance.
-- Suggest caching strategies to reduce backend requests.
-
-- Suggest optimizations in Dockerfiles to reduce image sizes.
-- Recommend strategies to improve container isolation and security.
-- Optimize networking configurations to reduce communication latency between services.
-- Ensure volumes are properly managed for data persistence.
-- Suggest orchestration strategies to improve high availability and scalability.
-
-- Follow Next.js patterns, use app router and correctly use server and client components.
-- Use Tailwind CSS for styling.
-- Use TanStack Query (react-query) for frontend data fetching.
-- Use Formik for form handling.
-- Use Zod for validation.
-- Use React Context for state management.
-- Follow AirBnB style guide for code formatting.
-- Use PascalCase when creating new React files. UserCard, not user-card.
-- Use named exports when creating new react components.
-- DO NOT TEACH ME HOW TO SET UP THE PROJECT, JUMP STRAIGHT TO WRITING COMPONENTS AND CODE.
-
-- This project uses biome for linting and formatting. Don't explain me how to use it.
+* Prefix code with `@app` where required.
+* Always use **function components**; **never** use default exports.
+* **Server components** for dumb UI; **client components** for browser logic, Suspense/lazy loading as needed.
+* File names in **kebab-case**; React component files in **PascalCase**.
+* Use **React Hooks**, Zustand / TanStack Query for state & data, **Formik + Zod** for forms/validation.
+* Style with **Tailwind CSS** + daisyUI; no Tailwind string concatenation—write full class names.
+* Icons from **react-feather** (`import { IconName } from 'react-feather'`).
+* Follow **Next.js app-router** patterns; keep business logic separate from UI.
+* TypeScript everywhere; adhere to **AirBnB** style and **biome** lint/format rules.
+* Check `ARCHITECTURE.md`; think sequentially and cache helpful search results.
+* Use `medusaj` hook (see `medusa/` and `hooks/` folders).
+* Optimize with lazy loading, caching, and clear modular structure.
+* Dev-Ops: slim Docker images, harden isolation, tune networking/volumes, plan HA orchestration.
+* Skip READMEs or setup instructions unless explicitly requested—go straight to code.
