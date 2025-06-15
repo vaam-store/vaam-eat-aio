@@ -33,11 +33,10 @@ export function HomeSearch() {
   };
 
   return (
-    <Suspense>
+
       <SearchInput
         onSearch={(data) => searchByLocation(data)}
         checkLocationDelivery
       />
-    </Suspense>
   );
 }

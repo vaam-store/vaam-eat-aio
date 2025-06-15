@@ -9,7 +9,7 @@ export default async function AuthPage() {
   }
 
   return (
-    <div className="form-control gap-6">
+    <div className="py-4">
       <Login />
     </div>
   );

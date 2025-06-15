@@ -16,6 +16,7 @@ import {
   type FormikHelpers,
 } from "formik";
 import { z } from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
 
 export type SearchLocationParams = {
   query: string;
@@ -176,7 +177,7 @@ export function SearchInput({ onSearch, onClear }: SearchInputProps) {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={searchValidationSchema}
+      validationSchema={toFormikValidationSchema(searchValidationSchema)}
       onSubmit={handleFormSubmit}
       enableReinitialize // Important if initialValues could change externally
     >

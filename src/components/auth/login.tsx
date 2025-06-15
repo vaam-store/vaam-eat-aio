@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
 import { z } from "zod";
+import { toFormikValidationSchema } from "zod-formik-adapter";
 
 const loginValidationSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
@@ -46,21 +47,17 @@ export function Login() {
   );
 
   const handleLogin = useCallback(async () => {
-    try {
       await signIn("passkey", {
         redirect: false,
       });
       router.push(redirectUrl);
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
   }, [router, redirectUrl]);
 
   return (
     <div className="flex flex-col">
       <Formik
         initialValues={initialValues}
-        validationSchema={loginValidationSchema}
+        validationSchema={toFormikValidationSchema(loginValidationSchema)}
         onSubmit={handleRegister}
       >
         {({ isSubmitting }) => (

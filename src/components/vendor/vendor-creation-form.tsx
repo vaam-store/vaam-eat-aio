@@ -23,7 +23,7 @@ import { Button } from "@app/components/button";
 import { PlusCircle, XCircle } from "react-feather";
 import React from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { Text } from '@app/components/text';
+import { Text } from "@app/components/text";
 
 const contactInfoValidationSchema = z.object({
   email: z.string().email("Invalid email address").optional().or(z.literal("")),
@@ -295,41 +295,41 @@ const ContactItem: React.FC<ContactItemProps> = ({ index, remove }) => {
     <div className="card card-border">
       <div className="card-body">
         <div className="flex items-center justify-between">
-        <Text bold>Contact #{index + 1}</Text>
-        <Button
-          type="button"
-          shape="circle"
-          variant="soft"
-          color="error"
-          size="sm"
-          onClick={() => remove(index)}
-          aria-label="Remove contact"
-        >
-          <XCircle size={18} />
-        </Button>
-      </div>
-      <div>
-        <label htmlFor={typePath} className="label">
-          <span className="label-text">Contact Type</span>
-        </label>
-        <Field
-          as="select"
-          id={typePath}
-          name={typePath}
-          className="select select-bordered w-full"
-        >
-          <option value="All">All</option>
-          <option value="Sales">Sales</option>
-          <option value="Support">Support</option>
-          <option value="Billing">Billing</option>
-        </Field>
-        <ErrorMessage
-          name={typePath}
-          component="div"
-          className="text-error mt-1 text-xs"
-        />
-      </div>
-      <ContactInfoFields contactIndex={index} />
+          <Text bold>Contact #{index + 1}</Text>
+          <Button
+            type="button"
+            shape="circle"
+            variant="soft"
+            color="error"
+            size="sm"
+            onClick={() => remove(index)}
+            aria-label="Remove contact"
+          >
+            <XCircle size={18} />
+          </Button>
+        </div>
+        <div>
+          <label htmlFor={typePath} className="label">
+            <span className="label-text">Contact Type</span>
+          </label>
+          <Field
+            as="select"
+            id={typePath}
+            name={typePath}
+            className="select select-bordered w-full"
+          >
+            <option value="All">All</option>
+            <option value="Sales">Sales</option>
+            <option value="Support">Support</option>
+            <option value="Billing">Billing</option>
+          </Field>
+          <ErrorMessage
+            name={typePath}
+            component="div"
+            className="text-error mt-1 text-xs"
+          />
+        </div>
+        <ContactInfoFields contactIndex={index} />
       </div>
     </div>
   );
@@ -386,7 +386,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({ userId }) => {
                   />
                 );
               }
-              
+
               return null;
             })()}
           </div>
@@ -629,7 +629,7 @@ const LocationSection: React.FC<LocationSectionProps> = ({ userId }) => {
                   />
                 );
               }
-              
+
               return null;
             })()}
           </div>
