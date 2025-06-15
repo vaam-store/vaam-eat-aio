@@ -1,9 +1,13 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "@app/server/api/trpc";
+import { sendEmail } from "@app/server/email/send-email";
+import crypto from "crypto";
+import { env } from "@app/env";
 
 export const userRouter = createTRPCRouter({
   updateProfile: protectedProcedure
@@ -32,17 +36,84 @@ export const userRouter = createTRPCRouter({
       return { success: true };
     }),
 
-  sendVerificationEmail: publicProcedure.mutation(async ({ ctx }) => {
-    // In a real application, you would send a verification email here.
-    // This would typically involve generating a token and sending an email with a link.
-    // For now, we'll just log the action.
-    console.log(
-      `Sending verification email to user ${ctx.session?.user?.email}`,
+  sendVerificationEmail: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const userEmail = ctx.session.user.email;
+
+    if (!userEmail) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "User does not have an email address.",
+      });
+    }
+
+    // Generate a secure verification token
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 1); // Token expires in 1 hour
+
+    // Store the token in the database
+    await ctx.db.verificationToken.create({
+      data: {
+        identifier: userId, // Using userId as identifier for simplicity, could be email
+        token,
+        expires,
+      },
+    });
+
+    // Construct the verification link
+    const verificationLink = `${env.NEXT_PUBLIC_EMGR_APP_URL}/settings/verify-email?token=${token}`;
+
+    // Send the email
+    await sendEmail(
+      ctx.emailTransporter,
+      env.EMAIL_FROM,
+      userEmail,
+      "Verify your email address",
+      `Click <a href="${verificationLink}">here</a> to verify your email address. This link will expire in 1 hour.`,
     );
 
-    // Simulate sending email
-    // await sendEmail(ctx.session.user.email, "Verify your email", "Click this link to verify...");
-
-    return { success: true };
+    return { success: true, message: "Verification email sent." };
   }),
+
+  verifyEmailToken: publicProcedure
+    .input(z.object({ token: z.string().min(1, "Token is required") }))
+    .mutation(async ({ ctx, input }) => {
+      const { token } = input;
+
+      const verificationToken = await ctx.db.verificationToken.findUnique({
+        where: { token },
+      });
+
+      if (!verificationToken) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invalid or expired verification token.",
+        });
+      }
+
+      if (verificationToken.expires < new Date()) {
+        // Delete expired token
+        await ctx.db.verificationToken.delete({
+          where: { token },
+        });
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Verification token has expired.",
+        });
+      }
+
+      // Mark user's email as verified
+      await ctx.db.user.update({
+        where: { id: verificationToken.identifier },
+        data: { emailVerified: new Date() },
+      });
+
+      // Delete the token after successful verification (single-use)
+      await ctx.db.verificationToken.delete({
+        where: { token },
+      });
+
+      return { success: true, message: "Email verified successfully." };
+    }),
 });

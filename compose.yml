@@ -131,6 +131,12 @@ services:
 
       DATABASE_URL: postgres://vaam-eat:vaam-eat-password@postgres:5432/vaam-eat?ssl_mode=disable
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
 volumes:
   db: {}
   redis: {}

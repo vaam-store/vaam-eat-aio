@@ -25,6 +25,12 @@ export const env = createEnv({
 
     REDIS_URL: z.string().url().optional(),
     REDIS_PREFIX: z.string().optional(),
+
+    EMAIL_SERVER_HOST: z.string(),
+    EMAIL_SERVER_PORT: z.coerce.number(),
+    EMAIL_SERVER_USER: z.string(),
+    EMAIL_SERVER_PASSWORD: z.string(),
+    EMAIL_FROM: z.string(),
   },
 
   /**
@@ -37,6 +43,7 @@ export const env = createEnv({
 
     NEXT_PUBLIC_EMGR_CDN: z.string().url().optional(),
     NEXT_PUBLIC_EMGR_APP_URL: z.string().url().optional(),
+    NEXT_PUBLIC_APP_URL: z.string().url(),
   },
 
   /**
@@ -59,8 +66,15 @@ export const env = createEnv({
     REDIS_URL: process.env.REDIS_URL,
     REDIS_PREFIX: process.env.REDIS_PREFIX,
 
+    EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
+    EMAIL_SERVER_PORT: Number(process.env.EMAIL_SERVER_PORT),
+    EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
+    EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
+    EMAIL_FROM: process.env.EMAIL_FROM,
+
     NEXT_PUBLIC_EMGR_CDN: process.env.NEXT_PUBLIC_EMGR_CDN,
     NEXT_PUBLIC_EMGR_APP_URL: process.env.NEXT_PUBLIC_EMGR_APP_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

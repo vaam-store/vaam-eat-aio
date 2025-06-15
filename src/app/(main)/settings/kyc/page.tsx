@@ -1,13 +1,32 @@
 "use client";
 
-import Link from "next/link";
+import { useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Check, Mail } from "react-feather";
+import toast from "react-hot-toast";
 import { SettingCard } from "@app/components/settings/setting-card";
+import { api } from "@app/trpc/react";
 
 export default function Page() {
   const { data: session } = useSession();
   const isEmailVerified = session?.user?.emailVerified !== null;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const sendVerificationEmailMutation =
+    api.user.sendVerificationEmail.useMutation();
+
+  const handleSendVerificationEmail = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await sendVerificationEmailMutation.mutateAsync();
+      toast.success("Verification email sent successfully!");
+    } catch (error) {
+      toast.error("Failed to send verification email.");
+      console.error("Failed to send verification email:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sendVerificationEmailMutation]);
 
   return (
     <SettingCard title="KYC (Email Setup)">
@@ -20,12 +39,18 @@ export default function Page() {
         )}
       </p>
       {!isEmailVerified && (
-        <Link
-          href="/settings/verify-email"
-          className="btn btn-secondary btn-sm"
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={handleSendVerificationEmail}
+          disabled={isLoading}
         >
-          <Mail size={16} /> Verify Email
-        </Link>
+          {isLoading ? (
+            <span className="loading loading-spinner" />
+          ) : (
+            <Mail size={16} />
+          )}{" "}
+          Send verification email
+        </button>
       )}
     </SettingCard>
   );

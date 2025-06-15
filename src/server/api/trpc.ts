@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 
 import { auth } from "@app/server/auth";
 import { db } from "@app/server/db";
+import { emailTransporter } from "@app/server/email/transporter";
 import { enhance } from "@zenstackhq/runtime";
 
 /**
@@ -34,6 +35,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     db,
     prisma: enhance(db as any, { user: session?.user as any }),
     session,
+    emailTransporter, // Add the email transporter to the context
     ...opts,
   };
 };

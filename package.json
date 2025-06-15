@@ -80,6 +80,7 @@
     "@types/fs-extra": "^11",
     "@types/lodash": "^4",
     "@types/node": "^24.0.1",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vymalo/ui-preset": "^2.0.3",
@@ -95,7 +96,7 @@
     "tailwindcss": "^4.0.15",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.27.0",
-    "zenstack": "^2.15.1"
+    "zenstack": "^2"
   },
   "ct3aMetadata": {
     "initVersion": "7.39.3"
