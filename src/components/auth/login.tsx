@@ -5,8 +5,9 @@ import { signIn } from "next-auth/webauthn"; // Assuming this signIn is correct,
 import { Button } from "@app/components/button";
 import { LogIn } from "react-feather";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
+import { ErrorCategory, ErrorSeverity, handleGenericError } from "@app/services/error-handler";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -23,12 +24,14 @@ const initialValues: LoginFormValues = {
 export function Login() {
   const { redirectUrl } = useRedirects();
   const router = useRouter();
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   const handleRegister = useCallback(
     async (
       values: LoginFormValues,
-      { setSubmitting }: FormikHelpers<LoginFormValues>,
+      { setSubmitting, setErrors }: FormikHelpers<LoginFormValues>,
     ) => {
+      setSubmitting(true);
       try {
         await signIn("passkey", {
           action: "register",
@@ -37,8 +40,16 @@ export function Login() {
         });
         router.push(redirectUrl);
       } catch (error) {
-        console.error("Registration failed:", error);
-        // Optionally, set form errors here using setErrors from FormikHelpers
+        handleGenericError(
+          error,
+          "Registration failed. Please try again.",
+          ErrorSeverity.Error, // Corrected argument
+          ErrorCategory.Authentication,
+        );
+        // Optionally, set form errors here if the error is a validation error from the server
+        if (error instanceof Error && error.message.includes("validation")) {
+          setErrors({ email: "This email might already be registered or is invalid." });
+        }
       } finally {
         setSubmitting(false);
       }
@@ -47,10 +58,22 @@ export function Login() {
   );
 
   const handleLogin = useCallback(async () => {
-    await signIn("passkey", {
-      redirect: false,
-    });
-    router.push(redirectUrl);
+    setIsLoginLoading(true);
+    try {
+      await signIn("passkey", {
+        redirect: false,
+      });
+      router.push(redirectUrl);
+    } catch (error) {
+      handleGenericError(
+        error,
+        "Login failed. Please ensure you have a passkey set up or try registering.",
+        ErrorSeverity.Error, // Corrected argument
+        ErrorCategory.Authentication,
+      );
+    } finally {
+      setIsLoginLoading(false);
+    }
   }, [router, redirectUrl]);
 
   return (
@@ -100,11 +123,21 @@ export function Login() {
 
       <div className="divider"> Or</div>
 
-      <Button size="lg" onClick={handleLogin} className="btn-block">
-        {" "}
-        {/* Added btn-block for consistency */}
-        <span>Sign in with Passkey</span>
-        <LogIn className="ml-2" />
+      <Button
+        size="lg"
+        block
+        onClick={handleLogin}
+        loading={isLoginLoading}
+        disabled={isLoginLoading}
+      >
+        {isLoginLoading ? (
+          <span className="loading loading-spinner" />
+        ) : (
+          <>
+            <span>Sign in with Passkey</span>
+            <LogIn className="ml-2" />
+          </>
+        )}
       </Button>
     </div>
   );

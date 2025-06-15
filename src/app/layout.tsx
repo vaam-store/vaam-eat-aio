@@ -12,6 +12,7 @@ import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
+import { NetworkStatusHandler } from "@app/components/network-status/network-status-handler";
 
 export const metadata: Metadata = {
   title: "Vaam EAT",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
             <ThemeProvider themes={mainThemes} storageKey={themeDataKey}>
               <SessionProvider>
                 <Toaster position="bottom-right" reverseOrder={false} />
+                <NetworkStatusHandler />
                 <div id="app">{children}</div>
               </SessionProvider>
             </ThemeProvider>

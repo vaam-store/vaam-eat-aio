@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { VendorCreationForm } from "@app/components/vendor/vendor-creation-form";
 import { api } from "@app/trpc/react";
+import { handleTrpcError } from "@app/services/error-handler";
 import { type Prisma } from "@prisma/client";
 import { Section } from "@app/components/section/section";
 
@@ -16,9 +17,7 @@ export default function VendorCreatePage() {
       router.push(`/vendor/${data?.id}`);
     },
     onError: (error) => {
-      // Explicitly type 'error'
-      console.error("Failed to create vendor:", error.message); // Log error.message
-      // Here you could add user-facing error messages, e.g., using a toast notification
+      handleTrpcError(error, "Failed to create vendor. Please try again.");
     },
   });
 

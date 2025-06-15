@@ -9,7 +9,7 @@ import { useState } from "react";
 import SuperJSON from "superjson";
 
 import { type AppRouter } from "@app/server/api/root";
-import { handleTrpcError } from "@app/services/error-handler";
+import { showErrorToast } from "@app/services/error-handler";
 import { createQueryClient } from "./query-client";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
@@ -52,7 +52,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           const unsubscribe = next(op).subscribe({
             next: (value) => observer.next(value),
             error: (err) => {
-              handleTrpcError(err);
+              showErrorToast(err, "A tRPC client error occurred.");
               observer.error(err);
             },
             complete: () => observer.complete(),

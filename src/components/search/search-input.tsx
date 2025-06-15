@@ -3,6 +3,7 @@
 import { useGeolocation } from "@app/hooks/use-geolocation";
 import { MapPin, Search } from "react-feather";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { handleGenericError } from "@app/services/error-handler";
 import { Button } from "../button";
 import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
 import { z } from "zod";
@@ -109,9 +110,13 @@ function FormikSearchBar({
   ]);
 
   const handleGetLocation = async () => {
-    await getLocation();
-    // After getLocation, latitude/longitude will update, triggering the above useEffect
-    // which then calls handleGeolocationSearch if conditions are met.
+    try {
+      await getLocation();
+      // After getLocation, latitude/longitude will update, triggering the above useEffect
+      // which then calls handleGeolocationSearch if conditions are met.
+    } catch (error) {
+      handleGenericError(error, "Could not get location.");
+    }
   };
 
   return (

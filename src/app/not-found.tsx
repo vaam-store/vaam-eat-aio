@@ -3,22 +3,49 @@
 import { Button } from "@app/components/button";
 import { Section } from "@app/components/section";
 import { Text } from "@app/components/text";
-import { Home } from "react-feather";
+import { Home, ArrowLeft, Search } from "react-feather";
+import Link from "next/link";
+import { useRouter } from "next/navigation"; // Corrected import
 
 export default function NotFound() {
+  const router = useRouter();
+
   return (
     <Section as="main">
-      <div className="flex flex-col gap-4 py-6">
-        <Text as="h2" size="4xl" bold>
-          Page not found
+      <div className="flex min-h-[calc(100vh-200px)] flex-col items-center justify-center gap-4 py-12 text-center">
+        <Text as="h1" size="6xl" bold className="text-primary">
+          404
         </Text>
-        <p className="text-lg">The page you're looking for doesn't exist.</p>
-        <div className="flex gap-4">
-          <Button onClick={() => window.location.replace("/")} type="button">
-            <span>Go home</span>
-            <Home />
+        <Text as="h2" size="4xl" bold>
+          Page Not Found
+        </Text>
+        <Text size="lg" className="max-w-md text-base-content/80">
+          Sorry, we couldn't find the page you're looking for. It might have
+          been moved, deleted, or maybe you just mistyped the URL.
+        </Text>
+
+        {/* Optional: Add a search input or links to popular sections */}
+        {/* <div className="mt-4">
+          <SearchInput />
+        </div> */}
+
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Button
+            onClick={() => router.back()}
+            type="button"
+            variant="outline"
+          >
+            <ArrowLeft size={18} className="mr-2" />
+            <span>Go Back</span>
+          </Button>
+          <Button as={Link} href="/">
+            <Home size={18} className="mr-2" />
+            <span>Go to Homepage</span>
           </Button>
         </div>
+        <Text size="sm" className="mt-8 text-base-content/60">
+          If you believe this is an error, please contact support.
+        </Text>
       </div>
     </Section>
   );
