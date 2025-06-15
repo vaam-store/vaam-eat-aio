@@ -64,7 +64,13 @@ export function EmailVerificationClient({
       setVerificationStatus("error");
       setErrorMessage("No verification token found in the URL.");
     }
-  }, [token, verificationStatus, verifyMutation, verificationData, isVerificationStatusLoading]);
+  }, [
+    token,
+    verificationStatus,
+    verifyMutation,
+    verificationData,
+    isVerificationStatusLoading,
+  ]);
 
   return (
     <AuthWrapper>

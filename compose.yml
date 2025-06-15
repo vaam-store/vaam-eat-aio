@@ -104,12 +104,38 @@ services:
       - minio:/bitnami/minio/data
     ports:
       - ${MINIO_PORT:-19000}:9000
-      - ${MINIO_PORT_INTERNAL:-9001}:9001
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minio}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minio123}
-      MINIO_BROWSER_SESSION_DURATION: ${MINIO_BROWSER_SESSION_DURATION:-7d}
-      MINIO_BROWSER_LOGIN_ANIMATION: ${MINIO_BROWSER_LOGIN_ANIMATION:-off}
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+      MINIO_BROWSER_SESSION_DURATION: 7d
+      MINIO_BROWSER_LOGIN_ANIMATION: off
+
+  minio-init:
+    image: bitnami/minio
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 500M
+    volumes:
+      - .docker/minio/policy.json:/tmp/policy.json
+    command:
+      - /bin/bash
+      - -c
+      - |-
+        set -e;
+
+        mc alias set bucketer http://minio:9000 minio minio123;
+        mc admin service restart bucketer --wait --json;
+
+        sleep 5;
+
+        mc mb bucketer/vaam-eat --ignore-existing
+
+        mc anonymous set-json /tmp/policy.json bucketer/vaam-eat
+    depends_on:
+      minio:
+        condition: service_started
 
   api:
     build:

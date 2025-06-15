@@ -98,7 +98,8 @@ model User {
     updatedFulfillments           Fulfillment[]           @relation("FulfillmentUpdatedBy") @omit
 
     // everyone can signup, and user profile is also publicly readable
-    @@allow('create,read', true)
+    @@allow('create', false)
+    @@allow('read', true)
     // only the user can update or delete their own profile
     @@allow('update,delete', auth().id == this.id)
 }

@@ -35,7 +35,7 @@ ENV SKIP_ENV_VALIDATION=1
 ENV S3_ENDPOINT="localhost"
 ENV S3_PORT="19000"
 ENV S3_SCHEME="https"
-ENV S3_BUCKET="sschool"
+ENV S3_BUCKET="vaam-eat"
 ENV S3_CDN_URL="https://some.cdn.com"
 
 ENV NEXT_PUBLIC_EMGR_CDN="https://emgr.ssegning.com/api/images/resize"
@@ -67,7 +67,7 @@ RUN \
 FROM node:24-alpine
 
 LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
-LABEL org.opencontainers.image.description="NextJS frontend for the SSchool"
+LABEL org.opencontainers.image.description="NextJS frontend for the vaam-eat"
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1

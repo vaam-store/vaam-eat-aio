@@ -4,10 +4,8 @@ import { Suspense } from "react";
 
 export default function OrdersPage() {
   return (
-    <Suspense>
-      <AuthWrapper>
-        <UserOrder />
-      </AuthWrapper>
-    </Suspense>
+    <>
+      <UserOrder />
+    </>
   );
 }

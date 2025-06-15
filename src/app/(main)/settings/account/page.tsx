@@ -14,7 +14,7 @@ export default function Page() {
         <div className="avatar">
           <div className="w-12 rounded-full">
             <img
-              src={session?.user?.image || "/placeholder-avatar.png"}
+              src={session?.user?.image || "/placeholder-avatar.jpg"}
               alt="User Avatar"
             />
           </div>

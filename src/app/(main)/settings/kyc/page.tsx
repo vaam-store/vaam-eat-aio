@@ -6,6 +6,7 @@ import { Check, Mail } from "react-feather";
 import toast from "react-hot-toast";
 import { SettingCard } from "@app/components/settings/setting-card";
 import { api } from "@app/trpc/react";
+import { showErrorToast } from "@app/services/error-handler";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -21,8 +22,7 @@ export default function Page() {
       await sendVerificationEmailMutation.mutateAsync();
       toast.success("Verification email sent successfully!");
     } catch (error) {
-      toast.error("Failed to send verification email.");
-      console.error("Failed to send verification email:", error);
+      showErrorToast(error, "Failed to send verification email.");
     } finally {
       setIsLoading(false);
     }

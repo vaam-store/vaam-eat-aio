@@ -58,6 +58,7 @@ function getErrorMessage(error: unknown): string {
     "message" in (error as any).shape &&
     typeof (error as any).shape.message === "string"
   ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (error as any).shape.message;
   }
   try {
@@ -144,7 +145,7 @@ function formatErrorMessage(categorizedError: CategorizedError): string {
       prefix = "Validation Error: ";
       break;
     case ErrorCategory.Server:
-      prefix = `Server Error (Code: ${categorizedError.statusCode || "N/A"}): `;
+      prefix = `Server Error (Code: ${categorizedError.statusCode ?? "N/A"}): `;
       break;
     // Add more cases as needed
   }
@@ -168,8 +169,8 @@ export const showErrorToast = (
   }
 
   const categorized = categorizeError(error);
-  const finalSeverity = options?.severity || categorized.severity;
-  const finalCategory = options?.category || categorized.category;
+  const finalSeverity = options?.severity ?? categorized.severity;
+  const finalCategory = options?.category ?? categorized.category;
 
   const displayMessage = formatErrorMessage({
     ...categorized,

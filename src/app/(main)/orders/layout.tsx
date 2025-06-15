@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <Section className="pt-6 pb-16">
       <AuthWrapper>
-        <div id="root-settings">{children}</div>
+        <div id="root-orders">{children}</div>
       </AuthWrapper>
     </Section>
   );

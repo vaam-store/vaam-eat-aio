@@ -21,17 +21,10 @@ export const userRouter = createTRPCRouter({
       const { name, image } = input;
       const userId = ctx.session.user.id;
 
-      // In a real application, you would update the user in your database here.
-      // For now, we'll just log the update.
-      console.log(
-        `Updating user ${userId} profile: name=${name}, image=${image}`,
-      );
-
-      // Simulate database update
-      // await ctx.db.user.update({
-      //   where: { id: userId },
-      //   data: { name, image },
-      // });
+      await ctx.db.user.update({
+        where: { id: userId },
+        data: { name, image },
+      });
 
       return { success: true };
     }),
