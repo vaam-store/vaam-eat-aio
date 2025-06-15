@@ -14,8 +14,8 @@ export const WelcomeEmail = ({ userName }: WelcomeEmailProps) => {
           </h2>
           <p className="text-base-content">Hello {userName},</p>
           <p className="text-base-content">
-            Thank you for joining our community. We&#39;re excited to have you on
-            board!
+            Thank you for joining our community. We&#39;re excited to have you
+            on board!
           </p>
           <div className="card-actions mt-4 justify-center">
             <a href="#" className="btn btn-primary">

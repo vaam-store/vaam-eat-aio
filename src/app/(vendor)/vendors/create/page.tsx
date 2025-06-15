@@ -49,7 +49,7 @@ export default function VendorCreatePage() {
   const userId = session.user.id;
 
   return (
-    <Section>
+    <>
       <h1 className="mb-4 text-2xl font-bold">Create New Vendor</h1>
       <VendorCreationForm onSubmit={handleSubmit} userId={userId} />
       {createVendorMutation.isError && (
@@ -57,6 +57,6 @@ export default function VendorCreatePage() {
           Error creating vendor: {createVendorMutation.error?.message}
         </p>
       )}
-    </Section>
+    </>
   );
 }
