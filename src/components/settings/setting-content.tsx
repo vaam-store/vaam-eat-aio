@@ -1,12 +1,23 @@
-import Link from "next/link";
-import { Button } from "../button";
+'use client';
+
+import { UserAccountSection } from "./user-account-section";
+import { KycEmailSection } from "./kyc-email-section";
+import { VendorManagementSection } from "./vendor-management-section";
+import { ImportantLinksSection } from "./important-links-section";
+import { ShareSection } from "./share-section";
+import { StarredProductsVendorsSection } from "./starred-products-vendors-section";
+import { WishlistsSection } from "./wishlists-section";
 
 export function SettingContent() {
   return (
-    <>
-      <Button as={Link} href="/vendors/create" prefetch>
-        Create a vendot account here
-      </Button>
-    </>
+    <div className="md:grid md:grid-cols-2 md:gap-4 p-4">
+      <UserAccountSection />
+      <KycEmailSection />
+      <VendorManagementSection />
+      <ImportantLinksSection />
+      <ShareSection />
+      <StarredProductsVendorsSection />
+      <WishlistsSection />
+    </div>
   );
 }
