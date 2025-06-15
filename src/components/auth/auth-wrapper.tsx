@@ -1,13 +1,13 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { type PropsWithChildren, useEffect, useState } from "react";
+import { type PropsWithChildren, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 
 export function AuthWrapper({ children }: PropsWithChildren) {
   const router = useRouter();
   const pathname = usePathname();
-  const [currentPathname] = useState(pathname);
+  const currentPathname = useRef(pathname);
   const { status } = useSession();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export function AuthWrapper({ children }: PropsWithChildren) {
 
     if (status === "unauthenticated") {
       router.replace(
-        `/auth?redirect_url=${encodeURIComponent(currentPathname)}`,
+        `/auth?redirect_url=${encodeURIComponent(currentPathname.current)}`,
       );
       return;
     }
