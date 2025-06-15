@@ -1,24 +1,24 @@
-import Link from "next/link";
 import { Home, List, Search, Settings } from "react-feather";
+import { DockLink } from "./dock-link";
 
 export function DefaultDock() {
   return (
     <div className="dock bg-base-200 text-base-content">
-      <Link href="/" prefetch className="dock-active">
+      <DockLink href="/">
         <Home />
-      </Link>
+      </DockLink>
 
-      <Link href="/search" prefetch>
+      <DockLink href="/search">
         <Search />
-      </Link>
+      </DockLink>
 
-      <Link href="/orders">
+      <DockLink href="/orders">
         <List />
-      </Link>
+      </DockLink>
 
-      <Link href="/settings">
+      <DockLink href="/settings">
         <Settings />
-      </Link>
+      </DockLink>
     </div>
   );
 }

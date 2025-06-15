@@ -2,7 +2,7 @@
 
 import { type GeolocationState } from "@app/hooks/use-geolocation";
 import { Form } from "@rjsf/daisyui";
-import type { RJSFSchema } from "@rjsf/utils";
+import type { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
 
 export type SearchLocationParams = Pick<
@@ -32,10 +32,31 @@ const schema: RJSFSchema = {
   required: ["query"],
 };
 
+const uiSchema: UiSchema = {
+  "ui:classNames": "flex flex-row",
+  "ui:field": "LayoutGridField",
+  "ui:widget": "password",
+  "ui:description": "The best password",
+  "ui:submitButtonOptions": {
+    props: {
+      className: "btn btn-square",
+    },
+    norender: false,
+    submitText: "Submit",
+  },
+  "ui:layoutGrid": {
+    "ui:col": {
+      spacing: 2,
+      children: ["query"],
+    },
+  },
+};
+
 export function SearchInput({ onSearch }: SearchInputProps) {
   return (
     <Form
       schema={schema}
+      uiSchema={uiSchema}
       validator={validator}
       onSubmit={async ({ formData }) => {
         onSearch!(formData.query);

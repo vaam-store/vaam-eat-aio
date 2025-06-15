@@ -3,14 +3,18 @@
 import { useRedirects } from "@app/components/auth/utils";
 import { signIn } from "next-auth/webauthn";
 import { Button } from "@app/components/button";
-import { Section } from "../section/section";
-import type { RJSFSchema } from "@rjsf/utils";
+import type { RJSFSchema, UiSchema } from "@rjsf/utils";
 import validator from "@rjsf/validator-ajv8";
-import Form from "@rjsf/core";
-import type { FormProps } from "@rjsf/core";
+import { Form } from "@rjsf/daisyui";
+import { LogIn } from "react-feather";
+import { useRouter } from "next/navigation";
+import { useCallback } from "react";
+import type { IChangeEvent } from "@rjsf/core";
 
 const schema: RJSFSchema = {
-  title: "Login",
+  title: "Register",
+  description:
+    "This is the same as the simple form, but with an altered bootstrap grid. Set the theme to default, and try shrinking the browser window to see it in action.",
   type: "object",
   properties: {
     email: {
@@ -19,47 +23,71 @@ const schema: RJSFSchema = {
       format: "email",
     },
   },
-  required: ["username"],
+  required: ["email"],
 };
 
-const uiSchema: FormProps<any>["uiSchema"] = {
-  email: {
-    "ui:widget": "text",
-    "ui:options": {
-      classNames: "input input-bordered input-primary w-full",
-      placeholder: "e.g. rustacean_42",
+const uiSchema: UiSchema = {
+  "ui:field": "LayoutGridField",
+  "ui:classNames": "mb-4",
+  "ui:submitButtonOptions": {
+    props: {
+      className: "btn-block btn-lg",
     },
+    norender: false,
+    submitText: "Submit",
   },
-  slug: {
-    "ui:widget": "text",
-    "ui:options": {
-      classNames: "input input-bordered input-secondary w-full",
-      placeholder: "e.g. my-awesome-blog",
+  "ui:layoutGrid": {
+    "ui:col": {
+      spacing: 2,
+      children: [
+        {
+          name: "email",
+        },
+      ],
     },
   },
 };
 
 export function Login() {
   const { redirectUrl } = useRedirects();
+  const router = useRouter();
+
+  const register = useCallback(
+    async ({ formData }: IChangeEvent<{ email: string }>) => {
+      await signIn("passkey", {
+        action: "register",
+        email: formData?.email,
+        redirect: false,
+      });
+      router.push(redirectUrl);
+    },
+    [router, redirectUrl],
+  );
+
+  const login = useCallback(async () => {
+    await signIn("passkey", {
+      redirect: false,
+    });
+    router.push(redirectUrl);
+  }, [router, redirectUrl]);
 
   return (
-    <Section className="flex flex-col gap-4">
+    <div className="flex flex-col">
       <Form
+        liveValidate
+        showErrorList="bottom"
         schema={schema}
         uiSchema={uiSchema}
         validator={validator}
-        onSubmit={async ({ formData }) => {
-          await signIn("passkey", {
-            action: "register",
-            email: formData.email,
-            redirectTo: redirectUrl,
-          });
-        }}
+        onSubmit={register}
       />
 
-      <hr />
+      <div className="divider"> Or </div>
 
-      <Button onClick={() => signIn("passkey")}>Sign in with Passkey</Button>
-    </Section>
+      <Button size="lg" onClick={login}>
+        <span>Sign in</span>
+        <LogIn />
+      </Button>
+    </div>
   );
 }

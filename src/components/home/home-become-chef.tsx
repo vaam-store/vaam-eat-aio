@@ -22,7 +22,8 @@ export function HomeBecomeChef() {
             size="lg"
             as={Link}
             variant="fill"
-            href="/vendors/activate"
+            prefetch
+            href="/vendors/create"
             color="neutral"
           >
             Become vendor
