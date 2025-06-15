@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { SettingCard } from "@app/components/settings/setting-card";
@@ -10,7 +11,7 @@ import { api } from "@app/trpc/react";
 import { useRouter } from "next/navigation";
 import { Upload } from "react-feather";
 import { useUploadFile } from "@app/hooks/upload-file";
-import { showErrorToast } from "@app/services/error-handler";
+import { showErrorToast } from "@app/utils/error-handler";
 
 const validationSchema = z.object({
   name: z.string(),
@@ -26,12 +27,12 @@ export default function EditProfilePage() {
     upload: { isPending: isUploading },
   } = useUploadFile();
   const [avatarPreview, setAvatarPreview] = useState(
-    session?.user?.image || "/placeholder-avatar.jpg",
+    session?.user?.image ?? "/placeholder-avatar.jpg",
   );
 
   const initialValues: Record<"name" | "image", string> = {
-    name: session?.user?.name || "",
-    image: session?.user?.image || "",
+    name: session?.user?.name ?? "",
+    image: session?.user?.image ?? "",
   };
 
   const handleFileChange = async (
@@ -58,9 +59,14 @@ export default function EditProfilePage() {
         onSubmit={async (values, { setSubmitting }) => {
           console.log({ values });
           try {
+            if (!session?.user?.id) {
+              showErrorToast("User ID not found. Please try again.");
+              setSubmitting(false);
+              return;
+            }
             await updateUser.mutateAsync({
               where: {
-                id: session?.user?.id as string,
+                id: session.user.id,
               },
               data: {
                 name: values.name,
@@ -76,12 +82,23 @@ export default function EditProfilePage() {
           }
         }}
       >
-        {({ isSubmitting, setFieldValue, values, dirty, isValid }) => (
+        {({
+          isSubmitting,
+          setFieldValue,
+          values: _values,
+          dirty: _dirty,
+          isValid: _isValid,
+        }) => (
           <Form className="form-control flex flex-col gap-4 md:flex-row">
             <div className="flex items-center gap-4">
               <div className="avatar">
-                <div className="w-24 rounded-full">
-                  <img src={avatarPreview} alt="User Avatar" />
+                <div className="relative w-24 overflow-hidden rounded-full">
+                  <Image
+                    src={avatarPreview}
+                    alt="User Avatar"
+                    fill
+                    style={{ objectFit: "cover" }}
+                  />
                 </div>
               </div>
               <label htmlFor="avatar-upload" className="btn btn-outline">
@@ -91,11 +108,13 @@ export default function EditProfilePage() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={async (e) => {
-                    const uploadedUrl = await handleFileChange(e);
-                    if (uploadedUrl?.publicUrl) {
-                      setFieldValue("image", uploadedUrl?.publicUrl);
-                    }
+                  onChange={(e) => {
+                    void (async () => {
+                      const uploadedUrl = await handleFileChange(e);
+                      if (uploadedUrl?.publicUrl) {
+                        setFieldValue("image", uploadedUrl?.publicUrl);
+                      }
+                    })();
                   }}
                   disabled={isUploading}
                 />

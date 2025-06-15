@@ -13,7 +13,7 @@ const createTransporter = () => {
   });
 
   // Verify connection configuration
-  transporter.verify((error, success) => {
+  transporter.verify((error, _success) => {
     if (error) {
       console.error("Nodemailer transporter verification failed:", error);
     } else {

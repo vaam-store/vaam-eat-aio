@@ -8,7 +8,7 @@ import {
   ErrorCategory,
   ErrorSeverity,
   showErrorToast,
-} from "@app/services/error-handler";
+} from "@app/utils/error-handler";
 import { Home, RefreshCw } from "react-feather";
 import Link from "next/link";
 
@@ -42,7 +42,8 @@ export default function Error({
           Oops! Something went wrong.
         </Text>
         <Text size="lg" className="text-base-content/80">
-          We've encountered an unexpected issue. Our team has been notified.
+          We&apos;ve encountered an unexpected issue. Our team has been
+          notified.
         </Text>
         <Text size="md" className="text-base-content/70">
           You can try to refresh the page or go back to the homepage.

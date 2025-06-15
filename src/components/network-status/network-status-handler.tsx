@@ -7,10 +7,10 @@ import {
   ErrorCategory,
   ErrorSeverity,
   showErrorToast,
-} from "@app/services/error-handler";
+} from "@app/utils/error-handler";
 
 export function NetworkStatusHandler() {
-  const [isOnline, setIsOnline] = useState(true); // Assume online by default
+  const [, setIsOnline] = useState(true); // Assume online by default
 
   useEffect(() => {
     // Set initial status

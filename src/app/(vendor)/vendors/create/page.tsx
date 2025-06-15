@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { VendorCreationForm } from "@app/components/vendor/vendor-creation-form";
 import { api } from "@app/trpc/react";
-import { handleTrpcError } from "@app/services/error-handler";
+import { handleTrpcError } from "@app/utils/error-handler";
 import { type Prisma } from "@prisma/client";
 import { Section } from "@app/components/section/section";
 
@@ -22,14 +22,9 @@ export default function VendorCreatePage() {
   });
 
   const handleSubmit = async (values: Prisma.VendorCreateInput) => {
-    try {
-      await createVendorMutation.mutateAsync({
-        data: values as any,
-      });
-    } catch (error) {
-      // Error is already handled by the onError callback in useMutation
-      // but you can add additional logic here if needed.
-    }
+    await createVendorMutation.mutateAsync({
+      data: values as any,
+    });
   };
 
   if (status === "loading") {

@@ -229,11 +229,11 @@ export const handleQueryError = (
   error: Error,
   // These parameters are part of TanStack Query's onError signature but not used here.
   // Including them (commented out or as unused variables) helps with type compatibility.
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _variables?: unknown, // For mutations
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _context?: unknown, // For mutations
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _queryOrMutation?: unknown, // For queries or mutations
 ) => {
   const defaultMessage = "A data fetching error occurred.";

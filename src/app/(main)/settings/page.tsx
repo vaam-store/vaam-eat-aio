@@ -1,6 +1,5 @@
 import { AuthWrapper } from "@app/components/auth/auth-wrapper";
 import { ListBlock } from "@app/components/list-block";
-import { Section } from "@app/components/section";
 import { SettingNavigationItem } from "@app/components/settings/setting-navigation-item";
 import { SettingShare } from "@app/components/settings/setting-share";
 import { Suspense } from "react";

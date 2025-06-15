@@ -34,7 +34,7 @@ export default async function VendorPage({ params }: VendorPageProps) {
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="card-title text-2xl">
-            {vendor.name || "Unnamed Vendor"}
+            {vendor.name ?? "Unnamed Vendor"}
           </h2>
           <p>
             <strong>ID:</strong> {vendor.id}

@@ -189,7 +189,7 @@ const PhoneNumberArray: React.FC<PhoneNumberArrayProps> = ({
   const { values } = useFormikContext<VendorFormValues>();
   const phonePath = `contacts.createMany.data.${contactIndex}.contactInfo.phone`;
   const contactItem = getIn(values, `contacts.createMany.data.${contactIndex}`);
-  const phones = getIn(contactItem, "contactInfo.phone") || [];
+  const phones = getIn(contactItem, "contactInfo.phone") ?? [];
 
   return (
     <div>
@@ -696,7 +696,7 @@ export function VendorCreationForm({
       enableReinitialize // Important if userId prop could change, though unlikely for this form
     >
       {({
-        values,
+        _values, // Not directly used here, but used by child components via context
         isSubmitting,
         // errors, // Not explicitly used, ErrorMessage component handles this
         // touched, // Not explicitly used, ErrorMessage component handles this
@@ -705,7 +705,7 @@ export function VendorCreationForm({
         handleSubmit, // Used for the Form's onSubmit
       }: FormikState<VendorFormValues> &
         FormikHandlers & {
-          values: VendorFormValues;
+          _values: VendorFormValues;
           isSubmitting: boolean;
         }) => (
         <Form onSubmit={handleSubmit} className="space-y-6">

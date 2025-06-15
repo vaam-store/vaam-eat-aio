@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "react-feather";
 
-export function ToggleTheme() {
+export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();
 
@@ -17,7 +17,7 @@ export function ToggleTheme() {
   }
 
   return (
-    <label className="toggle text-base-content">
+    <label htmlFor="vaam-theme-play" className="toggle text-base-content">
       <input
         onChange={(e) => {
           const newTheme = e.target.checked
@@ -29,6 +29,7 @@ export function ToggleTheme() {
         id="vaam-theme-play"
         type="checkbox"
         className="theme-controller"
+        aria-label="Toggle theme"
       />
 
       <Sun className="swap-off size-5" />

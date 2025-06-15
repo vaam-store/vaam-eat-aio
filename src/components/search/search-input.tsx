@@ -2,8 +2,8 @@
 
 import { useGeolocation } from "@app/hooks/use-geolocation";
 import { MapPin, Search } from "react-feather";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { handleGenericError } from "@app/services/error-handler";
+import { useEffect, useRef, useState } from "react";
+import { handleGenericError } from "@app/utils/error-handler";
 import { Button } from "../button";
 import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
 import { z } from "zod";
@@ -18,7 +18,7 @@ export type SearchLocationParams = {
 export interface SearchInputProps {
   checkLocationDelivery?: boolean;
   onSearch?: (data: SearchLocationParams) => void;
-  onClear?: () => void; // This was in the original props, but not used by RJSF version. Retaining for now.
+  _onClear?: () => void; // This was in the original props, but not used by RJSF version. Retaining for now.
 }
 
 const searchValidationSchema = z.object({
@@ -34,11 +34,7 @@ const initialValues: SearchLocationParams = {
 };
 
 // Custom Search Bar component to encapsulate the input and geolocation logic
-function FormikSearchBar({
-  onSearch,
-}: {
-  onSearch?: (data: SearchLocationParams) => void;
-}) {
+function FormikSearchBar() {
   const { values, setFieldValue, submitForm } =
     useFormikContext<SearchLocationParams>();
   const { latitude, longitude, getLocation, isLoading } = useGeolocation();
@@ -57,21 +53,6 @@ function FormikSearchBar({
       setFieldValue("longitude", longitude);
     }
   }, [latitude, longitude, setFieldValue]);
-
-  // Handle programmatic submission after geolocation
-  const handleGeolocationSearch = useCallback(() => {
-    if (latitude !== null && longitude !== null && !isLoading) {
-      // Ensure latest geo values are in formik state before submitting
-      const currentValues = {
-        // Construct with latest values
-        query: values.query, // or localQuery if preferred before formik update
-        latitude,
-        longitude,
-      };
-      onSearch?.(currentValues); // Directly call onSearch if needed
-      submitForm(); // Trigger Formik's submission
-    }
-  }, [latitude, longitude, isLoading, values.query, onSearch, submitForm]);
 
   useEffect(() => {
     // If we got new geo-coordinates and the location button was clicked (isLoading is false after true)
@@ -111,7 +92,11 @@ function FormikSearchBar({
 
   const handleGetLocation = async () => {
     try {
-      await getLocation();
+      // Explicitly handle the Promise
+      const locationPromise = getLocation();
+      if (locationPromise instanceof Promise) {
+        await locationPromise;
+      }
       // After getLocation, latitude/longitude will update, triggering the above useEffect
       // which then calls handleGeolocationSearch if conditions are met.
     } catch (error) {
@@ -126,7 +111,7 @@ function FormikSearchBar({
         shape="circle"
         variant="soft"
         aria-label="Use current location"
-        onClick={handleGetLocation}
+        onClick={() => void handleGetLocation()}
         loading={isLoading}
         className="flex-shrink-0"
       >
@@ -160,7 +145,7 @@ function FormikSearchBar({
   );
 }
 
-export function SearchInput({ onSearch, onClear }: SearchInputProps) {
+export function SearchInput({ onSearch, _onClear }: SearchInputProps) {
   const handleFormSubmit = (
     values: SearchLocationParams,
     { setSubmitting }: FormikHelpers<SearchLocationParams>,
@@ -178,9 +163,7 @@ export function SearchInput({ onSearch, onClear }: SearchInputProps) {
     >
       {() => (
         <Form className="w-full">
-          <FormikSearchBar onSearch={onSearch} />
-          {/* Error messages can be added here if needed for query/lat/lng at the form level */}
-          {/* <ErrorMessage name="query" component="div" className="text-error text-xs mt-1" /> */}
+          <FormikSearchBar />
         </Form>
       )}
     </Formik>

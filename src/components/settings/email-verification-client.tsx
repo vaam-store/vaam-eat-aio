@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@app/trpc/react";
-import { Section } from "@app/components/section";
+
 import { SettingCard } from "@app/components/settings/setting-card";
 import { AuthWrapper } from "@app/components/auth/auth-wrapper";
 
@@ -89,7 +89,7 @@ export function EmailVerificationClient({
         ) : verificationStatus === "error" ? (
           <p className="text-error">
             Email verification failed:{" "}
-            {errorMessage || "An unknown error occurred."}
+            {errorMessage ?? "An unknown error occurred."}
           </p>
         ) : (
           <p>

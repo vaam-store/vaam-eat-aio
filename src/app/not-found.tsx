@@ -20,8 +20,8 @@ export default function NotFound() {
           Page Not Found
         </Text>
         <Text size="lg" className="text-base-content/80 max-w-md">
-          Sorry, we couldn't find the page you're looking for. It might have
-          been moved, deleted, or maybe you just mistyped the URL.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for. It
+          might have been moved, deleted, or maybe you just mistyped the URL.
         </Text>
 
         {/* Optional: Add a search input or links to popular sections */}
