@@ -10,6 +10,7 @@ import { TRPCReactProvider } from "@app/trpc/react";
 import { HydrateClient } from "@app/trpc/server";
 import { ThemeProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
+import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
           <HydrateClient>
             <ThemeProvider themes={mainThemes} storageKey={themeDataKey}>
               <SessionProvider>
+                <Toaster position="bottom-right" reverseOrder={false} />
                 <div id="app">{children}</div>
               </SessionProvider>
             </ThemeProvider>
