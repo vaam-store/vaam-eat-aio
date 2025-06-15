@@ -62,7 +62,7 @@ export const userRouter = createTRPCRouter({
     });
 
     // Construct the verification link
-    const verificationLink = `${env.NEXT_PUBLIC_EMGR_APP_URL}/settings/verify-email?token=${token}`;
+    const verificationLink = `${env.NEXT_PUBLIC_APP_URL}/settings/verify-email?token=${token}`;
 
     // Send the email
     await sendEmail(
@@ -116,4 +116,14 @@ export const userRouter = createTRPCRouter({
 
       return { success: true, message: "Email verified successfully." };
     }),
+
+  getVerificationStatus: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const user = await ctx.db.user.findUnique({
+      where: { id: userId },
+      select: { emailVerified: true },
+    });
+
+    return { isVerified: !!user?.emailVerified };
+  }),
 });

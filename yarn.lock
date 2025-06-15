@@ -5606,15 +5606,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.515.0":
-  version: 0.515.0
-  resolution: "lucide-react@npm:0.515.0"
-  peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/00485e09ab3d0bbb34797b1f368c269e8708522b6e2f46fd84dd5bd99741546487be9a65a260f274e8049b81cc37687566e26132f5752352c8d9bc8e5d0b3dea
-  languageName: node
-  linkType: hard
-
 "magic-string@npm:^0.30.17":
   version: 0.30.17
   resolution: "magic-string@npm:0.30.17"
@@ -6579,6 +6570,13 @@ __metadata:
   bin:
     node-gyp: bin/node-gyp.js
   checksum: 10c0/bd8d8c76b06be761239b0c8680f655f6a6e90b48e44d43415b11c16f7e8c15be346fba0cbf71588c7cdfb52c419d928a7d3db353afc1d952d19756237d8f10b9
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "nodemailer@npm:7.0.3"
+  checksum: 10c0/835492262328471b94a080cea43ea20f4232e19a915400cd71c7f4f4ab93a7d361775154eebe30a8fc40379eecf11a0bbc73e6cf4bbee9dccb6dd1cf7a1dc792
   languageName: node
   linkType: hard
 
@@ -8874,12 +8872,12 @@ __metadata:
     gray-matter: "npm:^4.0.3"
     localforage: "npm:^1.10.0"
     lodash: "npm:^4.17.21"
-    lucide-react: "npm:^0.515.0"
     minio: "npm:^8.0.5"
     next: "npm:^15.2.3"
     next-auth: "npm:5.0.0-beta.28"
     next-compose-plugins: "npm:^2.2.1"
     next-themes: "npm:^0.4.6"
+    nodemailer: "npm:^7.0.3"
     postcss: "npm:^8.5.3"
     prettier: "npm:^3.5.3"
     prettier-plugin-tailwindcss: "npm:^0.6.11"

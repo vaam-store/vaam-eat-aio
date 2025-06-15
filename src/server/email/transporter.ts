@@ -31,4 +31,5 @@ const globalForTransporter = globalThis as unknown as {
 export const emailTransporter =
   globalForTransporter.transporter ?? createTransporter();
 
-if (env.NODE_ENV !== "production") globalForTransporter.transporter = emailTransporter;
+if (env.NODE_ENV !== "production")
+  globalForTransporter.transporter = emailTransporter;
