@@ -1,4 +1,4 @@
-import { AppName } from "@app/components/app/name";
+import { AppName } from "@app/components/app/app-name";
 import { Button } from "@app/components/button";
 import { Section } from "@app/components/section/section";
 import Link from "next/link";

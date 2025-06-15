@@ -1,7 +1,7 @@
 "use client";
 
 import { Share2 } from "react-feather";
-import { showErrorToast } from "@app/services/error-handler";
+import { showErrorToast } from "@app/utils/error-handler";
 import { ListItem } from "../list-item/list-item";
 
 export function SettingShare() {
@@ -13,7 +13,6 @@ export function SettingShare() {
           text: "Check out Vaam Eat AIO for amazing food!",
           url: window.location.href,
         });
-        console.log("Content shared successfully");
       } catch (error) {
         showErrorToast(error, "Could not share");
       }

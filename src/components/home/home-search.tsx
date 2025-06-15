@@ -24,7 +24,6 @@ export function HomeSearch() {
   );
 
   const searchByLocation = (data: SearchLocationParams) => {
-    console.log({ data });
     const p = btoa(
       JSON.stringify({ latitude: data.latitude, longitude: data.longitude }),
     );

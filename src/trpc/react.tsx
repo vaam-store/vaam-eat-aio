@@ -9,7 +9,7 @@ import { useState } from "react";
 import SuperJSON from "superjson";
 
 import { type AppRouter } from "@app/server/api/root";
-import { showErrorToast } from "@app/services/error-handler";
+import { showErrorToast } from "@app/utils/error-handler";
 import { createQueryClient } from "./query-client";
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;

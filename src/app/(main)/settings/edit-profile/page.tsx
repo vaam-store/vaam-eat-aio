@@ -57,7 +57,6 @@ export default function EditProfilePage() {
         initialValues={initialValues}
         validationSchema={toFormikValidationSchema(validationSchema)}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log({ values });
           try {
             if (!session?.user?.id) {
               showErrorToast("User ID not found. Please try again.");

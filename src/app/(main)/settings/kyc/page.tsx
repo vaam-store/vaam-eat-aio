@@ -6,7 +6,7 @@ import { Check, Mail } from "react-feather";
 import toast from "react-hot-toast";
 import { SettingCard } from "@app/components/settings/setting-card";
 import { api } from "@app/trpc/react";
-import { showErrorToast } from "@app/services/error-handler";
+import { showErrorToast } from "@app/utils/error-handler";
 
 export default function Page() {
   const { data: session } = useSession();

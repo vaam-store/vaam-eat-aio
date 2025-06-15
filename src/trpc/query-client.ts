@@ -5,7 +5,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import SuperJSON from "superjson";
-import { handleQueryError } from "@app/services/error-handler";
+import { handleQueryError } from "@app/utils/error-handler";
 
 export const createQueryClient = () =>
   new QueryClient({
