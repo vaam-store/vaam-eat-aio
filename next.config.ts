@@ -108,7 +108,7 @@ const nextConfig: NextConfig = {
     ],
   },
   output: "standalone",
-  transpilePackages: ["react-daisyui"],
+  transpilePackages: ["@simplewebauthn/browser"],
 };
 
 export default withPlugins(

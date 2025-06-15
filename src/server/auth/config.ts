@@ -1,14 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import KeycloakProvider from "next-auth/providers/keycloak";
+import PassKeyProvider from "next-auth/providers/passkey";
 
 import { db } from "@app/server/db";
 import type { Prisma } from "@prisma/client";
 
 type PrismaUser = Prisma.UserGetPayload<{
   include: {
-    vendorMembership: true,
-  }
+    vendorMembership: true;
+  };
 }>;
 
 /**
@@ -35,11 +35,16 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-  providers: [KeycloakProvider],
+  providers: [
+    PassKeyProvider({
+      enableConditionalUI: false,
+    }),
+  ],
   adapter: PrismaAdapter(db),
   pages: {
     signIn: "/auth",
     signOut: "/auth/logout",
+    error: "/auth",
   },
   callbacks: {
     session: async ({ session, user }) => ({
@@ -51,9 +56,7 @@ export const authConfig = {
     }),
   },
   trustHost: true,
-  jwt: {
-    // The maximum age of the NextAuth.js issued JWT in seconds.
-    // Defaults to `session.maxAge`.
-    maxAge: 60 * 60 * 24 * 30 * 6,
+  experimental: {
+    enableWebAuthn: true,
   },
 } satisfies NextAuthConfig;

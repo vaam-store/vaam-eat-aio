@@ -61,8 +61,7 @@ model Session {
 model User {
     id                            String                  @id @default(cuid())
     name                          String?
-    username                      String?                 @unique
-    email                         String?                 @unique
+    email                         String                  @unique
     emailVerified                 DateTime?
     image                         String?
     accounts                      Account[]
@@ -71,6 +70,7 @@ model User {
     vendorMembership              VendorMembership[]
     carts                         Cart[]
     checkoutSessions              CheckoutSession[]
+    authenticator                 Authenticator[] @omit
 
     order                         Order[]                 @relation("UserOrder")
     createdByOrder                Order[]                 @relation("OrderCreatedBy") @omit
@@ -101,6 +101,20 @@ model User {
     @@allow('create,read', true)
     // only the user can update or delete their own profile
     @@allow('update,delete', auth().id == this.id)
+}
+
+model Authenticator {
+  id                   String  @id @default(cuid())
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Reusable type for contact information

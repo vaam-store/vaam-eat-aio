@@ -3,12 +3,12 @@ services:
     image: quay.io/keycloak/keycloak:26.1.2
     restart: unless-stopped
     ports:
-      - '9100:9100'
+      - "9100:9100"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: password
       KC_HTTP_PORT: 9100
-      KC_LOG_CONSOLE_COLOR: 'true'
+      KC_LOG_CONSOLE_COLOR: "true"
     entrypoint: /bin/sh
     command:
       - -c
@@ -45,7 +45,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 500M
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-vaam-eat}
@@ -59,18 +59,18 @@ services:
   tracking:
     image: jaegertracing/all-in-one:latest
     ports:
-      - '4318:4318' # OpenTelemetry receiver
-      - '14268:14268' # Jaeger receiver
-      - '16686:16686' # Jaeger UI
+      - "4318:4318" # OpenTelemetry receiver
+      - "14268:14268" # Jaeger receiver
+      - "16686:16686" # Jaeger UI
     environment:
-      COLLECTOR_OTLP_ENABLED: 'true'
+      COLLECTOR_OTLP_ENABLED: "true"
 
   redis:
     image: redis
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 50M
     volumes:
       - redis:/data
@@ -82,7 +82,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.05'
+          cpus: "0.05"
           memory: 50M
     ports:
       - ${ADMINER_PORT:-18080}:8080
@@ -98,7 +98,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 500M
     volumes:
       - minio:/bitnami/minio/data
@@ -119,21 +119,20 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 250M
+          cpus: "1"
+          memory: 1G
     ports:
       - "16000:16000"
     environment:
       #USE_CLUSTER: 1
       LOG_LEVEL: error
-      MEDUSA_WORKER_MODE: server
 
       REDIS_URL: redis://redis:6379
 
       DATABASE_URL: postgres://vaam-eat:vaam-eat-password@postgres:5432/vaam-eat?ssl_mode=disable
 
 volumes:
-  db: { }
-  redis: { }
-  minio: { }
+  db: {}
+  redis: {}
+  minio: {}
   spi-theme: {}
