@@ -16,16 +16,9 @@ export function SearchHeader() {
     router.push(`/search?q=${encodeURIComponent(data.query)}&p=${p}`);
   };
 
-  const onSearch = (query: string) => {
-    router.push(`/search?q=${encodeURIComponent(query)}`);
-  };
-
   return (
     <>
-      <SearchInput
-        onSearch={onSearch}
-        onMapPin={(data) => searchByLocation(data)}
-      />
+      <SearchInput onSearch={(data) => searchByLocation(data)} />
     </>
   );
 }

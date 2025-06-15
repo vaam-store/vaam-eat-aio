@@ -8,7 +8,11 @@ export function Logout() {
   const { redirectUrl } = useRedirects();
   return (
     <>
-      <Button onClick={() => signOut({ redirectTo: redirectUrl })}>
+      <Button
+        block
+        color="error"
+        onClick={() => signOut({ redirectTo: redirectUrl })}
+      >
         Sign out
       </Button>
     </>

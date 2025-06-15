@@ -4,7 +4,9 @@ type OrderDetailPageProps = {
   }>;
 };
 
-export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
+export default async function OrderDetailPage({
+  params,
+}: OrderDetailPageProps) {
   const { id } = await params;
   return (
     <div>

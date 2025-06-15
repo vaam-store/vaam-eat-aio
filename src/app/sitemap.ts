@@ -1,8 +1,6 @@
 import type { MetadataRoute } from "next";
 import { env } from "@app/env";
 
-const MAX_PER_SITEMAP = 50_000;
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {

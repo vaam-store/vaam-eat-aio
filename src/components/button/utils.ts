@@ -1,11 +1,14 @@
-import type { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from "./types";
+import type {
+  ButtonColor,
+  ButtonShape,
+  ButtonSize,
+  ButtonVariant,
+} from "./types";
 
 /**
  * Returns the appropriate button size class
  */
-export function getButtonSizeClasses(
-  size: ButtonSize | undefined,
-): string {
+export function getButtonSizeClasses(size: ButtonSize | undefined): string {
   if (!size) return "";
 
   switch (size) {

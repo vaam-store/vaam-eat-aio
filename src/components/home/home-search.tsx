@@ -24,6 +24,7 @@ export function HomeSearch() {
   );
 
   const searchByLocation = (data: SearchLocationParams) => {
+    console.log({ data });
     const p = btoa(
       JSON.stringify({ latitude: data.latitude, longitude: data.longitude }),
     );
@@ -31,15 +32,9 @@ export function HomeSearch() {
     router.push(`/search?${queries}`);
   };
 
-  const onSearch = (query: string) => {
-    const queries = createQueryString(["q", query]);
-    router.push(`/search?${queries}`);
-  };
-
   return (
     <SearchInput
-      onSearch={onSearch}
-      onMapPin={(data) => searchByLocation(data)}
+      onSearch={(data) => searchByLocation(data)}
       checkLocationDelivery
     />
   );

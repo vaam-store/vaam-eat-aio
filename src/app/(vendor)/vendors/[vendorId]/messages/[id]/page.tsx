@@ -4,7 +4,9 @@ type ConversationPageProps = {
   }>;
 };
 
-export default async function ConversationPage({ params }: ConversationPageProps) {
+export default async function ConversationPage({
+  params,
+}: ConversationPageProps) {
   const { id } = await params;
   return (
     <div>

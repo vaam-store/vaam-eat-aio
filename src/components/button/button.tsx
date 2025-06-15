@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType } from "react";
+import type { ComponentPropsWithoutRef, ElementType, RefObject } from "react";
 import { X } from "react-feather";
 import { twMerge } from "tailwind-merge";
 import type {
@@ -23,13 +23,16 @@ interface BaseButtonOwnProps {
   color?: ButtonColor;
   variant?: ButtonVariant;
   block?: boolean;
+  join?: boolean;
   disabled?: boolean;
 }
 
-type BaseButtonProps<As extends ElementType = "button"> = BaseButtonOwnProps &
-  ComponentPropsWithoutRef<As> & {
-    as?: As;
-  };
+export type BaseButtonProps<As extends ElementType = "button"> =
+  BaseButtonOwnProps &
+    ComponentPropsWithoutRef<As> & {
+      as?: As;
+      ref?: RefObject<As>;
+    };
 
 export function Button<As extends ElementType = "button">({
   className,
@@ -43,6 +46,7 @@ export function Button<As extends ElementType = "button">({
   variant = "fill",
   circle = false,
   block = false,
+  join = false,
   ...props
 }: BaseButtonProps<As>) {
   const Component = as ?? "button";
@@ -67,6 +71,7 @@ export function Button<As extends ElementType = "button">({
         isDisabled && "btn-disabled",
         circle && "btn-circle",
         block && "w-full",
+        join && "join-item",
         className,
       )}
       // Apply native disabled attribute only if it's a button

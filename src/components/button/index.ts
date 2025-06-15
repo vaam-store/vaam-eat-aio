@@ -3,7 +3,7 @@
  */
 
 // Export components
-export { Button } from "./button";
+export { Button, type BaseButtonProps } from "./button";
 
 // Export types
 export type { ButtonSize, ButtonColor, ButtonVariant } from "./types";

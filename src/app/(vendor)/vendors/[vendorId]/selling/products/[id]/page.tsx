@@ -1,10 +1,12 @@
 type EditProductPageProps = {
   params: Promise<{
     id: string;
-  }>
+  }>;
 };
 
-export default async function EditProductPage({ params }: EditProductPageProps) {
+export default async function EditProductPage({
+  params,
+}: EditProductPageProps) {
   return (
     <div>
       <h1>Edit Product: {(await params).id}</h1>
