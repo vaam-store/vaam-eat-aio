@@ -1,5 +1,68 @@
 "use client";
 
-export default function CreateVendor() {
-  return <>Miaou</>;
+import React from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { VendorCreationForm } from "@app/components/vendor/vendor-creation-form";
+import { api } from "@app/trpc/react";
+import { type Prisma } from "@prisma/client";
+import { Section } from "@app/components/section/section";
+
+export default function VendorCreatePage() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const createVendorMutation = api.zen.vendor.create.useMutation({
+    onSuccess: (data) => {
+      router.push(`/vendor/${data?.id}`);
+    },
+    onError: (error) => {
+      // Explicitly type 'error'
+      console.error("Failed to create vendor:", error.message); // Log error.message
+      // Here you could add user-facing error messages, e.g., using a toast notification
+    },
+  });
+
+  const handleSubmit = async (values: Prisma.VendorCreateInput) => {
+    try {
+      await createVendorMutation.mutateAsync({
+        data: values as any,
+      });
+    } catch (error) {
+      // Error is already handled by the onError callback in useMutation
+      // but you can add additional logic here if needed.
+    }
+  };
+
+  if (status === "loading") {
+    return (
+      <Section>
+        <div className="flex h-64 items-center justify-center">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      </Section>
+    );
+  }
+
+  if (status === "unauthenticated" || !session?.user?.id) {
+    router.push("/auth"); // Or a more appropriate unauthenticated page/modal
+    return (
+      <Section>
+        <p>Redirecting to login...</p>
+      </Section>
+    );
+  }
+
+  const userId = session.user.id;
+
+  return (
+    <Section>
+      <h1 className="mb-4 text-2xl font-bold">Create New Vendor</h1>
+      <VendorCreationForm onSubmit={handleSubmit} userId={userId} />
+      {createVendorMutation.isError && (
+        <p className="text-error mt-2">
+          Error creating vendor: {createVendorMutation.error?.message}
+        </p>
+      )}
+    </Section>
+  );
 }

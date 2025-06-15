@@ -1,92 +1,113 @@
 "use client";
 
 import { useRedirects } from "@app/components/auth/utils";
-import { signIn } from "next-auth/webauthn";
+import { signIn } from "next-auth/webauthn"; // Assuming this signIn is correct, not from 'next-auth/react' for webauthn
 import { Button } from "@app/components/button";
-import type { RJSFSchema, UiSchema } from "@rjsf/utils";
-import validator from "@rjsf/validator-ajv8";
-import { Form } from "@rjsf/daisyui";
 import { LogIn } from "react-feather";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import type { IChangeEvent } from "@rjsf/core";
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
+import { z } from "zod";
 
-const schema: RJSFSchema = {
-  title: "Register",
-  description:
-    "This is the same as the simple form, but with an altered bootstrap grid. Set the theme to default, and try shrinking the browser window to see it in action.",
-  type: "object",
-  properties: {
-    email: {
-      type: "string",
-      title: "Email",
-      format: "email",
-    },
-  },
-  required: ["email"],
-};
+const loginValidationSchema = z.object({
+  email: z.string().email("Invalid email address").min(1, "Email is required"),
+});
 
-const uiSchema: UiSchema = {
-  "ui:field": "LayoutGridField",
-  "ui:classNames": "mb-4",
-  "ui:submitButtonOptions": {
-    props: {
-      className: "btn-block btn-lg",
-    },
-    norender: false,
-    submitText: "Submit",
-  },
-  "ui:layoutGrid": {
-    "ui:col": {
-      spacing: 2,
-      children: [
-        {
-          name: "email",
-        },
-      ],
-    },
-  },
+type LoginFormValues = z.infer<typeof loginValidationSchema>;
+
+const initialValues: LoginFormValues = {
+  email: "",
 };
 
 export function Login() {
   const { redirectUrl } = useRedirects();
   const router = useRouter();
 
-  const register = useCallback(
-    async ({ formData }: IChangeEvent<{ email: string }>) => {
-      await signIn("passkey", {
-        action: "register",
-        email: formData?.email,
-        redirect: false,
-      });
-      router.push(redirectUrl);
+  const handleRegister = useCallback(
+    async (
+      values: LoginFormValues,
+      { setSubmitting }: FormikHelpers<LoginFormValues>,
+    ) => {
+      try {
+        await signIn("passkey", {
+          action: "register",
+          email: values.email,
+          redirect: false,
+        });
+        router.push(redirectUrl);
+      } catch (error) {
+        console.error("Registration failed:", error);
+        // Optionally, set form errors here using setErrors from FormikHelpers
+      } finally {
+        setSubmitting(false);
+      }
     },
     [router, redirectUrl],
   );
 
-  const login = useCallback(async () => {
-    await signIn("passkey", {
-      redirect: false,
-    });
-    router.push(redirectUrl);
+  const handleLogin = useCallback(async () => {
+    try {
+      await signIn("passkey", {
+        redirect: false,
+      });
+      router.push(redirectUrl);
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   }, [router, redirectUrl]);
 
   return (
     <div className="flex flex-col">
-      <Form
-        liveValidate
-        showErrorList="bottom"
-        schema={schema}
-        uiSchema={uiSchema}
-        validator={validator}
-        onSubmit={register}
-      />
+      <Formik
+        initialValues={initialValues}
+        validationSchema={loginValidationSchema}
+        onSubmit={handleRegister}
+      >
+        {({ isSubmitting }) => (
+          <Form className="mb-4 space-y-4">
+            <div>
+              <label htmlFor="email" className="label sr-only">
+                {" "}
+                {/* Assuming label is visually hidden but present for a11y */}
+                <span className="label-text">Email</span>
+              </label>
+              <Field
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email to register with passkey"
+                className="input input-bordered input-lg w-full"
+                autoFocus
+              />
+              <ErrorMessage
+                name="email"
+                component="div"
+                className="text-error mt-1 text-xs"
+              />
+            </div>
+            <Button
+              type="submit"
+              className="btn-block btn-lg"
+              disabled={isSubmitting}
+              loading={isSubmitting} // Changed isLoading to loading
+            >
+              {isSubmitting ? (
+                <span className="loading loading-spinner" />
+              ) : (
+                "Register with Email & Passkey"
+              )}
+            </Button>
+          </Form>
+        )}
+      </Formik>
 
       <div className="divider"> Or </div>
 
-      <Button size="lg" onClick={login}>
-        <span>Sign in</span>
-        <LogIn />
+      <Button size="lg" onClick={handleLogin} className="btn-block">
+        {" "}
+        {/* Added btn-block for consistency */}
+        <span>Sign in with Passkey</span>
+        <LogIn className="ml-2" />
       </Button>
     </div>
   );

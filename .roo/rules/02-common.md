@@ -1,6 +1,6 @@
 # General rules
 
-- This project is using `@vaa` as prefix
+- This project is using `@app` as prefix
 - always use function components
 - never export default components
 - medusaj is defined using a hoo. Check the medusa and the hooks folder.
