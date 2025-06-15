@@ -3,7 +3,7 @@
 import { Button } from "@app/components/button";
 import { Section } from "@app/components/section";
 import { Text } from "@app/components/text";
-import { Home, ArrowLeft, Search } from "react-feather";
+import { ArrowLeft, Home } from "react-feather";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // Corrected import
 
@@ -19,7 +19,7 @@ export default function NotFound() {
         <Text as="h2" size="4xl" bold>
           Page Not Found
         </Text>
-        <Text size="lg" className="max-w-md text-base-content/80">
+        <Text size="lg" className="text-base-content/80 max-w-md">
           Sorry, we couldn't find the page you're looking for. It might have
           been moved, deleted, or maybe you just mistyped the URL.
         </Text>
@@ -30,11 +30,7 @@ export default function NotFound() {
         </div> */}
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Button
-            onClick={() => router.back()}
-            type="button"
-            variant="outline"
-          >
+          <Button onClick={() => router.back()} type="button" variant="outline">
             <ArrowLeft size={18} className="mr-2" />
             <span>Go Back</span>
           </Button>
@@ -43,7 +39,7 @@ export default function NotFound() {
             <span>Go to Homepage</span>
           </Button>
         </div>
-        <Text size="sm" className="mt-8 text-base-content/60">
+        <Text size="sm" className="text-base-content/60 mt-8">
           If you believe this is an error, please contact support.
         </Text>
       </div>

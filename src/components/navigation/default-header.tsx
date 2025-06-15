@@ -21,6 +21,8 @@ export function DefaultHeader() {
 
         <div className="navbar-end">
           <div className="flex flex-row items-center gap-4 align-middle">
+            <ToggleTheme />
+
             <Button
               as={Link}
               href="/orders"
@@ -39,7 +41,6 @@ export function DefaultHeader() {
             >
               <Settings />
             </Button>
-            <ToggleTheme />
             <Button as={Link} href="/cart" variant="soft" shape="circle">
               <ShoppingCart />
             </Button>

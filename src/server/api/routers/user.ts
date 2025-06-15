@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "@app/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@app/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
   updateProfile: protectedProcedure
@@ -15,7 +19,9 @@ export const userRouter = createTRPCRouter({
 
       // In a real application, you would update the user in your database here.
       // For now, we'll just log the update.
-      console.log(`Updating user ${userId} profile: name=${name}, image=${image}`);
+      console.log(
+        `Updating user ${userId} profile: name=${name}, image=${image}`,
+      );
 
       // Simulate database update
       // await ctx.db.user.update({
@@ -26,16 +32,17 @@ export const userRouter = createTRPCRouter({
       return { success: true };
     }),
 
-  sendVerificationEmail: publicProcedure
-    .mutation(async ({ ctx }) => {
-      // In a real application, you would send a verification email here.
-      // This would typically involve generating a token and sending an email with a link.
-      // For now, we'll just log the action.
-      console.log(`Sending verification email to user ${ctx.session?.user?.email}`);
+  sendVerificationEmail: publicProcedure.mutation(async ({ ctx }) => {
+    // In a real application, you would send a verification email here.
+    // This would typically involve generating a token and sending an email with a link.
+    // For now, we'll just log the action.
+    console.log(
+      `Sending verification email to user ${ctx.session?.user?.email}`,
+    );
 
-      // Simulate sending email
-      // await sendEmail(ctx.session.user.email, "Verify your email", "Click this link to verify...");
+    // Simulate sending email
+    // await sendEmail(ctx.session.user.email, "Verify your email", "Click this link to verify...");
 
-      return { success: true };
-    }),
+    return { success: true };
+  }),
 });

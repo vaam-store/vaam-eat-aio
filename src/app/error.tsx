@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import { Button } from "@app/components/button";
 import { Section } from "@app/components/section";
 import { Text } from "@app/components/text";
-import { showErrorToast, ErrorCategory, ErrorSeverity } from "@app/services/error-handler";
+import {
+  ErrorCategory,
+  ErrorSeverity,
+  showErrorToast,
+} from "@app/services/error-handler";
 import { Home, RefreshCw } from "react-feather";
 import Link from "next/link";
 

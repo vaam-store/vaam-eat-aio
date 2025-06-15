@@ -7,7 +7,11 @@ import { LogIn } from "react-feather";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
-import { ErrorCategory, ErrorSeverity, handleGenericError } from "@app/services/error-handler";
+import {
+  ErrorCategory,
+  ErrorSeverity,
+  handleGenericError,
+} from "@app/services/error-handler";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -48,7 +52,9 @@ export function Login() {
         );
         // Optionally, set form errors here if the error is a validation error from the server
         if (error instanceof Error && error.message.includes("validation")) {
-          setErrors({ email: "This email might already be registered or is invalid." });
+          setErrors({
+            email: "This email might already be registered or is invalid.",
+          });
         }
       } finally {
         setSubmitting(false);

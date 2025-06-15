@@ -3,14 +3,21 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Wifi, WifiOff } from "react-feather";
-import { ErrorCategory, ErrorSeverity, showErrorToast } from "@app/services/error-handler";
+import {
+  ErrorCategory,
+  ErrorSeverity,
+  showErrorToast,
+} from "@app/services/error-handler";
 
 export function NetworkStatusHandler() {
   const [isOnline, setIsOnline] = useState(true); // Assume online by default
 
   useEffect(() => {
     // Set initial status
-    if (typeof window !== "undefined" && typeof window.navigator !== "undefined") {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.navigator !== "undefined"
+    ) {
       setIsOnline(window.navigator.onLine);
     }
 
@@ -29,7 +36,9 @@ export function NetworkStatusHandler() {
       setIsOnline(false);
       // Using showErrorToast for a more persistent and styled notification
       showErrorToast(
-        new Error("You are currently offline. Please check your internet connection."),
+        new Error(
+          "You are currently offline. Please check your internet connection.",
+        ),
         "You are currently offline. Some features may not be available.",
         {
           severity: ErrorSeverity.Warning, // Or Critical, depending on app needs
@@ -48,7 +57,7 @@ export function NetworkStatusHandler() {
           icon: <WifiOff size={20} className="text-error" />,
           duration: Infinity, // Keep it until back online or manually dismissed
           id: "network-status-offline",
-        }
+        },
       );
     };
 

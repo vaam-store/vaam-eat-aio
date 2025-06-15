@@ -75,9 +75,16 @@ function categorizeError(error: unknown): CategorizedError {
 
   // Basic TRPC error check (can be expanded)
   if (typeof error === "object" && error !== null) {
-    if ("name" in error && (error as { name: string }).name === "TRPCClientError") {
+    if (
+      "name" in error &&
+      (error as { name: string }).name === "TRPCClientError"
+    ) {
       category = ErrorCategory.Server; // Or more specific based on TRPC error codes
-      if ("data" in error && typeof (error as any).data === "object" && (error as any).data !== null) {
+      if (
+        "data" in error &&
+        typeof (error as any).data === "object" &&
+        (error as any).data !== null
+      ) {
         statusCode = (error as any).data.httpStatus as number;
         if (statusCode) {
           if (statusCode >= 500) category = ErrorCategory.Server;
@@ -85,19 +92,22 @@ function categorizeError(error: unknown): CategorizedError {
           else if (statusCode === 401) category = ErrorCategory.Authentication;
           else if (statusCode === 403) category = ErrorCategory.Authorization;
           else if (statusCode === 404) category = ErrorCategory.NotFound;
-          else if (statusCode === 408 || statusCode === 504) category = ErrorCategory.Timeout;
+          else if (statusCode === 408 || statusCode === 504)
+            category = ErrorCategory.Timeout;
         }
       }
     } else if (error instanceof TypeError) {
       category = ErrorCategory.Validation; // Often indicates programming errors or unexpected data
       severity = ErrorSeverity.Warning;
-    } else if (message.toLowerCase().includes("network error") || message.toLowerCase().includes("failed to fetch")) {
+    } else if (
+      message.toLowerCase().includes("network error") ||
+      message.toLowerCase().includes("failed to fetch")
+    ) {
       category = ErrorCategory.Network;
       severity = ErrorSeverity.Critical;
     }
     // Add more specific checks here, e.g., for validation libraries
   }
-
 
   return {
     originalError: error,
@@ -147,7 +157,7 @@ export const showErrorToast = (
   options?: {
     severity?: ErrorSeverity;
     category?: ErrorCategory;
-  }
+  },
 ) => {
   const now = Date.now();
   // Clean up old entries from recentErrors
@@ -170,7 +180,11 @@ export const showErrorToast = (
 
   // Deduplication check
   if (recentErrors.has(displayMessage)) {
-    console.warn("Duplicate error suppressed:", displayMessage, categorized.originalError);
+    console.warn(
+      "Duplicate error suppressed:",
+      displayMessage,
+      categorized.originalError,
+    );
     return; // Don't show the toast
   }
   recentErrors.set(displayMessage, now);
@@ -194,12 +208,16 @@ export const showErrorToast = (
       break;
   }
 
-  console.error(`Error Handled [${finalCategory} - ${finalSeverity}]:`, displayMessage, categorized.originalError);
+  console.error(
+    `Error Handled [${finalCategory} - ${finalSeverity}]:`,
+    displayMessage,
+    categorized.originalError,
+  );
 };
 
 export const handleTrpcError = (
   error: unknown,
-  defaultMessage = "A tRPC error occurred."
+  defaultMessage = "A tRPC error occurred.",
 ) => {
   // TRPC errors might already have good categorization potential within categorizeError
   // We can pass along a default severity if needed, or let categorizeError decide.
@@ -213,9 +231,9 @@ export const handleQueryError = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _variables?: unknown, // For mutations
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _context?: unknown,   // For mutations
+  _context?: unknown, // For mutations
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _queryOrMutation?: unknown // For queries or mutations
+  _queryOrMutation?: unknown, // For queries or mutations
 ) => {
   const defaultMessage = "A data fetching error occurred.";
   // TanStack Query errors often relate to network or server issues.
@@ -223,7 +241,10 @@ export const handleQueryError = (
   // We can default to Server if it's not clearly a network one.
   const categorized = categorizeError(error); // error is an Error instance
   showErrorToast(error, defaultMessage, {
-    category: categorized.category === ErrorCategory.Unknown ? ErrorCategory.Server : categorized.category,
+    category:
+      categorized.category === ErrorCategory.Unknown
+        ? ErrorCategory.Server
+        : categorized.category,
   });
 };
 
@@ -232,7 +253,7 @@ export const handleGenericError = (
   error: unknown,
   defaultMessage = "An unexpected error occurred.",
   severity: ErrorSeverity = ErrorSeverity.Error,
-  category: ErrorCategory = ErrorCategory.Unknown
+  category: ErrorCategory = ErrorCategory.Unknown,
 ) => {
   showErrorToast(error, defaultMessage, { severity, category });
 };
