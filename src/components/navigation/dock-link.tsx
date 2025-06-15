@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useMemo, type PropsWithChildren } from "react";
+import { type PropsWithChildren, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 
 type DockLinkProps = PropsWithChildren<{

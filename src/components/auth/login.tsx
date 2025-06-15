@@ -6,7 +6,7 @@ import { Button } from "@app/components/button";
 import { LogIn } from "react-feather";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
+import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
@@ -47,10 +47,10 @@ export function Login() {
   );
 
   const handleLogin = useCallback(async () => {
-      await signIn("passkey", {
-        redirect: false,
-      });
-      router.push(redirectUrl);
+    await signIn("passkey", {
+      redirect: false,
+    });
+    router.push(redirectUrl);
   }, [router, redirectUrl]);
 
   return (
@@ -98,7 +98,7 @@ export function Login() {
         )}
       </Formik>
 
-      <div className="divider"> Or </div>
+      <div className="divider"> Or</div>
 
       <Button size="lg" onClick={handleLogin} className="btn-block">
         {" "}

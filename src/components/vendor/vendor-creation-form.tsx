@@ -1,27 +1,25 @@
 "use client";
 
-import { useState } from "react"; // Added useState
+import React, { useState } from "react"; // Added useState
 import { type Prisma } from "@prisma/client";
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  FieldArray,
-  type FormikHelpers,
-  useFormikContext,
-  getIn,
-} from "formik";
 import type {
-  FormikValues,
   FieldArrayRenderProps,
   FormikHandlers,
   FormikState,
 } from "formik";
+import {
+  ErrorMessage,
+  Field,
+  FieldArray,
+  Form,
+  Formik,
+  type FormikHelpers,
+  getIn,
+  useFormikContext,
+} from "formik";
 import { z } from "zod";
 import { Button } from "@app/components/button";
 import { PlusCircle, XCircle } from "react-feather";
-import React from "react";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { Text } from "@app/components/text";
 
@@ -338,6 +336,7 @@ const ContactItem: React.FC<ContactItemProps> = ({ index, remove }) => {
 interface ContactSectionProps {
   userId: string;
 }
+
 const ContactSection: React.FC<ContactSectionProps> = ({ userId }) => {
   const { values, errors, touched } = useFormikContext<VendorFormValues>();
   return (

@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  type GeolocationState,
-  useGeolocation,
-} from "@app/hooks/use-geolocation";
-import { Search, MapPin } from "react-feather";
+import { useGeolocation } from "@app/hooks/use-geolocation";
+import { MapPin, Search } from "react-feather";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "../button";
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  useFormikContext,
-  type FormikHelpers,
-} from "formik";
+import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 

@@ -5,7 +5,7 @@ import {
   type SearchLocationParams,
 } from "@app/components/search/search-input";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback } from "react";
+import { useCallback } from "react";
 
 export function HomeSearch() {
   const router = useRouter();
@@ -33,10 +33,9 @@ export function HomeSearch() {
   };
 
   return (
-
-      <SearchInput
-        onSearch={(data) => searchByLocation(data)}
-        checkLocationDelivery
-      />
+    <SearchInput
+      onSearch={(data) => searchByLocation(data)}
+      checkLocationDelivery
+    />
   );
 }
