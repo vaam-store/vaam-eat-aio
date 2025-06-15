@@ -4,7 +4,7 @@ import { Section } from "@app/components/section/section";
 import { Text } from "@app/components/text/text";
 import { ToggleTheme } from "@app/components/theme-toggle";
 import Link from "next/link";
-import { ShoppingCart } from "react-feather";
+import { List, Settings, ShoppingCart } from "react-feather";
 import { LoginButton } from "@app/components/navigation/login-button";
 
 export function DefaultHeader() {
@@ -21,6 +21,24 @@ export function DefaultHeader() {
 
         <div className="navbar-end">
           <div className="flex flex-row items-center gap-4 align-middle">
+            <Button
+              as={Link}
+              href="/orders"
+              variant="soft"
+              shape="circle"
+              className="hidden md:flex"
+            >
+              <List />
+            </Button>
+            <Button
+              as={Link}
+              href="/settings"
+              variant="soft"
+              shape="circle"
+              className="hidden md:flex"
+            >
+              <Settings />
+            </Button>
             <ToggleTheme />
             <Button as={Link} href="/cart" variant="soft" shape="circle">
               <ShoppingCart />
