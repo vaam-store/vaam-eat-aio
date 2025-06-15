@@ -11,7 +11,7 @@ import {
   ErrorCategory,
   ErrorSeverity,
   handleGenericError,
-} from "@app/services/error-handler";
+} from "@app/utils/error-handler";
 import { z } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 

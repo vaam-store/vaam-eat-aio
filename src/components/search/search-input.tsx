@@ -18,7 +18,6 @@ export type SearchLocationParams = {
 export interface SearchInputProps {
   checkLocationDelivery?: boolean;
   onSearch?: (data: SearchLocationParams) => void;
-  _onClear?: () => void; // This was in the original props, but not used by RJSF version. Retaining for now.
 }
 
 const searchValidationSchema = z.object({
@@ -57,7 +56,6 @@ function FormikSearchBar() {
   useEffect(() => {
     // If we got new geo-coordinates and the location button was clicked (isLoading is false after true)
     // we might want to auto-submit or update the search.
-    // The RJSF version had a ref.current.click(), which is a bit imperative.
     // Here, we can call submitForm() or onSearch directly if needed.
     if (
       latitude !== null &&
@@ -67,7 +65,6 @@ function FormikSearchBar() {
     ) {
       // Check if formik values are updated
       // This effect might be tricky if it causes too many re-renders or submissions.
-      // The original RJSF logic clicked a hidden submit button.
       // A more controlled approach might be to have a separate "search with current location" button
       // or make the getLocation button also trigger a search.
       // For now, let's try to replicate the auto-submit idea carefully.

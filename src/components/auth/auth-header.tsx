@@ -1,5 +1,5 @@
 import { Text } from "@app/components/text";
-import { ToggleTheme } from "@app/components/theme-toggle";
+import { ThemeToggle } from "@app/components/theme-toggle";
 import Link from "next/link";
 
 const AuthHeader = () => {
@@ -8,7 +8,7 @@ const AuthHeader = () => {
       <Text as={Link} href="/" className="text-xl normal-case">
         VAAM EAT
       </Text>
-      <ToggleTheme />
+      <ThemeToggle />
     </div>
   );
 };

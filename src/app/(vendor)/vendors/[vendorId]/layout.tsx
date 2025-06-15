@@ -1,5 +1,5 @@
 import { Button } from "@app/components/button";
-import { ToggleTheme } from "@app/components/theme-toggle";
+import { ThemeToggle } from "@app/components/theme-toggle";
 import Link from "next/link";
 import type { PropsWithChildren } from "react";
 import {
@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
           <li className="menu-title">
             <div className="bg-base-200! flex flex-row items-center justify-between">
               <span>Dashboard</span>
-              <ToggleTheme />
+              <ThemeToggle />
             </div>
           </li>
           <li>

@@ -8,6 +8,7 @@ import {
 import { sendEmail } from "@app/server/email/send-email";
 import crypto from "crypto";
 import { env } from "@app/env";
+import { appRender } from "@app/server/email/app-render";
 
 export const userRouter = createTRPCRouter({
   updateProfile: protectedProcedure
@@ -57,13 +58,19 @@ export const userRouter = createTRPCRouter({
     // Construct the verification link
     const verificationLink = `${env.NEXT_PUBLIC_APP_URL}/settings/verify-email?token=${token}`;
 
+    // Render the email component to an HTML string
+    const emailHtml = await appRender({
+      type: "email-verification",
+      verificationLink,
+    });
+
     // Send the email
     await sendEmail(
       ctx.emailTransporter,
       env.EMAIL_FROM,
       userEmail,
       "Verify your email address",
-      `Click <a href="${verificationLink}">here</a> to verify your email address. This link will expire in 1 hour.`,
+      emailHtml,
     );
 
     return { success: true, message: "Verification email sent." };

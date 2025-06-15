@@ -1,8 +1,8 @@
-import { AppName } from "@app/components/app/name";
+import { AppName } from "@app/components/app/app-name";
 import { Button } from "@app/components/button";
 import { Section } from "@app/components/section/section";
 import { Text } from "@app/components/text/text";
-import { ToggleTheme } from "@app/components/theme-toggle";
+import { ThemeToggle } from "@app/components/theme-toggle";
 import Link from "next/link";
 import { List, Settings, ShoppingCart } from "react-feather";
 import { LoginButton } from "@app/components/navigation/login-button";
@@ -21,7 +21,7 @@ export function DefaultHeader() {
 
         <div className="navbar-end">
           <div className="flex flex-row items-center gap-4 align-middle">
-            <ToggleTheme />
+            <ThemeToggle />
 
             <Button
               as={Link}
