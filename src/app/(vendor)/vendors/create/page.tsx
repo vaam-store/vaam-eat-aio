@@ -1,20 +1,19 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { VendorCreationForm } from "@app/components/vendor/vendor-creation-form";
+import { VendorCreationForm } from "@app/components/vendor";
 import { api } from "@app/trpc/react";
 import { handleTrpcError } from "@app/utils/error-handler";
 import { type Prisma } from "@prisma/client";
-import { Section } from "@app/components/section/section";
+import { useSession } from "next-auth/react";
 
 export default function VendorCreatePage() {
-  const router = useRouter();
-  const { data: session, status } = useSession();
+  const { data } = useSession();
+
   const createVendorMutation = api.zen.vendor.create.useMutation({
     onSuccess: (data) => {
-      router.push(`/vendor/${data?.id}`);
+      // No router push here, as per instructions to remove redirect logic.
+      // The parent layout will handle navigation if needed.
     },
     onError: (error) => {
       handleTrpcError(error, "Failed to create vendor. Please try again.");
@@ -23,35 +22,17 @@ export default function VendorCreatePage() {
 
   const handleSubmit = async (values: Prisma.VendorCreateInput) => {
     await createVendorMutation.mutateAsync({
-      data: values as any,
+      data: { ...values, createdById: data?.user?.id } as any, // Ensure createdById is passed
     });
   };
-
-  if (status === "loading") {
-    return (
-      <Section>
-        <div className="flex h-64 items-center justify-center">
-          <span className="loading loading-spinner loading-lg"></span>
-        </div>
-      </Section>
-    );
-  }
-
-  if (status === "unauthenticated" || !session?.user?.id) {
-    router.push("/auth"); // Or a more appropriate unauthenticated page/modal
-    return (
-      <Section>
-        <p>Redirecting to login...</p>
-      </Section>
-    );
-  }
-
-  const userId = session.user.id;
 
   return (
     <>
       <h1 className="mb-4 text-2xl font-bold">Create New Vendor</h1>
-      <VendorCreationForm onSubmit={handleSubmit} userId={userId} />
+      <VendorCreationForm
+        onSubmit={handleSubmit}
+        userId={data?.user?.id as string}
+      />
       {createVendorMutation.isError && (
         <p className="text-error mt-2">
           Error creating vendor: {createVendorMutation.error?.message}

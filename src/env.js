@@ -44,6 +44,8 @@ export const env = createEnv({
     NEXT_PUBLIC_EMGR_CDN: z.string().url().optional(),
     NEXT_PUBLIC_EMGR_APP_URL: z.string().url().optional(),
     NEXT_PUBLIC_APP_URL: z.string().url(),
+
+    NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL: z.string().url(),
   },
 
   /**
@@ -75,6 +77,9 @@ export const env = createEnv({
     NEXT_PUBLIC_EMGR_CDN: process.env.NEXT_PUBLIC_EMGR_CDN,
     NEXT_PUBLIC_EMGR_APP_URL: process.env.NEXT_PUBLIC_EMGR_APP_URL,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+
+    NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL:
+      process.env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

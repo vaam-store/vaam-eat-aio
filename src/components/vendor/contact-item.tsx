@@ -1,0 +1,55 @@
+import React from "react";
+import { Field } from "formik";
+import { Button } from "@app/components/button";
+import { XCircle } from "react-feather";
+import { Text } from "@app/components/text";
+import { ContactInfoFields } from "@app/components/vendor/contact-info-fields";
+import { ErrorDisplay } from "@app/components/vendor/error-display";
+
+interface ContactItemProps {
+  index: number;
+  remove: (index: number) => void;
+}
+
+export function ContactItem({ index, remove }: ContactItemProps) {
+  const typePath = `contacts.createMany.data.${index}.type`;
+
+  return (
+    <div className="card card-border">
+      <div className="card-body">
+        <div className="flex items-center justify-between">
+          <Text bold>Contact #{index + 1}</Text>
+          <Button
+            type="button"
+            shape="circle"
+            variant="soft"
+            color="error"
+            size="sm"
+            onClick={() => remove(index)}
+            aria-label="Remove contact"
+          >
+            <XCircle size={18} />
+          </Button>
+        </div>
+        <div>
+          <label htmlFor={typePath} className="label">
+            <span className="label-text">Contact Type</span>
+          </label>
+          <Field
+            as="select"
+            id={typePath}
+            name={typePath}
+            className="select select-bordered w-full"
+          >
+            <option value="All">All</option>
+            <option value="Sales">Sales</option>
+            <option value="Support">Support</option>
+            <option value="Billing">Billing</option>
+          </Field>
+          <ErrorDisplay name={typePath} />
+        </div>
+        <ContactInfoFields contactIndex={index} />
+      </div>
+    </div>
+  );
+}

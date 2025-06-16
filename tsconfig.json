@@ -41,8 +41,7 @@
       ]
     },
     "types": [
-      "@serwist/next/typings",
-      "jest"
+      "@serwist/next/typings"
     ]
   },
   "include": [
@@ -51,8 +50,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts",
-    "**/*.test.{ts,tsx}"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -61,6 +59,7 @@
     ".next",
     "out",
     "public",
-    "public/sw.js"
+    "public/sw.js",
+    "**/*.test.{ts,tsx}"
   ]
 }

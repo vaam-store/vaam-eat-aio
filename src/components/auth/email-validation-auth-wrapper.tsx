@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { type PropsWithChildren, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { AuthWrapper } from "@app/components/auth/auth-wrapper";
 import { useRedirects } from "./utils";
 
 export function EmailValidationAuthWrapper({ children }: PropsWithChildren) {
@@ -20,7 +19,7 @@ export function EmailValidationAuthWrapper({ children }: PropsWithChildren) {
       );
       return;
     }
-  }, [status, session, router, currentPathname]);
+  }, [status, session, router, currentPathname, redirectUrl]);
 
   if (status !== "authenticated" || !session?.user.emailVerified) {
     return null;

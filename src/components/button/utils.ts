@@ -1,9 +1,4 @@
-import type {
-  ButtonColor,
-  ButtonShape,
-  ButtonSize,
-  ButtonVariant,
-} from "./types";
+import type { ButtonColor, ButtonShape, ButtonSize, ButtonVariant } from "./types";
 
 /**
  * Returns the appropriate button size class

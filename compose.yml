@@ -137,6 +137,37 @@ services:
       minio:
         condition: service_started
 
+  extract-pmtiles:
+    image: debian:stable-slim
+    volumes:
+      - pmtiles-data:/pmtiles-data
+      - ./.docker/minio/pmtiles-extract-and-download-in-docker.sh:/usr/local/bin/pmtiles-extract-and-download-in-docker.sh
+    command:
+      - /bin/bash
+      - -c
+      - |
+        set -e
+        apt-get update && apt-get install -y curl tar gzip unzip
+        bash /usr/local/bin/pmtiles-extract-and-download-in-docker.sh
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+
+  upload-pmtiles:
+    image: bitnami/minio:latest # Has mc client
+    volumes:
+      - pmtiles-data:/pmtiles-data # Mount the shared volume
+      - ./.docker/minio/pmtiles-upload.sh:/usr/local/bin/pmtiles-upload.sh # New script for upload
+    command:
+      - /bin/bash
+      - -c
+      - |-
+        set -e
+        bash /usr/local/bin/pmtiles-upload.sh
+    depends_on:
+      extract-pmtiles:
+        condition: service_completed_successfully
+
   api:
     build:
       dockerfile: Dockerfile
@@ -168,3 +199,4 @@ volumes:
   redis: {}
   minio: {}
   spi-theme: {}
+  pmtiles-data: {} # New volume for pmtiles data

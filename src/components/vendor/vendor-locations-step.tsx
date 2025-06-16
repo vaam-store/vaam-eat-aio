@@ -1,0 +1,76 @@
+import React from "react";
+import { FieldArray, getIn, useFormikContext } from "formik";
+import { Button } from "@app/components/button";
+import { PlusCircle } from "react-feather";
+import { Text } from "@app/components/text";
+import { LocationItem } from "@app/components/vendor/location-item";
+import { ErrorDisplay } from "@app/components/vendor/error-display";
+import { type VendorFormValues } from "@app/components/vendor/vendor-creation-form";
+
+interface VendorLocationsStepProps {
+  userId: string;
+}
+
+export function VendorLocationsStep({ userId }: VendorLocationsStepProps) {
+  const { values, errors, touched } = useFormikContext<VendorFormValues>();
+  return (
+    <div className="space-y-4">
+      <Text bold className="text-xl">
+        Vendor Locations
+      </Text>
+      <p className="text-base-content opacity-70">
+        Define the physical locations associated with your vendor.
+      </p>
+      <FieldArray name="locations.createMany.data">
+        {({ remove, push }) => (
+          <div className="space-y-4">
+            {values.locations.createMany.data.map((_locationItem, index) => (
+              <LocationItem key={index} index={index} remove={remove} />
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              color="primary"
+              className="mt-2"
+              onClick={() =>
+                push({
+                  name: "Main",
+                  address: {
+                    street: "",
+                    city: "",
+                    state: "",
+                    zip: "",
+                    country: "",
+                    latitude: 0,
+                    longitude: 0,
+                  },
+                  createdById: userId,
+                })
+              }
+              aria-label="Add location"
+            >
+              <PlusCircle size={18} className="mr-2" /> Add Location
+            </Button>
+            {(() => {
+              const locationDataError = getIn(
+                errors,
+                "locations.createMany.data",
+              );
+              const locationDataTouched = getIn(
+                touched,
+                "locations.createMany.data",
+              );
+              if (
+                locationDataTouched &&
+                typeof locationDataError === "string"
+              ) {
+                return <ErrorDisplay name="locations.createMany.data" />;
+              }
+              return null;
+            })()}
+          </div>
+        )}
+      </FieldArray>
+    </div>
+  );
+}
