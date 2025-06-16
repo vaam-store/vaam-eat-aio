@@ -42,6 +42,22 @@ CACHE_DIR=${PMTILES_CACHE_DIR:-/tmp/pmtiles-cache}
 #─── default bbox list ───────────────────────────────────────────────────────────
 read -r -d '' _DEFAULT_BBOXES || true # ignore the expected "read" non‑zero status
 _DEFAULT_BBOXES="$(cat <<'EOF'
+germany-baden-wuerttemberg-v1:7.456,47.530,10.472,49.808
+germany-bavaria-v1:9.221,47.270,13.622,50.562
+germany-berlin-v1:13.090,52.330,13.760,52.650
+germany-brandenburg-v1:11.350,51.310,14.450,53.560
+germany-bremen-v1:8.370,52.300,8.930,53.120
+germany-hamburg-v1:9.650,53.280,10.350,53.750
+germany-hessen-v1:7.900,49.170,10.240,51.650
+germany-mecklenburg-vorpommern-v1:10.090,53.250,14.800,54.350
+germany-niedersachsen-v1:6.020,51.270,11.120,53.720
+germany-nordrhein-westfalen-v1:5.870,50.330,9.540,52.740
+germany-rheinland-pfalz-v1:5.520,48.930,8.380,50.560
+germany-saarland-v1:6.320,48.080,7.140,49.030
+germany-sachsen-v1:11.795,50.160,15.042,51.705
+germany-sachsen-anhalt-v1:10.513,50.900,13.368,53.071
+germany-schleswig-holstein-v1:8.090,53.420,11.000,55.060
+germany-thueringen-v1:9.640,50.200,12.170,51.730
 cameroon-adamawa-v1:10.991,5.790,15.380,8.333
 cameroon-centre-v1:10.044,2.910,13.408,6.440
 cameroon-east-v1:12.260,1.390,16.430,6.246

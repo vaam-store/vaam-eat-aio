@@ -1,6 +1,6 @@
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { Protocol } from "pmtiles";
 import { layers, namedFlavor } from "@protomaps/basemaps";
 import { env } from "@app/env";
@@ -32,7 +32,12 @@ export function useLocationMap({
     latitude,
     longitude,
     isLoading: geolocationLoading,
+    getLocation,
   } = useGeolocation();
+
+  useEffect(() => {
+    getLocation();
+  }, [getLocation]);
 
   useEffect(() => {
     // Register the pmtiles protocol once per mount
@@ -127,7 +132,8 @@ export function useLocationMap({
         layers: layers("protomaps", namedFlavor("light"), { lang: "en" }),
       },
       center: [defaultCenter.lng, defaultCenter.lat],
-      zoom: 10,
+      zoom: 14,
+      doubleClickZoom: false, // Disable default double-click zoom
     });
 
     mapRef.current.on("load", () => {
@@ -159,7 +165,7 @@ export function useLocationMap({
       }
 
       if (boundsToFit && mapRef.current) {
-        mapRef.current.fitBounds(boundsToFit, { padding: 20 });
+        mapRef.current.fitBounds(boundsToFit, { padding: 20, zoom: 14 });
       }
 
       const initialMarkerLocation =
@@ -189,8 +195,21 @@ export function useLocationMap({
       }
     });
 
+    if (mapRef.current) {
+      // Double-click to reposition marker
+      mapRef.current.on("dblclick", (e: maplibregl.MapMouseEvent) => {
+        if (markerRef.current) {
+          const lngLat = e.lngLat;
+          markerRef.current.setLngLat([lngLat.lng, lngLat.lat]);
+          setSelectedLocation({ lat: lngLat.lat, lng: lngLat.lng });
+          onLocationChange({ lat: lngLat.lat, lng: lngLat.lng });
+        }
+      });
+    }
+
     return () => {
       if (mapRef.current) {
+        mapRef.current.off("dblclick", () => {}); // Remove dblclick listener
         mapRef.current.remove();
         mapRef.current = null;
       }
@@ -202,7 +221,7 @@ export function useLocationMap({
     selectedArea,
     managedCountries,
     onLocationChange,
-    country, // Add country to dependency array
+    country,
   ]);
 
   useEffect(() => {
