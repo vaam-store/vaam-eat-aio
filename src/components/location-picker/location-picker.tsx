@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocationMap } from "@app/hooks/use-location-map";
 import { type ManagedCountries } from "@app/hooks/use-managed-countries";
-import { RecenterMapButton } from "./RecenterMapButton";
+import { RecenterMapButton } from "./recenter-map-button";
 
 interface LocationPickerProps {
   previousCoordinates?: { lat: number; lng: number }; // Renamed from initialLocation and made optional

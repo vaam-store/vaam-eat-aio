@@ -19,8 +19,13 @@ export function VendorLocationsStep({ userId }: VendorLocationsStepProps) {
         Vendor Locations
       </Text>
       <p className="text-base-content opacity-70">
-        Define the physical locations associated with your vendor.
+        Define the physical locations associated with your vendor. For each location, you'll need to:
       </p>
+      <ol className="list-decimal list-inside mt-2 mb-4 text-base-content opacity-70">
+        <li>Select a country and region</li>
+        <li>Use the map picker to select precise coordinates (default), or</li>
+        <li>Manually enter address details if preferred</li>
+      </ol>
       <FieldArray name="locations.createMany.data">
         {({ remove, push }) => (
           <div className="space-y-4">

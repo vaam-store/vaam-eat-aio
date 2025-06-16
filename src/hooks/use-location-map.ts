@@ -94,7 +94,7 @@ export function useLocationMap({
           }
         }
         // Fallback to country's first area if no specific selectedArea
-        if (country && managedCountries && managedCountries[country]) {
+        if (country && managedCountries?.[country]) {
           const countryRegions = managedCountries[country];
           const firstRegionName = Object.keys(countryRegions)[0];
           if (firstRegionName && countryRegions[firstRegionName]) {
@@ -122,7 +122,7 @@ export function useLocationMap({
     let pmtilesUrl = `pmtiles://${pmtilesBaseUrl}/${pmtilesBucket}/berlin.pmtiles`; // Default fallback
     if (selectedArea) {
       pmtilesUrl = `pmtiles://${pmtilesBaseUrl}/${pmtilesBucket}/maps/${selectedArea}.pmtiles`;
-    } else if (country && managedCountries && managedCountries[country]) {
+    } else if (country && managedCountries?.[country]) {
       // If no specific area, but country is known, try to use the first area of that country for pmtiles
       const countryRegions = managedCountries[country];
       const firstRegionName = Object.keys(countryRegions)[0];
@@ -331,7 +331,7 @@ export function useLocationMap({
   };
 
   const recenterMapToUserLocation = async () => {
-    await getLocation(); // Ensure fresh coordinates
+    getLocation(); // Ensure fresh coordinates
     if (latitude !== null && longitude !== null && mapRef.current) {
       // Set shouldFitToArea to false to prevent fitting to area bounds on next modal open
       setShouldFitToArea(false);

@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Navigation } from "react-feather";
+import { MapPin } from "react-feather";
 import { Button } from "../button";
 
 interface RecenterMapButtonProps {

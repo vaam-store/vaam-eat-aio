@@ -11,10 +11,6 @@ export default function VendorCreatePage() {
   const { data } = useSession();
 
   const createVendorMutation = api.zen.vendor.create.useMutation({
-    onSuccess: (data) => {
-      // No router push here, as per instructions to remove redirect logic.
-      // The parent layout will handle navigation if needed.
-    },
     onError: (error) => {
       handleTrpcError(error, "Failed to create vendor. Please try again.");
     },
@@ -31,7 +27,7 @@ export default function VendorCreatePage() {
       <h1 className="mb-4 text-2xl font-bold">Create New Vendor</h1>
       <VendorCreationForm
         onSubmit={handleSubmit}
-        userId={data?.user?.id as string}
+        userId={data?.user?.id!}
       />
       {createVendorMutation.isError && (
         <p className="text-error mt-2">

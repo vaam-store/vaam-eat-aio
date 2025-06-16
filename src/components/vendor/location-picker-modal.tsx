@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@app/components/button";
 import { Modal } from "@app/components/modal";
-import { LocationPicker } from "@app/components/location-picker/LocationPicker";
+import { LocationPicker } from "@app/components/location-picker/location-picker";
 import { type ManagedCountries } from "@app/hooks/use-managed-countries";
 
 interface LocationPickerModalProps {
