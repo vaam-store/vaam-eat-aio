@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import { Button } from "@app/components/button";
-import { XCircle } from "react-feather";
+import { X } from "react-feather";
 import { Text } from "@app/components/text";
 import { ContactInfoFields } from "@app/components/vendor/contact-info-fields";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
@@ -28,7 +28,7 @@ export function ContactItem({ index, remove }: ContactItemProps) {
             onClick={() => remove(index)}
             aria-label="Remove contact"
           >
-            <XCircle size={18} />
+            <X />
           </Button>
         </div>
         <div>

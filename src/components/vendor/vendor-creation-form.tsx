@@ -185,11 +185,7 @@ export function VendorCreationForm({
             <VendorStepper currentStep={currentStep} formSteps={formSteps} />
           </div>
           <div className="md:w-2/3">
-            <div className="card card-border">
-              <div className="card-body">
-                {formSteps[currentStep]?.component}
-              </div>
-            </div>
+            {formSteps[currentStep]?.component}
 
             <div className="mt-6 flex justify-between">
               {currentStep > 0 && (

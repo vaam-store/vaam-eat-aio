@@ -23,5 +23,9 @@ export function useManagedCountries() {
     staleTime: Infinity, // Data is static, so it never becomes stale
   });
 
-  return { managedCountriesData, managedCountriesLoading, managedCountriesError };
+  return {
+    managedCountriesData,
+    managedCountriesLoading,
+    managedCountriesError,
+  };
 }

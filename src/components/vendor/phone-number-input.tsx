@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import { Button } from "@app/components/button";
-import { XCircle } from "react-feather";
+import { X } from "react-feather";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
 
 interface PhoneNumberInputProps {
@@ -31,7 +31,7 @@ export function PhoneNumberInput({
         onClick={() => removePhone(phoneIndex)}
         aria-label="Remove phone number"
       >
-        <XCircle size={16} />
+        <X />
       </Button>
       <ErrorDisplay name={`${baseFieldPath}.${phoneIndex}`} />
     </div>

@@ -17,37 +17,57 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
     useFormikContext<VendorFormValues>();
   const basePath = `locations.createMany.data.${locationIndex}.address`;
 
-  const { managedCountriesData, managedCountriesLoading, managedCountriesError } =
-    useManagedCountries();
+  const {
+    managedCountriesData,
+    managedCountriesLoading,
+    managedCountriesError,
+  } = useManagedCountries();
 
   const currentCountryFormikValue = getIn(values, `${basePath}.country`);
   const currentStateFormikValue = getIn(values, `${basePath}.state`);
 
   // Local state for the country dropdown UI selection
-  const [dropdownSelectedCountry, setDropdownSelectedCountry] = useState<string>("");
+  const [dropdownSelectedCountry, setDropdownSelectedCountry] =
+    useState<string>("");
 
   useEffect(() => {
     if (managedCountriesLoading) return; // Wait for data to load
 
-    if (currentCountryFormikValue && managedCountriesData?.[currentCountryFormikValue]) {
+    if (
+      currentCountryFormikValue &&
+      managedCountriesData?.[currentCountryFormikValue]
+    ) {
       setDropdownSelectedCountry(currentCountryFormikValue);
-    } else if (currentCountryFormikValue) { // Country in Formik but not in managed list (or data not loaded yet)
+    } else if (currentCountryFormikValue) {
+      // Country in Formik but not in managed list (or data not loaded yet)
       setDropdownSelectedCountry(OTHER_COUNTRY_VALUE);
     } else {
       setDropdownSelectedCountry(""); // No country selected in Formik
     }
-  }, [currentCountryFormikValue, managedCountriesData, managedCountriesLoading]);
+  }, [
+    currentCountryFormikValue,
+    managedCountriesData,
+    managedCountriesLoading,
+  ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentLatitude = getIn(values, `${basePath}.latitude`);
   const currentLongitude = getIn(values, `${basePath}.longitude`);
 
-  const handleConfirmLocation = ({ lat, lng }: { lat: number; lng: number }) => {
+  const handleConfirmLocation = ({
+    lat,
+    lng,
+  }: {
+    lat: number;
+    lng: number;
+  }) => {
     setFieldValue(`${basePath}.latitude`, lat);
     setFieldValue(`${basePath}.longitude`, lng);
   };
 
-  const handleCountryDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCountryDropdownChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
     const newDropdownValue = e.target.value;
     setDropdownSelectedCountry(newDropdownValue);
     if (newDropdownValue === OTHER_COUNTRY_VALUE) {
@@ -58,11 +78,15 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
     setFieldValue(`${basePath}.state`, ""); // Always clear state/region when country changes
   };
 
-  const countryOptions = managedCountriesData ? Object.keys(managedCountriesData) : [];
-  
+  const countryOptions = managedCountriesData
+    ? Object.keys(managedCountriesData)
+    : [];
+
   const actualSelectedCountryForRegions = currentCountryFormikValue;
   const regionsForActualSelectedCountry =
-    managedCountriesData && actualSelectedCountryForRegions && managedCountriesData[actualSelectedCountryForRegions]
+    managedCountriesData &&
+    actualSelectedCountryForRegions &&
+    managedCountriesData[actualSelectedCountryForRegions]
       ? Object.keys(managedCountriesData[actualSelectedCountryForRegions])
       : [];
 
@@ -109,8 +133,15 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
         <label htmlFor={`${basePath}.country-select`} className="label">
           <span className="label-text">Country</span>
         </label>
-        {managedCountriesLoading && <div className="input input-bordered w-full flex items-center"><span className="loading loading-xs loading-spinner" />&nbsp;Loading countries...</div>}
-        {managedCountriesError && <p className="text-error">Error loading countries.</p>}
+        {managedCountriesLoading && (
+          <div className="input input-bordered flex w-full items-center">
+            <span className="loading loading-xs loading-spinner" />
+            &nbsp;Loading countries...
+          </div>
+        )}
+        {managedCountriesError && (
+          <p className="text-error">Error loading countries.</p>
+        )}
         {!managedCountriesLoading && !managedCountriesError && (
           <select
             id={`${basePath}.country-select`}
@@ -130,15 +161,16 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
             <option value={OTHER_COUNTRY_VALUE}>Other (Specify)</option>
           </select>
         )}
-        {dropdownSelectedCountry === OTHER_COUNTRY_VALUE && !managedCountriesLoading && (
-          <Field
-            id={`${basePath}.country-text`}
-            name={`${basePath}.country`}
-            type="text"
-            placeholder="Enter country name"
-            className="input input-bordered mt-2 w-full"
-          />
-        )}
+        {dropdownSelectedCountry === OTHER_COUNTRY_VALUE &&
+          !managedCountriesLoading && (
+            <Field
+              id={`${basePath}.country-text`}
+              name={`${basePath}.country`}
+              type="text"
+              placeholder="Enter country name"
+              className="input input-bordered mt-2 w-full"
+            />
+          )}
         <ErrorDisplay name={`${basePath}.country`} />
       </div>
 
@@ -153,10 +185,12 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
             id={`${basePath}.state-select`}
             name={`${basePath}.state`}
             className="select select-bordered w-full"
-            disabled={managedCountriesLoading || !actualSelectedCountryForRegions}
+            disabled={
+              managedCountriesLoading || !actualSelectedCountryForRegions
+            }
           >
             <option value="">
-              {managedCountriesLoading ? 'Loading...' : 'Select State/Province'}
+              {managedCountriesLoading ? "Loading..." : "Select State/Province"}
             </option>
             {regionsForActualSelectedCountry.map((regionName) => (
               <option key={regionName} value={regionName}>
@@ -171,12 +205,16 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
             type="text"
             placeholder="Enter state/province"
             className="input input-bordered w-full"
-            disabled={managedCountriesLoading || (dropdownSelectedCountry !== OTHER_COUNTRY_VALUE && !actualSelectedCountryForRegions)}
+            disabled={
+              managedCountriesLoading ||
+              (dropdownSelectedCountry !== OTHER_COUNTRY_VALUE &&
+                !actualSelectedCountryForRegions)
+            }
           />
         )}
         <ErrorDisplay name={`${basePath}.state`} />
       </div>
-      
+
       <div>
         <label htmlFor={`${basePath}.zip`} className="label">
           <span className="label-text">ZIP/Postal Code</span>
@@ -189,7 +227,7 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
         />
         <ErrorDisplay name={`${basePath}.zip`} />
       </div>
-      
+
       {/* This empty div helps maintain the 2-column layout for the ZIP code field if others wrap */}
       <div></div>
 
@@ -204,7 +242,9 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
         >
           Pick Location on Map
         </Button>
-        {currentLatitude !== undefined && currentLongitude !== undefined && (currentLatitude !== 0 || currentLongitude !== 0) ? (
+        {currentLatitude !== undefined &&
+        currentLongitude !== undefined &&
+        (currentLatitude !== 0 || currentLongitude !== 0) ? (
           <p className="text-base-content mt-2 text-sm opacity-70">
             Selected: Lat {currentLatitude?.toFixed(4)}, Lng{" "}
             {currentLongitude?.toFixed(4)}
@@ -224,12 +264,25 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleConfirmLocation}
         initialLocation={
-          currentLatitude !== undefined && currentLongitude !== undefined && (currentLatitude !== 0 || currentLongitude !== 0)
+          currentLatitude !== undefined &&
+          currentLongitude !== undefined &&
+          (currentLatitude !== 0 || currentLongitude !== 0)
             ? { lat: currentLatitude, lng: currentLongitude }
             : undefined
         }
-        country={currentCountryFormikValue && managedCountriesData?.[currentCountryFormikValue] ? currentCountryFormikValue : undefined}
-        region={currentCountryFormikValue && managedCountriesData?.[currentCountryFormikValue] && regionsForActualSelectedCountry.includes(currentStateFormikValue) ? currentStateFormikValue : undefined}
+        country={
+          currentCountryFormikValue &&
+          managedCountriesData?.[currentCountryFormikValue]
+            ? currentCountryFormikValue
+            : undefined
+        }
+        region={
+          currentCountryFormikValue &&
+          managedCountriesData?.[currentCountryFormikValue] &&
+          regionsForActualSelectedCountry.includes(currentStateFormikValue)
+            ? currentStateFormikValue
+            : undefined
+        }
         managedCountriesData={managedCountriesData}
       />
     </div>

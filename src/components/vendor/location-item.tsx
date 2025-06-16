@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import { Button } from "@app/components/button";
-import { XCircle } from "react-feather";
+import { X } from "react-feather";
 import { Text } from "@app/components/text";
 import { AddressFields } from "@app/components/vendor/address-fields";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
@@ -28,7 +28,7 @@ export function LocationItem({ index, remove }: LocationItemProps) {
             onClick={() => remove(index)}
             aria-label="Remove location"
           >
-            <XCircle size={18} />
+            <X />
           </Button>
         </div>
         <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldArray, getIn, useFormikContext } from "formik";
 import { Button } from "@app/components/button";
-import { PlusCircle } from "react-feather";
+import { Plus } from "react-feather";
 import { Text } from "@app/components/text";
 import { LocationItem } from "@app/components/vendor/location-item";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
@@ -49,7 +49,7 @@ export function VendorLocationsStep({ userId }: VendorLocationsStepProps) {
               }
               aria-label="Add location"
             >
-              <PlusCircle size={18} className="mr-2" /> Add Location
+              <Plus /> Add Location
             </Button>
             {(() => {
               const locationDataError = getIn(

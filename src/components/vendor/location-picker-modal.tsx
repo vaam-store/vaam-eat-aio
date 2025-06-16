@@ -48,7 +48,7 @@ export const LocationPickerModal: React.FC<LocationPickerModalProps> = ({
     >
       <div>
         <LocationPicker
-          initialLocation={initialLocation}
+          previousCoordinates={initialLocation}
           onLocationChange={setSelectedLocation}
           initialArea={initialArea}
           onAreaChange={setSelectedArea}

@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldArray, getIn, useFormikContext } from "formik";
 import { Button } from "@app/components/button";
-import { PlusCircle } from "react-feather";
+import { Plus } from "react-feather";
 import { Text } from "@app/components/text";
 import { ContactItem } from "@app/components/vendor/contact-item";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
@@ -41,7 +41,7 @@ export function VendorContactsStep({ userId }: VendorContactsStepProps) {
               }
               aria-label="Add contact"
             >
-              <PlusCircle size={18} className="mr-2" /> Add Contact
+              <Plus /> Add Contact
             </Button>
             {(() => {
               const contactDataError = getIn(

@@ -31,7 +31,7 @@ export default async function VendorPage({ params }: VendorPageProps) {
   return (
     <div className="container mx-auto p-4">
       <h1 className="mb-6 text-3xl font-bold">Vendor Details</h1>
-      <div className="card bg-base-100 shadow-xl">
+      <div className="card card-border">
         <div className="card-body">
           <h2 className="card-title text-2xl">
             {vendor.name ?? "Unnamed Vendor"}

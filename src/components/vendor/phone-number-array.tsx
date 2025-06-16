@@ -1,7 +1,7 @@
 import React from "react";
 import { FieldArray, getIn, useFormikContext } from "formik";
 import { Button } from "@app/components/button";
-import { PlusCircle } from "react-feather";
+import { Plus } from "react-feather";
 import { PhoneNumberInput } from "@app/components/vendor/phone-number-input";
 import { ErrorDisplay } from "@app/components/vendor/error-display";
 import { type VendorFormValues } from "@app/components/vendor/vendor-creation-form"; // Import VendorFormValues
@@ -43,7 +43,7 @@ export function PhoneNumberArray({ contactIndex }: PhoneNumberArrayProps) {
               onClick={() => pushPhone("")}
               aria-label="Add phone number"
             >
-              <PlusCircle size={16} />
+              <Plus />
             </Button>
           </div>
         )}

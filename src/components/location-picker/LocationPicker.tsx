@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useLocationMap } from "@app/hooks/use-location-map";
 import { type ManagedCountries } from "@app/hooks/use-managed-countries";
+import { RecenterMapButton } from "./RecenterMapButton";
 
 interface LocationPickerProps {
-  initialLocation?: { lat: number; lng: number };
+  previousCoordinates?: { lat: number; lng: number }; // Renamed from initialLocation and made optional
   onLocationChange: (location: { lat: number; lng: number }) => void;
   initialArea?: string; // Kept for potential direct use, but overridden by region if provided
   onAreaChange?: (area: string) => void;
   country?: string; // The selected country from AddressFields
   region?: string; // The selected region/area from AddressFields, will be prioritized for initialArea
   managedCountriesData?: ManagedCountries; // Passed from AddressFields -> LocationPickerModal
+  disabled?: boolean;
 }
 
 export function LocationPicker({
-  initialLocation,
+  previousCoordinates,
   onLocationChange,
   initialArea, // This is the prop from LocationPickerModal, which might be undefined
   onAreaChange,
   country, // Country from AddressFields
   region, // Region from AddressFields (will be used as selectedArea if present)
   managedCountriesData, // Data from AddressFields
+  disabled = false,
 }: LocationPickerProps) {
   // Prioritize `region` prop for initial selected area, then `initialArea`, then fallback logic
   const [selectedArea, setSelectedArea] = useState<string | undefined>(() => {
@@ -29,12 +32,17 @@ export function LocationPicker({
     if (managedCountriesData && country && managedCountriesData[country]) {
       const countryRegions = Object.keys(managedCountriesData[country]);
       if (countryRegions.length > 0) return countryRegions[0];
-    } else if (managedCountriesData && Object.keys(managedCountriesData).length > 0) {
-        const firstCountry = Object.keys(managedCountriesData)[0];
-        if (firstCountry && managedCountriesData[firstCountry]) {
-            const firstCountryRegions = Object.keys(managedCountriesData[firstCountry]);
-            if (firstCountryRegions.length > 0) return firstCountryRegions[0];
-        }
+    } else if (
+      managedCountriesData &&
+      Object.keys(managedCountriesData).length > 0
+    ) {
+      const firstCountry = Object.keys(managedCountriesData)[0];
+      if (firstCountry && managedCountriesData[firstCountry]) {
+        const firstCountryRegions = Object.keys(
+          managedCountriesData[firstCountry],
+        );
+        if (firstCountryRegions.length > 0) return firstCountryRegions[0];
+      }
     }
     return undefined;
   });
@@ -52,15 +60,25 @@ export function LocationPicker({
     }
   }, [region, initialArea, selectedArea, onAreaChange]);
 
+  const {
+    mapContainerRef,
+    selectedLocation,
+    handleAreaChange: handleMapAreaChange,
+    recenterMapToUserLocation,
+  } = useLocationMap({
+    initialLocation: previousCoordinates,
+    onLocationChange,
+    selectedArea, // This will be the effectively selected area
+    managedCountries: managedCountriesData || {},
+    country, // Pass country to useLocationMap
+    disabled,
+  });
 
-  const { mapContainerRef, selectedLocation, handleAreaChange: handleMapAreaChange } =
-    useLocationMap({
-      initialLocation,
-      onLocationChange,
-      selectedArea, // This will be the effectively selected area
-      managedCountries: managedCountriesData || {},
-      country, // Pass country to useLocationMap
-    });
+  const handleRecenterClick = () => {
+    if (recenterMapToUserLocation) {
+      recenterMapToUserLocation();
+    }
+  };
 
   const handleAreaChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newArea = event.target.value;
@@ -80,6 +98,7 @@ export function LocationPicker({
           value={selectedArea ?? ""}
           onChange={handleAreaChange}
           aria-label="Select Zone/Area"
+          disabled={disabled}
         >
           <option value="" disabled>
             Select an area
@@ -97,7 +116,17 @@ export function LocationPicker({
           )}
         </select>
       </div>
-      <div ref={mapContainerRef} className="rounded-box h-96 w-full" />
+      <div className="relative">
+        {" "}
+        {/* Added relative positioning for the button */}
+        <div ref={mapContainerRef} className="rounded-box h-96 w-full" />
+        {!disabled && (
+          <RecenterMapButton
+            onClick={handleRecenterClick}
+            className="absolute right-2 bottom-12 z-10" // Positioning classes
+          />
+        )}
+      </div>
       <div className="py-4">
         {selectedLocation ? (
           <p>
@@ -105,7 +134,11 @@ export function LocationPicker({
             {selectedLocation.lng.toFixed(4)}
           </p>
         ) : (
-          <p>Drag the marker to select a location.</p>
+          <p>
+            {disabled
+              ? "Location is set."
+              : "Drag the marker to select a location."}
+          </p>
         )}
       </div>
     </div>
