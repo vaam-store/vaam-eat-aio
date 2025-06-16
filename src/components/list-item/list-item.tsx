@@ -1,6 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import { Text } from "../text";
+import Link from 'next/link';
+import React from 'react';
+import { Text } from '../text';
 
 interface ListItemProps {
   title: string;
@@ -20,7 +20,7 @@ export const ListItem: React.FC<ListItemProps> = ({
   onClick,
 }) => {
   const commonProps = {
-    className: "list-row items-center",
+    className: 'list-row items-center',
     onClick: onClick,
   };
 
@@ -28,10 +28,10 @@ export const ListItem: React.FC<ListItemProps> = ({
     return (
       <Link href={href} {...commonProps}>
         {icon}
-        <div className="flex-grow">
-          <Text className="font-bold">{title}</Text>
+        <div className='flex-grow'>
+          <Text className='font-bold'>{title}</Text>
           {description && (
-            <Text className="text-opacity-70 text-sm">{description}</Text>
+            <Text className='text-opacity-70 text-sm'>{description}</Text>
           )}
         </div>
         {endIcon}
@@ -40,12 +40,12 @@ export const ListItem: React.FC<ListItemProps> = ({
   }
 
   return (
-    <button type="button" {...commonProps}>
+    <button type='button' {...commonProps}>
       {icon}
-      <div className="flex-grow">
-        <Text className="font-bold">{title}</Text>
+      <div className='flex-grow'>
+        <Text className='font-bold'>{title}</Text>
         {description && (
-          <Text className="text-opacity-70 text-sm">{description}</Text>
+          <Text className='text-opacity-70 text-sm'>{description}</Text>
         )}
       </div>
       {endIcon}

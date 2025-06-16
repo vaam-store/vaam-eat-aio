@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
-import { env } from "@app/env";
+import { env } from '@app/env';
+import nodemailer from 'nodemailer';
 
 const createTransporter = () => {
   const transporter = nodemailer.createTransport({
@@ -15,9 +15,9 @@ const createTransporter = () => {
   // Verify connection configuration
   transporter.verify((error, _success) => {
     if (error) {
-      console.error("Nodemailer transporter verification failed:", error);
+      console.error('Nodemailer transporter verification failed:', error);
     } else {
-      console.log("Nodemailer transporter is ready to send emails");
+      console.log('Nodemailer transporter is ready to send emails');
     }
   });
 
@@ -31,5 +31,5 @@ const globalForTransporter = globalThis as unknown as {
 export const emailTransporter =
   globalForTransporter.transporter ?? createTransporter();
 
-if (env.NODE_ENV !== "production")
+if (env.NODE_ENV !== 'production')
   globalForTransporter.transporter = emailTransporter;

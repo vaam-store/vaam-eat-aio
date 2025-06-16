@@ -19,7 +19,7 @@
 # ────────────────────────────────────────────────────────────────────────────────
 
 set -Eeuo pipefail
-shopt -s inherit_errexit 2>/dev/null || true   # Bash <5.0 compatibility
+shopt -s inherit_errexit 2> /dev/null || true # Bash <5.0 compatibility
 IFS=$'\n\t'
 
 #─── logging helpers ─────────────────────────────────────────────────────────────
@@ -29,7 +29,10 @@ trap 'err "Command \"${BASH_COMMAND}\" failed at line ${LINENO}."' ERR
 
 #─── prerequisite binaries ───────────────────────────────────────────────────────
 for bin in curl tar uname mktemp; do
-  command -v "$bin" &>/dev/null || { err "Required command '$bin' not found"; exit 1; }
+  command -v "$bin" &> /dev/null || {
+    err "Required command '$bin' not found"
+    exit 1
+  }
 done
 
 #─── user‑tweakable knobs ────────────────────────────────────────────────────────
@@ -41,7 +44,8 @@ CACHE_DIR=${PMTILES_CACHE_DIR:-/tmp/pmtiles-cache}
 
 #─── default bbox list ───────────────────────────────────────────────────────────
 read -r -d '' _DEFAULT_BBOXES || true # ignore the expected "read" non‑zero status
-_DEFAULT_BBOXES="$(cat <<'EOF'
+_DEFAULT_BBOXES="$(
+  cat << 'EOF'
 germany-baden-wuerttemberg-v1:7.456,47.530,10.472,49.808
 germany-bavaria-v1:9.221,47.270,13.622,50.562
 germany-berlin-v1:13.090,52.330,13.760,52.650
@@ -74,9 +78,12 @@ BBOXES=${BBOXES:-${_DEFAULT_BBOXES}}
 
 #─── map kernel arch → release suffix ───────────────────────────────────────────
 case "$(uname -m)" in
-  x86_64|amd64)   GO_PMTILES_ARCH="Linux_x86_64" ;;
-  aarch64|arm64)  GO_PMTILES_ARCH="Linux_arm64"   ;;
-  *) err "Unsupported architecture $(uname -m)"; exit 1 ;;
+  x86_64 | amd64) GO_PMTILES_ARCH="Linux_x86_64" ;;
+  aarch64 | arm64) GO_PMTILES_ARCH="Linux_arm64" ;;
+  *)
+    err "Unsupported architecture $(uname -m)"
+    exit 1
+    ;;
 esac
 
 mkdir -p "$CACHE_DIR"
@@ -100,8 +107,8 @@ mkdir -p "$PMTILES_DATA_DIR"
 
 #─── extraction loop ─────────────────────────────────────────────────────────────
 while IFS= read -r entry; do
-  [[ -z $entry ]] && continue          # skip empty lines
-  IFS=':' read -r name bbox <<<"$entry"
+  [[ -z $entry ]] && continue # skip empty lines
+  IFS=':' read -r name bbox <<< "$entry"
   TARGET="${PMTILES_DATA_DIR}/${name}.pmtiles"
 
   if [[ $SKIP_EXISTING == true && -f $TARGET ]]; then
@@ -113,6 +120,6 @@ while IFS= read -r entry; do
   "$CLI_PATH" extract "$BASEMAP_URL" "$TARGET" --bbox="$bbox"
   log "✅  Finished $name"
 
-done <<<"$BBOXES"
+done <<< "$BBOXES"
 
 log "🎉  All extracts completed. Output in $PMTILES_DATA_DIR"

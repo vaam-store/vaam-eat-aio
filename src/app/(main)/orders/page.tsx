@@ -1,4 +1,4 @@
-import { UserOrder } from "@app/components/orders/order";
+import { UserOrder } from '@app/components/orders/order';
 
 export default function OrdersPage() {
   return (

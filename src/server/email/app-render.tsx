@@ -1,22 +1,22 @@
-import { VerificationEmail } from "@app/server/email/templates/VerificationEmail";
-import { render } from "@react-email/render";
-import { WelcomeEmail } from "@app/server/email/templates/WelcomeEmail";
+import { VerificationEmail } from '@app/server/email/templates/VerificationEmail';
+import { WelcomeEmail } from '@app/server/email/templates/WelcomeEmail';
+import { render } from '@react-email/render';
 
 export type AppEmailTemplate =
   | {
-      type: "email-verification";
+      type: 'email-verification';
       verificationLink: string;
     }
   | {
-      type: "welcome-user";
+      type: 'welcome-user';
       userName: string;
     };
 
 export function helper(data: AppEmailTemplate) {
   switch (data.type) {
-    case "email-verification":
+    case 'email-verification':
       return <VerificationEmail verificationLink={data.verificationLink} />;
-    case "welcome-user":
+    case 'welcome-user':
       return <WelcomeEmail userName={data.userName} />;
   }
 }

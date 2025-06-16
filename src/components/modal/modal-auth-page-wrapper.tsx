@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Modal, type ModalProps } from "@app/components/modal/modal";
-import { useRouter } from "next/navigation";
-import { type PropsWithChildren, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { Modal, type ModalProps } from '@app/components/modal/modal';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { type PropsWithChildren, useEffect } from 'react';
 
 export function ModalAuthPageWrapper({
   children,
   ...restProps
-}: PropsWithChildren<Omit<ModalProps, "onCloseAction" | "open" | "children">>) {
+}: PropsWithChildren<Omit<ModalProps, 'onCloseAction' | 'open' | 'children'>>) {
   const router = useRouter();
   const { status } = useSession();
 
@@ -17,7 +17,7 @@ export function ModalAuthPageWrapper({
       return;
     }
 
-    if (status === "authenticated") {
+    if (status === 'authenticated') {
       router.back();
     }
   }, [status, router]);

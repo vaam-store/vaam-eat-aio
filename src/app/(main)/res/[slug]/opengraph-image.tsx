@@ -1,4 +1,4 @@
-import { ImageResponse } from "next/og";
+import { ImageResponse } from 'next/og';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -9,7 +9,7 @@ export const size = {
   height: 630,
 };
 
-export const contentType = "image/png";
+export const contentType = 'image/png';
 
 // Image generation
 export default async function Image({ params }: Props) {
@@ -24,14 +24,13 @@ export default async function Image({ params }: Props) {
       <div
         style={{
           fontSize: 128,
-          background: "white",
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+          background: 'white',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         About {slug}
       </div>
     ),

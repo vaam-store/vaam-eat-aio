@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { z } from "zod";
-import { toFormikValidationSchema } from "zod-formik-adapter";
-import { SettingCard } from "@app/components/settings/setting-card";
-import { api } from "@app/trpc/react";
-import { useRouter } from "next/navigation";
-import { Upload } from "react-feather";
-import { useUploadFile } from "@app/hooks/upload-file";
-import { showErrorToast } from "@app/utils/error-handler";
+import { SettingCard } from '@app/components/settings/setting-card';
+import { useUploadFile } from '@app/hooks/upload-file';
+import { api } from '@app/trpc/react';
+import { showErrorToast } from '@app/utils/error-handler';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Upload } from 'react-feather';
+import { z } from 'zod';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 const validationSchema = z.object({
   name: z.string(),
@@ -27,12 +27,12 @@ export default function EditProfilePage() {
     upload: { isPending: isUploading },
   } = useUploadFile();
   const [avatarPreview, setAvatarPreview] = useState(
-    session?.user?.image ?? "/placeholder-avatar.jpg",
+    session?.user?.image ?? '/placeholder-avatar.jpg',
   );
 
-  const initialValues: Record<"name" | "image", string> = {
-    name: session?.user?.name ?? "",
-    image: session?.user?.image ?? "",
+  const initialValues: Record<'name' | 'image', string> = {
+    name: session?.user?.name ?? '',
+    image: session?.user?.image ?? '',
   };
 
   const handleFileChange = async (
@@ -44,7 +44,7 @@ export default function EditProfilePage() {
       try {
         return await uploadFile(file);
       } catch (error) {
-        showErrorToast(error, "Error uploading file:");
+        showErrorToast(error, 'Error uploading file:');
         // Handle error, maybe set a default image or show an error message
         return null;
       }
@@ -52,14 +52,14 @@ export default function EditProfilePage() {
   };
 
   return (
-    <SettingCard title="Edit Profile">
+    <SettingCard title='Edit Profile'>
       <Formik
         initialValues={initialValues}
         validationSchema={toFormikValidationSchema(validationSchema)}
         onSubmit={async (values, { setSubmitting }) => {
           try {
             if (!session?.user?.id) {
-              showErrorToast("User ID not found. Please try again.");
+              showErrorToast('User ID not found. Please try again.');
               setSubmitting(false);
               return;
             }
@@ -73,14 +73,13 @@ export default function EditProfilePage() {
               },
             });
             await update({ name: values.name, image: values.image }); // Update session
-            router.push("/settings/account");
+            router.push('/settings/account');
           } catch (error) {
-            showErrorToast(error, "Failed to update profile:");
+            showErrorToast(error, 'Failed to update profile:');
           } finally {
             setSubmitting(false);
           }
-        }}
-      >
+        }}>
         {({
           isSubmitting,
           setFieldValue,
@@ -88,30 +87,30 @@ export default function EditProfilePage() {
           dirty: _dirty,
           isValid: _isValid,
         }) => (
-          <Form className="form-control flex flex-col gap-4 md:flex-row">
-            <div className="flex items-center gap-4">
-              <div className="avatar">
-                <div className="relative w-24 overflow-hidden rounded-full">
+          <Form className='form-control flex flex-col gap-4 md:flex-row'>
+            <div className='flex items-center gap-4'>
+              <div className='avatar'>
+                <div className='relative w-24 overflow-hidden rounded-full'>
                   <Image
                     src={avatarPreview}
-                    alt="User Avatar"
+                    alt='User Avatar'
                     fill
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: 'cover' }}
                   />
                 </div>
               </div>
-              <label htmlFor="avatar-upload" className="btn btn-outline">
+              <label htmlFor='avatar-upload' className='btn btn-outline'>
                 <Upload size={16} /> Upload Avatar
                 <input
-                  id="avatar-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
+                  id='avatar-upload'
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
                   onChange={(e) => {
                     void (async () => {
                       const uploadedUrl = await handleFileChange(e);
                       if (uploadedUrl?.publicUrl) {
-                        setFieldValue("image", uploadedUrl?.publicUrl);
+                        setFieldValue('image', uploadedUrl?.publicUrl);
                       }
                     })();
                   }}
@@ -121,29 +120,28 @@ export default function EditProfilePage() {
             </div>
 
             <div>
-              <label className="label">
-                <span className="label-text">Full Name</span>
+              <label className='label'>
+                <span className='label-text'>Full Name</span>
               </label>
               <Field
-                type="text"
-                name="name"
-                placeholder="Your full name"
-                className="input input-bordered w-full"
+                type='text'
+                name='name'
+                placeholder='Your full name'
+                className='input input-bordered w-full'
               />
               <ErrorMessage
-                name="name"
-                component="div"
-                className="text-error text-sm"
+                name='name'
+                component='div'
+                className='text-error text-sm'
               />
             </div>
 
-            <div className="mt-4">
+            <div className='mt-4'>
               <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={isSubmitting || isUploading}
-              >
-                {isSubmitting ? "Saving..." : "Save Changes"}
+                type='submit'
+                className='btn btn-primary'
+                disabled={isSubmitting || isUploading}>
+                {isSubmitting ? 'Saving...' : 'Save Changes'}
               </button>
             </div>
           </Form>

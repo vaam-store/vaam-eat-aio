@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getApiClient } from "@app/utils/axios";
+import { getApiClient } from '@app/utils/axios';
+import { useQuery } from '@tanstack/react-query';
 
 export type ManagedCountries = Record<
   string,
@@ -12,11 +12,11 @@ export function useManagedCountries() {
     isLoading: managedCountriesLoading,
     isError: managedCountriesError,
   } = useQuery<ManagedCountries>({
-    queryKey: ["managedCountries"],
+    queryKey: ['managedCountries'],
     queryFn: async () => {
       const client = getApiClient();
       const response = await client.get<ManagedCountries>(
-        "/maps/managed-countries.json",
+        '/maps/managed-countries.json',
       );
       return response.data;
     },

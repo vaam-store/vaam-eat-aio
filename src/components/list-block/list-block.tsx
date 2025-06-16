@@ -1,5 +1,5 @@
-import { Text } from "@app/components/text";
-import type { ReactNode } from "react";
+import { Text } from '@app/components/text';
+import type { ReactNode } from 'react';
 
 export function ListBlock({
   title,
@@ -12,10 +12,10 @@ export function ListBlock({
 }) {
   return (
     <div className={className}>
-      <Text size="2xl" bold className="mb-6">
+      <Text size='2xl' bold className='mb-6'>
         {title}
       </Text>
-      <ul className="list w-full">{children}</ul>
+      <ul className='list w-full'>{children}</ul>
     </div>
   );
 }

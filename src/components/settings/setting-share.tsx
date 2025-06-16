@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { Share2 } from "react-feather";
-import { showErrorToast } from "@app/utils/error-handler";
-import { ListItem } from "../list-item/list-item";
+import { showErrorToast } from '@app/utils/error-handler';
+import { Share2 } from 'react-feather';
+import { ListItem } from '../list-item/list-item';
 
 export function SettingShare() {
   const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Vaam Eat AIO",
-          text: "Check out Vaam Eat AIO for amazing food!",
+          title: 'Vaam Eat AIO',
+          text: 'Check out Vaam Eat AIO for amazing food!',
           url: window.location.href,
         });
       } catch (error) {
-        showErrorToast(error, "Could not share");
+        showErrorToast(error, 'Could not share');
       }
     } else {
       showErrorToast(
         null,
-        "Web Share API is not supported in your browser. You can manually share this page: " +
+        'Web Share API is not supported in your browser. You can manually share this page: ' +
           window.location.href,
       );
     }
@@ -27,10 +27,10 @@ export function SettingShare() {
 
   return (
     <ListItem
-      title="Share"
-      description="Share this app with your friends"
+      title='Share'
+      description='Share this app with your friends'
       icon={<Share2 />}
-      href="#"
+      href='#'
       onClick={handleShare}
     />
   );

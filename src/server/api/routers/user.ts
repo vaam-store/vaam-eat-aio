@@ -1,21 +1,21 @@
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+import { env } from '@app/env';
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
-} from "@app/server/api/trpc";
-import { sendEmail } from "@app/server/email/send-email";
-import crypto from "crypto";
-import { env } from "@app/env";
-import { appRender } from "@app/server/email/app-render";
+} from '@app/server/api/trpc';
+import { appRender } from '@app/server/email/app-render';
+import { sendEmail } from '@app/server/email/send-email';
+import { TRPCError } from '@trpc/server';
+import crypto from 'crypto';
+import { z } from 'zod';
 
 export const userRouter = createTRPCRouter({
   updateProfile: protectedProcedure
     .input(
       z.object({
-        name: z.string().min(1, "Name is required").optional(),
-        image: z.string().url("Invalid image URL").optional(),
+        name: z.string().min(1, 'Name is required').optional(),
+        image: z.string().url('Invalid image URL').optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -36,13 +36,13 @@ export const userRouter = createTRPCRouter({
 
     if (!userEmail) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "User does not have an email address.",
+        code: 'BAD_REQUEST',
+        message: 'User does not have an email address.',
       });
     }
 
     // Generate a secure verification token
-    const token = crypto.randomBytes(32).toString("hex");
+    const token = crypto.randomBytes(32).toString('hex');
     const expires = new Date();
     expires.setHours(expires.getHours() + 1); // Token expires in 1 hour
 
@@ -60,7 +60,7 @@ export const userRouter = createTRPCRouter({
 
     // Render the email component to an HTML string
     const emailHtml = await appRender({
-      type: "email-verification",
+      type: 'email-verification',
       verificationLink,
     });
 
@@ -69,15 +69,15 @@ export const userRouter = createTRPCRouter({
       ctx.emailTransporter,
       env.EMAIL_FROM,
       userEmail,
-      "Verify your email address",
+      'Verify your email address',
       emailHtml,
     );
 
-    return { success: true, message: "Verification email sent." };
+    return { success: true, message: 'Verification email sent.' };
   }),
 
   verifyEmailToken: publicProcedure
-    .input(z.object({ token: z.string().min(1, "Token is required") }))
+    .input(z.object({ token: z.string().min(1, 'Token is required') }))
     .mutation(async ({ ctx, input }) => {
       const { token } = input;
 
@@ -87,8 +87,8 @@ export const userRouter = createTRPCRouter({
 
       if (!verificationToken) {
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Invalid or expired verification token.",
+          code: 'NOT_FOUND',
+          message: 'Invalid or expired verification token.',
         });
       }
 
@@ -98,8 +98,8 @@ export const userRouter = createTRPCRouter({
           where: { token },
         });
         throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Verification token has expired.",
+          code: 'FORBIDDEN',
+          message: 'Verification token has expired.',
         });
       }
 
@@ -114,7 +114,7 @@ export const userRouter = createTRPCRouter({
         where: { token },
       });
 
-      return { success: true, message: "Email verified successfully." };
+      return { success: true, message: 'Email verified successfully.' };
     }),
 
   getVerificationStatus: protectedProcedure.query(async ({ ctx }) => {

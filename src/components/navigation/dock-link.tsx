@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type PropsWithChildren, useMemo } from "react";
-import { twMerge } from "tailwind-merge";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { type PropsWithChildren, useMemo } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 type DockLinkProps = PropsWithChildren<{
   href: string;
@@ -14,7 +14,7 @@ export function DockLink({ href, children }: DockLinkProps) {
   const active = useMemo(() => current === href, [current, href]);
 
   return (
-    <Link href={href} prefetch className={twMerge(active && "dock-active")}>
+    <Link href={href} prefetch className={twMerge(active && 'dock-active')}>
       {children}
     </Link>
   );

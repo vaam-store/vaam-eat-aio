@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { usePathname, useRouter } from "next/navigation";
-import { type PropsWithChildren, useEffect, useRef } from "react";
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
+import { usePathname, useRouter } from 'next/navigation';
+import { type PropsWithChildren, useEffect, useRef } from 'react';
 
 export function AuthWrapper({ children }: PropsWithChildren) {
   const router = useRouter();
@@ -15,7 +15,7 @@ export function AuthWrapper({ children }: PropsWithChildren) {
       return;
     }
 
-    if (status === "unauthenticated") {
+    if (status === 'unauthenticated') {
       router.replace(
         `/auth?redirect_url=${encodeURIComponent(currentPathname.current)}`,
       );
@@ -23,7 +23,7 @@ export function AuthWrapper({ children }: PropsWithChildren) {
     }
   }, [status, router, currentPathname]);
 
-  if (status !== "authenticated") {
+  if (status !== 'authenticated') {
     return null;
   }
 

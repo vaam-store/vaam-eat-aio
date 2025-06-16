@@ -1,7 +1,7 @@
-import { createCallerFactory, createTRPCRouter } from "@app/server/api/trpc";
-import { createRouter } from "@gen/routers";
-import { uploadRouter } from "@app/server/api/routers/upload";
-import { userRouter } from "@app/server/api/routers/user";
+import { uploadRouter } from '@app/server/api/routers/upload';
+import { userRouter } from '@app/server/api/routers/user';
+import { createCallerFactory, createTRPCRouter } from '@app/server/api/trpc';
+import { createRouter } from '@gen/routers';
 
 const zenRouter = createRouter();
 

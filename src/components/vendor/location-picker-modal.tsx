@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button } from "@app/components/button";
-import { Modal } from "@app/components/modal";
-import { LocationPicker } from "@app/components/location-picker/location-picker";
-import { type ManagedCountries } from "@app/hooks/use-managed-countries";
+import { Button } from '@app/components/button';
+import { LocationPicker } from '@app/components/location-picker/location-picker';
+import { Modal } from '@app/components/modal';
+import { type ManagedCountries } from '@app/hooks/use-managed-countries';
+import React, { useState } from 'react';
 
 interface LocationPickerModalProps {
   isOpen: boolean;
@@ -43,9 +43,8 @@ export const LocationPickerModal: React.FC<LocationPickerModalProps> = ({
     <Modal
       open={isOpen}
       onCloseAction={onClose}
-      title="Pick Location"
-      position="bottom"
-    >
+      title='Pick Location'
+      position='bottom'>
       <div>
         <LocationPicker
           previousCoordinates={initialLocation}
@@ -57,15 +56,14 @@ export const LocationPickerModal: React.FC<LocationPickerModalProps> = ({
           managedCountriesData={managedCountriesData}
         />
       </div>
-      <div className="modal-action">
-        <Button onClick={onClose} className="btn-ghost">
+      <div className='modal-action'>
+        <Button onClick={onClose} className='btn-ghost'>
           Cancel
         </Button>
         <Button
           onClick={handleConfirm}
           disabled={!selectedLocation}
-          className="btn-primary"
-        >
+          className='btn-primary'>
           Confirm
         </Button>
       </div>

@@ -1,5 +1,5 @@
-import { Button } from "@app/components/button";
-import { ChevronLeft, ChevronRight } from "react-feather";
+import { Button } from '@app/components/button';
+import { ChevronLeft, ChevronRight } from 'react-feather';
 
 export interface PaginationProps {
   currentPage: number;
@@ -47,7 +47,7 @@ export function Pagination({
 
     // Ellipsis after first page if needed
     if (currentPage > halfPagesToShow + 2) {
-      pageNumbers.push("...");
+      pageNumbers.push('...');
     }
 
     // Determine start and end for middle numbers
@@ -67,7 +67,7 @@ export function Pagination({
 
     // Ellipsis before last page if needed
     if (currentPage < totalPages - halfPagesToShow - 1) {
-      pageNumbers.push("...");
+      pageNumbers.push('...');
     }
 
     // Always show last page
@@ -75,41 +75,39 @@ export function Pagination({
   }
 
   return (
-    <div className="join pagination my-8 flex justify-center">
+    <div className='join pagination my-8 flex justify-center'>
       <Button
-        type="button"
-        variant="outline"
-        className="join-item"
+        type='button'
+        variant='outline'
+        className='join-item'
         onClick={handlePrev}
         disabled={!hasPrevPage}
-        aria-label="Previous Page"
-      >
+        aria-label='Previous Page'>
         <ChevronLeft size={18} />
       </Button>
 
       {pageNumbers.map((page, index) =>
-        typeof page === "number" ? (
+        typeof page === 'number' ? (
           <Button
             // biome-ignore lint/suspicious/noArrayIndexKey: Index is fine for pagination items
             key={`${page}-${index}`}
-            type="button"
-            variant={currentPage === page ? "fill" : "outline"}
-            color={currentPage === page ? "primary" : undefined}
-            className="join-item"
+            type='button'
+            variant={currentPage === page ? 'fill' : 'outline'}
+            color={currentPage === page ? 'primary' : undefined}
+            className='join-item'
             onClick={() => onPageChange(page)}
-            aria-current={currentPage === page ? "page" : undefined}
-          >
+            aria-current={currentPage === page ? 'page' : undefined}>
             {page}
           </Button>
         ) : (
           <Button
-            as="span"
+            as='span'
             // biome-ignore lint/suspicious/noArrayIndexKey: Index is fine for pagination items
             key={`ellipsis-${index}`}
-            variant="outline"
+            variant='outline'
             disabled
-            className="join-item"
-            aria-hidden="true" // This is okay for a non-interactive span
+            className='join-item'
+            aria-hidden='true' // This is okay for a non-interactive span
           >
             {page}
           </Button>
@@ -117,13 +115,12 @@ export function Pagination({
       )}
 
       <Button
-        type="button"
-        variant="outline"
-        className="join-item"
+        type='button'
+        variant='outline'
+        className='join-item'
         onClick={handleNext}
         disabled={!hasNextPage}
-        aria-label="Next Page"
-      >
+        aria-label='Next Page'>
         <ChevronRight size={18} />
       </Button>
     </div>

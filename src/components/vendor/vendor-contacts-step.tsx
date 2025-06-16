@@ -1,59 +1,58 @@
-import React from "react";
-import { FieldArray, getIn, useFormikContext } from "formik";
-import { Button } from "@app/components/button";
-import { Plus } from "react-feather";
-import { Text } from "@app/components/text";
-import { ContactItem } from "@app/components/vendor/contact-item";
-import { ErrorDisplay } from "@app/components/vendor/error-display";
-import { type VendorFormValues } from "@app/components/vendor/vendor-creation-form";
+import { Button } from '@app/components/button';
+import { Text } from '@app/components/text';
+import { ContactItem } from '@app/components/vendor/contact-item';
+import { ErrorDisplay } from '@app/components/vendor/error-display';
+import { type VendorFormValues } from '@app/components/vendor/vendor-creation-form';
+import { FieldArray, getIn, useFormikContext } from 'formik';
+import { Plus } from 'react-feather';
 
 interface VendorContactsStepProps {
   userId: string;
+  name: string;
 }
 
-export function VendorContactsStep({ userId }: VendorContactsStepProps) {
+export function VendorContactsStep({ userId, name }: VendorContactsStepProps) {
   const { values, errors, touched } = useFormikContext<VendorFormValues>();
   return (
-    <div className="space-y-4">
-      <Text bold className="text-xl">
+    <div className='space-y-4'>
+      <Text bold className='text-xl'>
         Vendor Contacts
       </Text>
-      <p className="text-base-content opacity-70">
+      <p className='text-base-content opacity-70'>
         Manage vendor contact information.
       </p>
-      <FieldArray name="contacts.createMany.data">
+      <FieldArray name='contacts.createMany.data'>
         {({ remove, push }) => (
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {values.contacts.createMany.data.map((_contactItem, index) => (
               <ContactItem key={index} index={index} remove={remove} />
             ))}
             <Button
-              type="button"
-              variant="outline"
-              color="primary"
-              className="mt-2"
+              type='button'
+              variant='outline'
+              color='primary'
+              className='mt-2'
               onClick={() =>
                 push({
-                  type: "All",
-                  contactInfo: { email: "", phone: [""], name: "" },
+                  type: 'All',
+                  contactInfo: { email: '', phone: [''], name },
                   createdById: userId,
                 })
               }
-              aria-label="Add contact"
-            >
+              aria-label='Add contact'>
               <Plus /> Add Contact
             </Button>
             {(() => {
               const contactDataError = getIn(
                 errors,
-                "contacts.createMany.data",
+                'contacts.createMany.data',
               );
               const contactDataTouched = getIn(
                 touched,
-                "contacts.createMany.data",
+                'contacts.createMany.data',
               );
-              if (contactDataTouched && typeof contactDataError === "string") {
-                return <ErrorDisplay name="contacts.createMany.data" />;
+              if (contactDataTouched && typeof contactDataError === 'string') {
+                return <ErrorDisplay name='contacts.createMany.data' />;
               }
               return null;
             })()}

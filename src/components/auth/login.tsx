@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useRedirects } from "@app/components/auth/utils";
-import { signIn } from "next-auth/webauthn"; // Assuming this signIn is correct, not from 'next-auth/react' for webauthn
-import { Button } from "@app/components/button";
-import { LogIn } from "react-feather";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from "formik";
+import { useRedirects } from '@app/components/auth/utils';
+import { Button } from '@app/components/button';
 import {
   ErrorCategory,
   ErrorSeverity,
   handleGenericError,
-} from "@app/utils/error-handler";
-import { z } from "zod";
-import { toFormikValidationSchema } from "zod-formik-adapter";
+} from '@app/utils/error-handler';
+import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik';
+import { signIn } from 'next-auth/webauthn'; // Assuming this signIn is correct, not from 'next-auth/react' for webauthn
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { LogIn } from 'react-feather';
+import { z } from 'zod';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
 
 const loginValidationSchema = z.object({
-  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  email: z.string().email('Invalid email address').min(1, 'Email is required'),
 });
 
 type LoginFormValues = z.infer<typeof loginValidationSchema>;
 
 const initialValues: LoginFormValues = {
-  email: "",
+  email: '',
 };
 
 export function Login() {
@@ -37,8 +37,8 @@ export function Login() {
     ) => {
       setSubmitting(true);
       try {
-        await signIn("passkey", {
-          action: "register",
+        await signIn('passkey', {
+          action: 'register',
           email: values.email,
           redirect: false,
         });
@@ -46,14 +46,14 @@ export function Login() {
       } catch (error) {
         handleGenericError(
           error,
-          "Registration failed. Please try again.",
+          'Registration failed. Please try again.',
           ErrorSeverity.Error, // Corrected argument
           ErrorCategory.Authentication,
         );
         // Optionally, set form errors here if the error is a validation error from the server
-        if (error instanceof Error && error.message.includes("validation")) {
+        if (error instanceof Error && error.message.includes('validation')) {
           setErrors({
-            email: "This email might already be registered or is invalid.",
+            email: 'This email might already be registered or is invalid.',
           });
         }
       } finally {
@@ -66,14 +66,14 @@ export function Login() {
   const handleLogin = useCallback(async () => {
     setIsLoginLoading(true);
     try {
-      await signIn("passkey", {
+      await signIn('passkey', {
         redirect: false,
       });
       router.push(redirectUrl);
     } catch (error) {
       handleGenericError(
         error,
-        "Login failed. Please ensure you have a passkey set up or try registering.",
+        'Login failed. Please ensure you have a passkey set up or try registering.',
         ErrorSeverity.Error, // Corrected argument
         ErrorCategory.Authentication,
       );
@@ -83,65 +83,63 @@ export function Login() {
   }, [router, redirectUrl]);
 
   return (
-    <div className="flex flex-col">
+    <div className='flex flex-col'>
       <Formik
         initialValues={initialValues}
         validationSchema={toFormikValidationSchema(loginValidationSchema)}
-        onSubmit={handleRegister}
-      >
+        onSubmit={handleRegister}>
         {({ isSubmitting }) => (
-          <Form className="mb-4 space-y-4">
+          <Form className='mb-4 space-y-4'>
             <div>
-              <label htmlFor="email" className="label sr-only">
-                {" "}
+              <label htmlFor='email' className='label sr-only'>
+                {' '}
                 {/* Assuming label is visually hidden but present for a11y */}
-                <span className="label-text">Email</span>
+                <span className='label-text'>Email</span>
               </label>
               <Field
-                id="email"
-                name="email"
-                type="email"
-                placeholder="Enter your email to register with passkey"
-                className="input input-bordered input-lg w-full"
+                id='email'
+                name='email'
+                type='email'
+                placeholder='Enter your email to register with passkey'
+                className='input input-bordered input-lg w-full'
                 autoFocus
               />
               <ErrorMessage
-                name="email"
-                component="div"
-                className="text-error mt-1 text-xs"
+                name='email'
+                component='div'
+                className='text-error mt-1 text-xs'
               />
             </div>
             <Button
-              type="submit"
-              className="btn-block btn-lg"
+              type='submit'
+              className='btn-block btn-lg'
               disabled={isSubmitting}
               loading={isSubmitting} // Changed isLoading to loading
             >
               {isSubmitting ? (
-                <span className="loading loading-spinner" />
+                <span className='loading loading-spinner' />
               ) : (
-                "Register with Email & Passkey"
+                'Register with Email & Passkey'
               )}
             </Button>
           </Form>
         )}
       </Formik>
 
-      <div className="divider"> Or</div>
+      <div className='divider'> Or</div>
 
       <Button
-        size="lg"
+        size='lg'
         block
         onClick={handleLogin}
         loading={isLoginLoading}
-        disabled={isLoginLoading}
-      >
+        disabled={isLoginLoading}>
         {isLoginLoading ? (
-          <span className="loading loading-spinner" />
+          <span className='loading loading-spinner' />
         ) : (
           <>
             <span>Sign in with Passkey</span>
-            <LogIn className="ml-2" />
+            <LogIn className='ml-2' />
           </>
         )}
       </Button>

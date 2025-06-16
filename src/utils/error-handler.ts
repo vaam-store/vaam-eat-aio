@@ -1,22 +1,22 @@
-import toast, { type ToastOptions } from "react-hot-toast";
+import toast, { type ToastOptions } from 'react-hot-toast';
 
 export enum ErrorCategory {
-  Network = "Network",
-  Validation = "Validation",
-  Server = "Server",
-  Authentication = "Authentication",
-  Authorization = "Authorization",
-  NotFound = "NotFound",
-  Timeout = "Timeout",
-  ThirdParty = "ThirdParty",
-  Unknown = "Unknown",
+  Network = 'Network',
+  Validation = 'Validation',
+  Server = 'Server',
+  Authentication = 'Authentication',
+  Authorization = 'Authorization',
+  NotFound = 'NotFound',
+  Timeout = 'Timeout',
+  ThirdParty = 'ThirdParty',
+  Unknown = 'Unknown',
 }
 
 export enum ErrorSeverity {
-  Info = "Info",
-  Warning = "Warning",
-  Error = "Error",
-  Critical = "Critical",
+  Info = 'Info',
+  Warning = 'Warning',
+  Error = 'Error',
+  Critical = 'Critical',
 }
 
 interface ErrorWithMessage {
@@ -37,10 +37,10 @@ const DEDUPLICATION_WINDOW_MS = 5000; // 5 seconds
 
 function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
   return (
-    typeof error === "object" &&
+    typeof error === 'object' &&
     error !== null &&
-    "message" in error &&
-    typeof (error as { message: unknown }).message === "string"
+    'message' in error &&
+    typeof (error as { message: unknown }).message === 'string'
   );
 }
 
@@ -50,13 +50,13 @@ function getErrorMessage(error: unknown): string {
   }
   // Attempt to extract message from TRPCError
   if (
-    typeof error === "object" &&
+    typeof error === 'object' &&
     error !== null &&
-    "shape" in error &&
-    typeof (error as any).shape === "object" &&
+    'shape' in error &&
+    typeof (error as any).shape === 'object' &&
     (error as any).shape !== null &&
-    "message" in (error as any).shape &&
-    typeof (error as any).shape.message === "string"
+    'message' in (error as any).shape &&
+    typeof (error as any).shape.message === 'string'
   ) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return (error as any).shape.message;
@@ -75,15 +75,15 @@ function categorizeError(error: unknown): CategorizedError {
   let statusCode: number | undefined;
 
   // Basic TRPC error check (can be expanded)
-  if (typeof error === "object" && error !== null) {
+  if (typeof error === 'object' && error !== null) {
     if (
-      "name" in error &&
-      (error as { name: string }).name === "TRPCClientError"
+      'name' in error &&
+      (error as { name: string }).name === 'TRPCClientError'
     ) {
       category = ErrorCategory.Server; // Or more specific based on TRPC error codes
       if (
-        "data" in error &&
-        typeof (error as any).data === "object" &&
+        'data' in error &&
+        typeof (error as any).data === 'object' &&
         (error as any).data !== null
       ) {
         statusCode = (error as any).data.httpStatus as number;
@@ -101,8 +101,8 @@ function categorizeError(error: unknown): CategorizedError {
       category = ErrorCategory.Validation; // Often indicates programming errors or unexpected data
       severity = ErrorSeverity.Warning;
     } else if (
-      message.toLowerCase().includes("network error") ||
-      message.toLowerCase().includes("failed to fetch")
+      message.toLowerCase().includes('network error') ||
+      message.toLowerCase().includes('failed to fetch')
     ) {
       category = ErrorCategory.Network;
       severity = ErrorSeverity.Critical;
@@ -136,16 +136,16 @@ function getToastDuration(severity: ErrorSeverity): number {
 
 function formatErrorMessage(categorizedError: CategorizedError): string {
   // Basic formatting, can be expanded
-  let prefix = "";
+  let prefix = '';
   switch (categorizedError.category) {
     case ErrorCategory.Network:
-      prefix = "Network Error: ";
+      prefix = 'Network Error: ';
       break;
     case ErrorCategory.Validation:
-      prefix = "Validation Error: ";
+      prefix = 'Validation Error: ';
       break;
     case ErrorCategory.Server:
-      prefix = `Server Error (Code: ${categorizedError.statusCode ?? "N/A"}): `;
+      prefix = `Server Error (Code: ${categorizedError.statusCode ?? 'N/A'}): `;
       break;
     // Add more cases as needed
   }
@@ -154,7 +154,7 @@ function formatErrorMessage(categorizedError: CategorizedError): string {
 
 export const showErrorToast = (
   error: unknown,
-  defaultMessage = "An unexpected error occurred.",
+  defaultMessage = 'An unexpected error occurred.',
   options?: {
     severity?: ErrorSeverity;
     category?: ErrorCategory;
@@ -182,7 +182,7 @@ export const showErrorToast = (
   // Deduplication check
   if (recentErrors.has(displayMessage)) {
     console.warn(
-      "Duplicate error suppressed:",
+      'Duplicate error suppressed:',
       displayMessage,
       categorized.originalError,
     );
@@ -200,7 +200,7 @@ export const showErrorToast = (
       toast.success(displayMessage, toastOptions); // Or toast(displayMessage, { icon: 'ℹ️', ...toastOptions });
       break;
     case ErrorSeverity.Warning:
-      toast(displayMessage, { icon: "⚠️", ...toastOptions });
+      toast(displayMessage, { icon: '⚠️', ...toastOptions });
       break;
     case ErrorSeverity.Critical:
     case ErrorSeverity.Error:
@@ -218,7 +218,7 @@ export const showErrorToast = (
 
 export const handleTrpcError = (
   error: unknown,
-  defaultMessage = "A tRPC error occurred.",
+  defaultMessage = 'A tRPC error occurred.',
 ) => {
   // TRPC errors might already have good categorization potential within categorizeError
   // We can pass along a default severity if needed, or let categorizeError decide.
@@ -236,7 +236,7 @@ export const handleQueryError = (
 
   _queryOrMutation?: unknown, // For queries or mutations
 ) => {
-  const defaultMessage = "A data fetching error occurred.";
+  const defaultMessage = 'A data fetching error occurred.';
   // TanStack Query errors often relate to network or server issues.
   // categorizeError should pick up network issues.
   // We can default to Server if it's not clearly a network one.
@@ -252,7 +252,7 @@ export const handleQueryError = (
 // General purpose error handler
 export const handleGenericError = (
   error: unknown,
-  defaultMessage = "An unexpected error occurred.",
+  defaultMessage = 'An unexpected error occurred.',
   severity: ErrorSeverity = ErrorSeverity.Error,
   category: ErrorCategory = ErrorCategory.Unknown,
 ) => {

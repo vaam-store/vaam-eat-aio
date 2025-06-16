@@ -1,12 +1,12 @@
-import type { ComponentPropsWithoutRef, ElementType, RefObject } from "react";
-import { X } from "react-feather";
-import { twMerge } from "tailwind-merge";
+import type { ComponentPropsWithoutRef, ElementType, RefObject } from 'react';
+import { X } from 'react-feather';
+import { twMerge } from 'tailwind-merge';
 import type {
   ButtonColor,
   ButtonShape,
   ButtonSize,
   ButtonVariant,
-} from "./types";
+} from './types';
 import {
   getButtonColorClasses,
   getButtonShape,
@@ -14,7 +14,7 @@ import {
   getButtonVariantClasses,
   getIconSize,
   getLoadingSizeClasses,
-} from "./utils";
+} from './utils';
 
 interface BaseButtonOwnProps {
   loading?: boolean;
@@ -27,14 +27,14 @@ interface BaseButtonOwnProps {
   disabled?: boolean;
 }
 
-export type BaseButtonProps<As extends ElementType = "button"> =
+export type BaseButtonProps<As extends ElementType = 'button'> =
   BaseButtonOwnProps &
     ComponentPropsWithoutRef<As> & {
       as?: As;
       ref?: RefObject<As>;
     };
 
-export function Button<As extends ElementType = "button">({
+export function Button<As extends ElementType = 'button'>({
   className,
   loading = false,
   children,
@@ -42,18 +42,18 @@ export function Button<As extends ElementType = "button">({
   size,
   as,
   shape,
-  color = "primary",
-  variant = "fill",
+  color = 'primary',
+  variant = 'fill',
   circle = false,
   block = false,
   join = false,
   ...props
 }: BaseButtonProps<As>) {
-  const Component = as ?? "button";
+  const Component = as ?? 'button';
   const isDisabled = loading ?? disabled;
 
   // Determine if the rendered component is a button to apply the native disabled attribute
-  const isButton = Component === "button";
+  const isButton = Component === 'button';
 
   const colorClasses = getButtonColorClasses(color);
   const variantClasses = getButtonVariantClasses(variant);
@@ -63,30 +63,29 @@ export function Button<As extends ElementType = "button">({
   return (
     <Component
       className={twMerge(
-        "btn relative",
+        'btn relative',
         variantClasses,
         colorClasses,
         sizeClasses,
         shapeClasses,
-        isDisabled && "btn-disabled",
-        circle && "btn-circle",
-        block && "w-full",
-        join && "join-item",
+        isDisabled && 'btn-disabled',
+        circle && 'btn-circle',
+        block && 'w-full',
+        join && 'join-item',
         className,
       )}
       // Apply native disabled attribute only if it's a button
       {...(isButton ? { disabled: isDisabled } : {})}
-      {...props}
-    >
+      {...props}>
       {loading ? (
         <span
           className={twMerge(
-            "loading loading-spinner",
+            'loading loading-spinner',
             getLoadingSizeClasses(size),
           )}
         />
       ) : isDisabled && isButton ? ( // Only show X icon if disabled and it's a button
-        <X className="fill-current" size={getIconSize(size)} />
+        <X className='fill-current' size={getIconSize(size)} />
       ) : (
         children
       )}

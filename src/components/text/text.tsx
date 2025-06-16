@@ -1,14 +1,14 @@
-import type { TextColor, TextSize } from "@app/components/text/types";
+import type { TextColor, TextSize } from '@app/components/text/types';
 import {
   getTextColorClasses,
   getTextSizeClasses,
-} from "@app/components/text/utils";
+} from '@app/components/text/utils';
 import type {
   ComponentPropsWithoutRef,
   ElementType,
   PropsWithChildren,
-} from "react";
-import { twMerge } from "tailwind-merge";
+} from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface TextOwnProps {
   size?: TextSize;
@@ -16,12 +16,12 @@ interface TextOwnProps {
   bold?: boolean;
 }
 
-type TextProps<As extends ElementType = "p"> = TextOwnProps &
+type TextProps<As extends ElementType = 'p'> = TextOwnProps &
   ComponentPropsWithoutRef<As> & {
     as?: As;
   };
 
-export function Text<As extends ElementType = "p">({
+export function Text<As extends ElementType = 'p'>({
   children,
   as,
   color,
@@ -30,13 +30,13 @@ export function Text<As extends ElementType = "p">({
   className,
   ...props
 }: PropsWithChildren<TextProps<As>>) {
-  const Component = as ?? "p";
+  const Component = as ?? 'p';
   const textColorClasses = getTextColorClasses(color);
   const textSizeClasses = getTextSizeClasses(size);
 
   const finalClass = twMerge(
-    "text-wrap",
-    bold && "font-bold",
+    'text-wrap',
+    bold && 'font-bold',
     textColorClasses,
     textSizeClasses,
     className,

@@ -1,7 +1,7 @@
-import type { MetadataRoute } from "next";
-import { env } from "@app/env";
-import { VariationStatus } from "@prisma/client";
-import { db } from "@app/server/db";
+import { env } from '@app/env';
+import { db } from '@app/server/db';
+import { VariationStatus } from '@prisma/client';
+import type { MetadataRoute } from 'next';
 
 const MAX_PER_SITEMAP = 50_000;
 
@@ -33,7 +33,7 @@ export default async function sitemap({
     url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/p/${product.id}`,
     lastModified: product.updatedAt,
     images: product.images.map(({ url }: any) => url as string),
-    changeFrequency: "weekly",
+    changeFrequency: 'weekly',
     priority: 0.6,
   }));
 }

@@ -1,10 +1,10 @@
-import "maplibre-gl/dist/maplibre-gl.css";
-import { useEffect, useRef, useState } from "react";
-import maplibregl from "maplibre-gl";
-import { Protocol } from "pmtiles";
-import { layers, namedFlavor } from "@protomaps/basemaps";
-import { env } from "@app/env";
-import { useGeolocation } from "@app/hooks/use-geolocation";
+import { env } from '@app/env';
+import { useGeolocation } from '@app/hooks/use-geolocation';
+import { layers, namedFlavor } from '@protomaps/basemaps';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import { Protocol } from 'pmtiles';
+import { useEffect, useRef, useState } from 'react';
 
 const pmtilesBaseUrl = env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL;
 const pmtilesBucket = env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET;
@@ -42,12 +42,7 @@ export function useLocationMap({
   // This ensures we respect the exact initialLocation when provided
   const [shouldFitToArea, setShouldFitToArea] = useState(!initialLocation);
 
-  const {
-    latitude,
-    longitude,
-    isLoading: geolocationLoading,
-    getLocation,
-  } = useGeolocation();
+  const { latitude, longitude, getLocation } = useGeolocation();
 
   useEffect(() => {
     getLocation();
@@ -56,14 +51,14 @@ export function useLocationMap({
   useEffect(() => {
     // Register the pmtiles protocol once per mount
     const pmtilesProtocol = new Protocol();
-    maplibregl.addProtocol("pmtiles", pmtilesProtocol.tile);
+    maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile);
 
     // Cleanup function to remove the protocol on unmount
     return () => {
       // It's good practice to check if removeProtocol exists,
       // though it's standard in maplibre-gl
       if (maplibregl.removeProtocol) {
-        maplibregl.removeProtocol("pmtiles");
+        maplibregl.removeProtocol('pmtiles');
       }
     };
   }, []); // Empty dependency array ensures this runs only once on mount and unmount
@@ -136,16 +131,16 @@ export function useLocationMap({
       style: {
         version: 8,
         glyphs:
-          "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
-        sprite: "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
+          'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+        sprite: 'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
         sources: {
           protomaps: {
-            type: "vector",
+            type: 'vector',
             url: pmtilesUrl,
             //attribution: '<a href="https://protomaps.com">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
           },
         },
-        layers: layers("protomaps", namedFlavor("light"), { lang: "en" }),
+        layers: layers('protomaps', namedFlavor('light'), { lang: 'en' }),
       },
       center: [defaultCenter.lng, defaultCenter.lat],
       zoom: 14,
@@ -162,7 +157,7 @@ export function useLocationMap({
       mapRef.current.touchZoomRotate.disable();
     }
 
-    mapRef.current.on("load", () => {
+    mapRef.current.on('load', () => {
       let boundsToFit: maplibregl.LngLatBoundsLike | undefined = undefined;
 
       if (selectedArea && managedCountries) {
@@ -214,7 +209,7 @@ export function useLocationMap({
           .addTo(mapRef.current);
 
         if (!disabled) {
-          marker.on("dragend", () => {
+          marker.on('dragend', () => {
             const lngLat = marker.getLngLat();
             const newLocation = { lat: lngLat.lat, lng: lngLat.lng };
 
@@ -254,12 +249,12 @@ export function useLocationMap({
           setShouldFitToArea(false);
         }
       };
-      mapRef.current.on("dblclick", dblClickHandler);
+      mapRef.current.on('dblclick', dblClickHandler);
 
       // Cleanup function for this specific effect
       return () => {
         if (mapRef.current) {
-          mapRef.current.off("dblclick", dblClickHandler);
+          mapRef.current.off('dblclick', dblClickHandler);
         }
       };
     }
@@ -281,7 +276,8 @@ export function useLocationMap({
     managedCountries,
     onLocationChange,
     country,
-    disabled, // Add disabled to dependency array
+    disabled,
+    shouldFitToArea,
   ]);
 
   const handleAreaChange = (newArea: string) => {
@@ -313,16 +309,16 @@ export function useLocationMap({
           mapRef.current.setStyle({
             version: 8,
             glyphs:
-              "https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf",
+              'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
             sprite:
-              "https://protomaps.github.io/basemaps-assets/sprites/v4/light",
+              'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
             sources: {
               protomaps: {
-                type: "vector",
+                type: 'vector',
                 url: `pmtiles://${env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL}/vaam-eat/maps/${newArea}.pmtiles`,
               },
             },
-            layers: layers("protomaps", namedFlavor("light"), { lang: "en" }),
+            layers: layers('protomaps', namedFlavor('light'), { lang: 'en' }),
           });
           break;
         }
@@ -349,7 +345,7 @@ export function useLocationMap({
         const marker = new maplibregl.Marker({ draggable: !disabled })
           .setLngLat([userCoords.lng, userCoords.lat])
           .addTo(mapRef.current);
-        marker.on("dragend", () => {
+        marker.on('dragend', () => {
           const lngLat = marker.getLngLat();
           const newLocation = { lat: lngLat.lat, lng: lngLat.lng };
           setCurrentLocation(newLocation);

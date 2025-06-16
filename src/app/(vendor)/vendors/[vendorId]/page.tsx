@@ -1,6 +1,5 @@
-import { api } from "@app/trpc/server";
-import { notFound } from "next/navigation";
-import React from "react";
+import { api } from '@app/trpc/server';
+import { notFound } from 'next/navigation';
 
 type VendorPageProps = {
   params: {
@@ -29,25 +28,25 @@ export default async function VendorPage({ params }: VendorPageProps) {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-6 text-3xl font-bold">Vendor Details</h1>
-      <div className="card card-border">
-        <div className="card-body">
-          <h2 className="card-title text-2xl">
-            {vendor.name ?? "Unnamed Vendor"}
+    <div className='container mx-auto p-4'>
+      <h1 className='mb-6 text-3xl font-bold'>Vendor Details</h1>
+      <div className='card card-border'>
+        <div className='card-body'>
+          <h2 className='card-title text-2xl'>
+            {vendor.name ?? 'Unnamed Vendor'}
           </h2>
           <p>
             <strong>ID:</strong> {vendor.id}
           </p>
           <p>
-            <strong>Status:</strong> {vendor.enabled ? "Enabled" : "Disabled"}
+            <strong>Status:</strong> {vendor.enabled ? 'Enabled' : 'Disabled'}
           </p>
           <p>
-            <strong>Created At:</strong>{" "}
+            <strong>Created At:</strong>{' '}
             {new Date(vendor.createdAt).toLocaleDateString()}
           </p>
           <p>
-            <strong>Last Updated:</strong>{" "}
+            <strong>Last Updated:</strong>{' '}
             {new Date(vendor.updatedAt).toLocaleDateString()}
           </p>
           {/* Add more vendor details here as needed */}

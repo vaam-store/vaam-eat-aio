@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
 import {
   SearchInput,
   type SearchLocationParams,
-} from "@app/components/search/search-input";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+} from '@app/components/search/search-input';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 
 export function HomeSearch() {
   const router = useRouter();
@@ -27,7 +27,7 @@ export function HomeSearch() {
     const p = btoa(
       JSON.stringify({ latitude: data.latitude, longitude: data.longitude }),
     );
-    const queries = createQueryString(["q", data.query], ["p", p]);
+    const queries = createQueryString(['q', data.query], ['p', p]);
     router.push(`/search?${queries}`);
   };
 

@@ -19,7 +19,8 @@
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
@@ -87,11 +88,18 @@
     "@types/react-dom": "^19.0.0",
     "@vymalo/ui-preset": "^2.0.3",
     "@zenstackhq/trpc": "^2.15.1",
+    "autoprefixer": "^10.4.21",
+    "cssnano": "^7.0.7",
     "eslint": "^9.23.0",
     "eslint-config-next": "^15.2.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-prisma": "^5.0.0",
+    "prettier-plugin-sh": "^0.17.4",
+    "prettier-plugin-tailwindcss": "^0.6.12",
     "prisma": "6.9.0",
     "rimraf": "^6.0.1",
     "sass": "^1.89.2",
@@ -103,5 +111,8 @@
   "ct3aMetadata": {
     "initVersion": "7.39.3"
   },
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.1",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  }
 }

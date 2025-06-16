@@ -1,9 +1,9 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import PassKeyProvider from "next-auth/providers/passkey";
+import { PrismaAdapter } from '@auth/prisma-adapter';
+import { type DefaultSession, type NextAuthConfig } from 'next-auth';
+import PassKeyProvider from 'next-auth/providers/passkey';
 
-import { db } from "@app/server/db";
-import type { Prisma } from "@prisma/client";
+import { db } from '@app/server/db';
+import type { Prisma } from '@prisma/client';
 
 type PrismaUser = Prisma.UserGetPayload<{
   include: {
@@ -17,9 +17,9 @@ type PrismaUser = Prisma.UserGetPayload<{
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
+declare module 'next-auth' {
   interface Session extends DefaultSession {
-    user: PrismaUser & DefaultSession["user"];
+    user: PrismaUser & DefaultSession['user'];
   }
 
   // interface User {
@@ -42,9 +42,9 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   pages: {
-    signIn: "/auth",
-    signOut: "/auth/logout",
-    error: "/auth",
+    signIn: '/auth',
+    signOut: '/auth/logout',
+    error: '/auth',
   },
   callbacks: {
     session: async ({ session, user }) => ({

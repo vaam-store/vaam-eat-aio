@@ -7,14 +7,14 @@
  * need to use are documented accordingly near the end.
  */
 
-import { initTRPC, TRPCError } from "@trpc/server";
-import superjson from "superjson";
-import { ZodError } from "zod";
+import { initTRPC, TRPCError } from '@trpc/server';
+import superjson from 'superjson';
+import { ZodError } from 'zod';
 
-import { auth } from "@app/server/auth";
-import { db } from "@app/server/db";
-import { emailTransporter } from "@app/server/email/transporter";
-import { enhance } from "@zenstackhq/runtime";
+import { auth } from '@app/server/auth';
+import { db } from '@app/server/db';
+import { emailTransporter } from '@app/server/email/transporter';
+import { enhance } from '@zenstackhq/runtime';
 
 /**
  * 1. CONTEXT
@@ -126,7 +126,7 @@ export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
     if (!ctx.session?.user) {
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+      throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
     return next({
       ctx: {

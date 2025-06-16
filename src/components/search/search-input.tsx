@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useGeolocation } from "@app/hooks/use-geolocation";
-import { MapPin, Search } from "react-feather";
-import { useEffect, useRef, useState } from "react";
-import { handleGenericError } from "@app/utils/error-handler";
-import { Button } from "../button";
-import { Form, Formik, type FormikHelpers, useFormikContext } from "formik";
-import { z } from "zod";
-import { toFormikValidationSchema } from "zod-formik-adapter";
+import { useGeolocation } from '@app/hooks/use-geolocation';
+import { handleGenericError } from '@app/utils/error-handler';
+import { Form, Formik, type FormikHelpers, useFormikContext } from 'formik';
+import { useEffect, useRef, useState } from 'react';
+import { MapPin, Search } from 'react-feather';
+import { z } from 'zod';
+import { toFormikValidationSchema } from 'zod-formik-adapter';
+import { Button } from '../button';
 
 export type SearchLocationParams = {
   query: string;
@@ -27,7 +27,7 @@ const searchValidationSchema = z.object({
 });
 
 const initialValues: SearchLocationParams = {
-  query: "",
+  query: '',
   latitude: undefined,
   longitude: undefined,
 };
@@ -42,14 +42,14 @@ function FormikSearchBar() {
 
   // Update Formik's query field when localQuery changes
   useEffect(() => {
-    setFieldValue("query", localQuery);
+    setFieldValue('query', localQuery);
   }, [localQuery, setFieldValue]);
 
   // Update Formik's lat/lng when geolocation hook provides them
   useEffect(() => {
     if (latitude !== null && longitude !== null) {
-      setFieldValue("latitude", latitude);
-      setFieldValue("longitude", longitude);
+      setFieldValue('latitude', latitude);
+      setFieldValue('longitude', longitude);
     }
   }, [latitude, longitude, setFieldValue]);
 
@@ -97,46 +97,44 @@ function FormikSearchBar() {
       // After getLocation, latitude/longitude will update, triggering the above useEffect
       // which then calls handleGeolocationSearch if conditions are met.
     } catch (error) {
-      handleGenericError(error, "Could not get location.");
+      handleGenericError(error, 'Could not get location.');
     }
   };
 
   return (
-    <div className="input input-primary input-bordered input-xl flex w-full items-center gap-2">
+    <div className='input input-primary input-bordered input-xl flex w-full items-center gap-2'>
       <Button
-        type="button"
-        shape="circle"
-        variant="soft"
-        aria-label="Use current location"
+        type='button'
+        shape='circle'
+        variant='soft'
+        aria-label='Use current location'
         onClick={() => void handleGetLocation()}
         loading={isLoading}
-        className="flex-shrink-0"
-      >
-        <MapPin className="h-6 w-6 stroke-current" />
+        className='flex-shrink-0'>
+        <MapPin className='h-6 w-6 stroke-current' />
       </Button>
 
       <input
-        type="text"
-        placeholder="Search for food…"
+        type='text'
+        placeholder='Search for food…'
         value={localQuery}
         onChange={(e) => setLocalQuery(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === 'Enter') {
             e.preventDefault(); // Prevent default form submission if inside a larger form
             submitForm();
           }
         }}
-        className="grow bg-transparent outline-none"
+        className='grow bg-transparent outline-none'
       />
 
       <Button
-        type="submit"
-        shape="circle"
-        variant="soft"
-        className="flex-shrink-0"
-        ref={submitButtonRef}
-      >
-        <Search className="h-6 w-6 stroke-current" />
+        type='submit'
+        shape='circle'
+        variant='soft'
+        className='flex-shrink-0'
+        ref={submitButtonRef}>
+        <Search className='h-6 w-6 stroke-current' />
       </Button>
     </div>
   );
@@ -159,7 +157,7 @@ export function SearchInput({ onSearch, _onClear }: SearchInputProps) {
       enableReinitialize // Important if initialValues could change externally
     >
       {() => (
-        <Form className="w-full">
+        <Form className='w-full'>
           <FormikSearchBar />
         </Form>
       )}

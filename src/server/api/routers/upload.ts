@@ -1,7 +1,7 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-import { createTRPCRouter, protectedProcedure } from "@app/server/api/trpc";
-import { createPresignedPostUrl } from "@app/server/s3";
+import { createTRPCRouter, protectedProcedure } from '@app/server/api/trpc';
+import { createPresignedPostUrl } from '@app/server/s3';
 
 export const uploadRouter = createTRPCRouter({
   getUploadUrl: protectedProcedure

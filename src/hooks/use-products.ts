@@ -1,5 +1,5 @@
-import { api } from "@app/trpc/react";
-import type { Prisma } from "@prisma/client";
+import { api } from '@app/trpc/react';
+import type { Prisma } from '@prisma/client';
 
 type UseProducts = {
   take?: number;

@@ -1,6 +1,6 @@
-import React from "react";
-import { ArrowRight } from "react-feather";
-import { ListItem } from "../list-item/list-item";
+import React from 'react';
+import { ArrowRight } from 'react-feather';
+import { ListItem } from '../list-item/list-item';
 
 interface SettingNavigationItemProps {
   href: string;
@@ -21,7 +21,7 @@ export function SettingNavigationItem({
       title={title}
       icon={icon}
       description={description}
-      endIcon={<ArrowRight className="text-primary" />}
+      endIcon={<ArrowRight className='text-primary' />}
     />
   );
 }

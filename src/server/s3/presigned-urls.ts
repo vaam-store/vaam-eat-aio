@@ -1,6 +1,6 @@
-import { env } from "@app/env";
-import { createId } from "@paralleldrive/cuid2";
-import { client } from "./client";
+import { env } from '@app/env';
+import { createId } from '@paralleldrive/cuid2';
+import { client } from './client';
 
 const maxAge = 3600 * 24; // 24 hours
 

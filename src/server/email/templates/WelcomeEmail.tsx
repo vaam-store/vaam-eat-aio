@@ -6,8 +6,7 @@ import {
   Html,
   Section,
   Text,
-} from "@react-email/components";
-import React from "react";
+} from '@react-email/components';
 
 interface WelcomeEmailProps {
   userName: string;
@@ -26,7 +25,7 @@ export const WelcomeEmail = ({ userName }: WelcomeEmailProps) => {
               Thank you for joining our community. We&#39;re excited to have you
               on board!
             </Text>
-            <Button style={button} href="#">
+            <Button style={button} href='#'>
               Get Started
             </Button>
           </Section>
@@ -37,48 +36,48 @@ export const WelcomeEmail = ({ userName }: WelcomeEmailProps) => {
 };
 
 const main = {
-  backgroundColor: "#f6f9fc",
+  backgroundColor: '#f6f9fc',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
 const container = {
-  backgroundColor: "#ffffff",
-  margin: "0 auto",
-  padding: "20px 0 48px",
-  marginBottom: "64px",
+  backgroundColor: '#ffffff',
+  margin: '0 auto',
+  padding: '20px 0 48px',
+  marginBottom: '64px',
 };
 
 const box = {
-  padding: "0 48px",
+  padding: '0 48px',
 };
 
 const heading = {
-  fontSize: "24px",
-  letterSpacing: "-0.5px",
-  lineHeight: "1.3",
-  fontWeight: "400",
-  color: "#488cc7",
-  padding: "17px 0 0",
-  textAlign: "center" as const,
+  fontSize: '24px',
+  letterSpacing: '-0.5px',
+  lineHeight: '1.3',
+  fontWeight: '400',
+  color: '#488cc7',
+  padding: '17px 0 0',
+  textAlign: 'center' as const,
 };
 
 const paragraph = {
-  margin: "0 0 15px",
-  fontSize: "15px",
-  lineHeight: "1.4",
-  color: "#3c4043",
+  margin: '0 0 15px',
+  fontSize: '15px',
+  lineHeight: '1.4',
+  color: '#3c4043',
 };
 
 const button = {
-  backgroundColor: "#488cc7",
-  borderRadius: "5px",
-  color: "#fff",
-  fontSize: "16px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "block",
-  width: "100%",
-  padding: "10px 0",
+  backgroundColor: '#488cc7',
+  borderRadius: '5px',
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: 'bold',
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'block',
+  width: '100%',
+  padding: '10px 0',
 };

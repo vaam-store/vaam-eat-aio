@@ -1,4 +1,4 @@
-import { Title } from "@app/components/text/title";
+import { Title } from '@app/components/text/title';
 
 export default function OrdersListPage() {
   return (

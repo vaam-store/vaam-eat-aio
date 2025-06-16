@@ -1,5 +1,5 @@
-import { Suspense } from "react";
-import { EmailVerificationClient } from "@app/components/settings/email-verification-client";
+import { EmailVerificationClient } from '@app/components/settings/email-verification-client';
+import { Suspense } from 'react';
 
 interface VerifyEmailPageProps {
   searchParams: {

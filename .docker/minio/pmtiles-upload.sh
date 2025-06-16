@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -Eeuo pipefail
-shopt -s nullglob inherit_errexit 2>/dev/null || true
+shopt -s nullglob inherit_errexit 2> /dev/null || true
 IFS=$'\n\t'
 
 #─── logging helpers ─────────────────────────────────────────────────────────────
@@ -11,7 +11,10 @@ trap 'err "Command \"${BASH_COMMAND}\" failed at line ${LINENO}."' ERR
 
 #─── prerequisite binaries ───────────────────────────────────────────────────────
 for bin in mc; do
-  command -v "$bin" &>/dev/null || { err "Required command '$bin' not found"; exit 1; }
+  command -v "$bin" &> /dev/null || {
+    err "Required command '$bin' not found"
+    exit 1
+  }
 done
 
 # ────────────────────────────── CONFIG VIA ENV ────────────────────────────────
@@ -30,11 +33,11 @@ log "Configuring mc alias '$MINIO_ALIAS' → $MINIO_ENDPOINT"
 mc alias set "$MINIO_ALIAS" "$MINIO_ENDPOINT" "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY" --quiet
 
 log "Waiting for bucket '$MINIO_BUCKET' on $MINIO_ALIAS…"
-until mc ls "$MINIO_ALIAS/$MINIO_BUCKET" >/dev/null 2>&1; do sleep 1; done
+until mc ls "$MINIO_ALIAS/$MINIO_BUCKET" > /dev/null 2>&1; do sleep 1; done
 log "Bucket '$MINIO_BUCKET' is ready."
 
 files=("$PMTILES_DIR"/*.pmtiles)
-if (( ${#files[@]} == 0 )); then
+if ((${#files[@]} == 0)); then
   log "No .pmtiles files found in $PMTILES_DIR — nothing to upload."
   exit 0
 fi
@@ -43,7 +46,7 @@ for filepath in "${files[@]}"; do
   filename=$(basename "$filepath")
   dest="$MINIO_ALIAS/$MINIO_BUCKET/$DEST_PREFIX/$filename"
 
-  if [[ $SKIP_EXISTING == true ]] && mc stat "$dest" >/dev/null 2>&1; then
+  if [[ $SKIP_EXISTING == true ]] && mc stat "$dest" > /dev/null 2>&1; then
     log "Skipping $filename (already in bucket)"
     continue
   fi

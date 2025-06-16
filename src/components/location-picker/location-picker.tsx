@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useLocationMap } from "@app/hooks/use-location-map";
-import { type ManagedCountries } from "@app/hooks/use-managed-countries";
-import { RecenterMapButton } from "./recenter-map-button";
+import { useLocationMap } from '@app/hooks/use-location-map';
+import { type ManagedCountries } from '@app/hooks/use-managed-countries';
+import React, { useEffect, useState } from 'react';
+import { RecenterMapButton } from './recenter-map-button';
 
 interface LocationPickerProps {
   previousCoordinates?: { lat: number; lng: number }; // Renamed from initialLocation and made optional
@@ -69,7 +69,7 @@ export function LocationPicker({
     initialLocation: previousCoordinates,
     onLocationChange,
     selectedArea, // This will be the effectively selected area
-    managedCountries: managedCountriesData || {},
+    managedCountries: managedCountriesData ?? {},
     country, // Pass country to useLocationMap
     disabled,
   });
@@ -88,22 +88,21 @@ export function LocationPicker({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="form-control w-full">
-        <label className="label">
-          <span className="label-text">Select Zone/Area</span>
+    <div className='flex flex-col gap-4'>
+      <div className='form-control w-full'>
+        <label className='label'>
+          <span className='label-text'>Select Zone/Area</span>
         </label>
         <select
-          className="select select-bordered"
-          value={selectedArea ?? ""}
+          className='select select-bordered'
+          value={selectedArea ?? ''}
           onChange={handleAreaChange}
-          aria-label="Select Zone/Area"
-          disabled={disabled}
-        >
-          <option value="" disabled>
+          aria-label='Select Zone/Area'
+          disabled={disabled}>
+          <option value='' disabled>
             Select an area
           </option>
-          {Object.entries(managedCountriesData || {}).map(
+          {Object.entries(managedCountriesData ?? {}).map(
             ([countryCode, areas]) => (
               <optgroup key={countryCode} label={countryCode.toUpperCase()}>
                 {Object.keys(areas).map((areaName) => (
@@ -116,28 +115,28 @@ export function LocationPicker({
           )}
         </select>
       </div>
-      <div className="relative">
-        {" "}
+      <div className='relative'>
+        {' '}
         {/* Added relative positioning for the button */}
-        <div ref={mapContainerRef} className="rounded-box h-96 w-full" />
+        <div ref={mapContainerRef} className='rounded-box h-96 w-full' />
         {!disabled && (
           <RecenterMapButton
             onClick={handleRecenterClick}
-            className="absolute right-2 bottom-12 z-10" // Positioning classes
+            className='absolute right-2 bottom-12 z-10' // Positioning classes
           />
         )}
       </div>
-      <div className="py-4">
+      <div className='py-4'>
         {selectedLocation ? (
           <p>
-            Selected: Lat {selectedLocation.lat.toFixed(4)}, Lng{" "}
+            Selected: Lat {selectedLocation.lat.toFixed(4)}, Lng{' '}
             {selectedLocation.lng.toFixed(4)}
           </p>
         ) : (
           <p>
             {disabled
-              ? "Location is set."
-              : "Drag the marker to select a location."}
+              ? 'Location is set.'
+              : 'Drag the marker to select a location.'}
           </p>
         )}
       </div>

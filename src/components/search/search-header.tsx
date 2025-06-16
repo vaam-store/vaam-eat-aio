@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 import {
   SearchInput,
   type SearchLocationParams,
-} from "@app/components/search/search-input";
-import { useRouter } from "next/navigation";
+} from '@app/components/search/search-input';
+import { useRouter } from 'next/navigation';
 
 export function SearchHeader() {
   const router = useRouter();
