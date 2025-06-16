@@ -1,6 +1,7 @@
 import { Login } from '@app/components/auth/login';
 import { auth } from '@app/server/auth';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 export default async function AuthPage() {
   const session = await auth();
@@ -10,7 +11,9 @@ export default async function AuthPage() {
 
   return (
     <div className='py-4'>
-      <Login />
+      <Suspense>
+        <Login />
+      </Suspense>
     </div>
   );
 }

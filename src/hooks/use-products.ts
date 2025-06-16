@@ -1,5 +1,5 @@
 import { api } from '@app/trpc/react';
-import type { Prisma } from '@prisma/client';
+import type { Prisma } from '@zenstackhq/runtime/models';
 
 type UseProducts = {
   take?: number;

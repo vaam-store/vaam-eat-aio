@@ -43,6 +43,7 @@
     "@vercel/otel": "^1.13.0",
     "@zenstackhq/runtime": "^2.15.1",
     "axios": "^1.9.0",
+    "decimal.js": "^10.5.0",
     "deep-chat-react": "^2.2.1",
     "formik": "^2.4.6",
     "fs-extra": "^11.3.0",
@@ -51,7 +52,7 @@
     "lodash": "^4.17.21",
     "maplibre-gl": "^5.6.0",
     "minio": "^8.0.5",
-    "next": "^15.2.3",
+    "next": "^15.3.3",
     "next-auth": "5.0.0-beta.28",
     "next-compose-plugins": "^2.2.1",
     "next-themes": "^0.4.6",
@@ -80,6 +81,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.0.15",
+    "@types/eslint": "^9.6.1",
     "@types/fs-extra": "^11",
     "@types/lodash": "^4",
     "@types/node": "^24.0.1",
@@ -105,11 +107,8 @@
     "sass": "^1.89.2",
     "tailwindcss": "^4.0.15",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.27.0",
+    "typescript-eslint": "^8.34.1",
     "zenstack": "^2"
-  },
-  "ct3aMetadata": {
-    "initVersion": "7.39.3"
   },
   "packageManager": "yarn@4.9.1",
   "lint-staged": {

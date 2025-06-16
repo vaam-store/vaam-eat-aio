@@ -36,7 +36,13 @@ const initialValues: SearchLocationParams = {
 function FormikSearchBar() {
   const { values, setFieldValue, submitForm } =
     useFormikContext<SearchLocationParams>();
-  const { latitude, longitude, getLocation, isLoading } = useGeolocation();
+  const {
+    latitude,
+    longitude,
+    getLocation,
+    isLoading,
+    error: geoError,
+  } = useGeolocation();
   const [localQuery, setLocalQuery] = useState(values.query);
   const submitButtonRef = useRef<any>(null); // Changed to any to resolve type conflict
 
@@ -87,19 +93,11 @@ function FormikSearchBar() {
     submitForm,
   ]);
 
-  const handleGetLocation = async () => {
-    try {
-      // Explicitly handle the Promise
-      const locationPromise = getLocation();
-      if (locationPromise instanceof Promise) {
-        await locationPromise;
-      }
-      // After getLocation, latitude/longitude will update, triggering the above useEffect
-      // which then calls handleGeolocationSearch if conditions are met.
-    } catch (error) {
-      handleGenericError(error, 'Could not get location.');
+  useEffect(() => {
+    if (geoError) {
+      handleGenericError(geoError, 'Could not get location.');
     }
-  };
+  }, [geoError]);
 
   return (
     <div className='input input-primary input-bordered input-xl flex w-full items-center gap-2'>
@@ -108,7 +106,7 @@ function FormikSearchBar() {
         shape='circle'
         variant='soft'
         aria-label='Use current location'
-        onClick={() => void handleGetLocation()}
+        onClick={getLocation}
         loading={isLoading}
         className='flex-shrink-0'>
         <MapPin className='h-6 w-6 stroke-current' />
@@ -140,7 +138,7 @@ function FormikSearchBar() {
   );
 }
 
-export function SearchInput({ onSearch, _onClear }: SearchInputProps) {
+export function SearchInput({ onSearch }: SearchInputProps) {
   const handleFormSubmit = (
     values: SearchLocationParams,
     { setSubmitting }: FormikHelpers<SearchLocationParams>,

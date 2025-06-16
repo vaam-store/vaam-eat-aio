@@ -13,3 +13,5 @@
 !tsconfig.json
 !yarn.lock
 !schema.zmodel
+!eslint.config.js
+!prettier.config.js

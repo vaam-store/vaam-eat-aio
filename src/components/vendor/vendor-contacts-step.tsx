@@ -9,9 +9,14 @@ import { Plus } from 'react-feather';
 interface VendorContactsStepProps {
   userId: string;
   name: string;
+  email: string;
 }
 
-export function VendorContactsStep({ userId, name }: VendorContactsStepProps) {
+export function VendorContactsStep({
+  userId,
+  name,
+  email,
+}: VendorContactsStepProps) {
   const { values, errors, touched } = useFormikContext<VendorFormValues>();
   return (
     <div className='space-y-4'>
@@ -35,7 +40,7 @@ export function VendorContactsStep({ userId, name }: VendorContactsStepProps) {
               onClick={() =>
                 push({
                   type: 'All',
-                  contactInfo: { email: '', phone: [''], name },
+                  contactInfo: { email, phone: [''], name },
                   createdById: userId,
                 })
               }

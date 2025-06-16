@@ -2,13 +2,13 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-import { env } from "@app/env";
-import withPlugins from "next-compose-plugins";
+import { env } from '@app/env';
+import withPlugins from 'next-compose-plugins';
 
-import withBundleAnalyzer from "@next/bundle-analyzer";
-import type { NextConfig } from "next";
+import withBundleAnalyzer from '@next/bundle-analyzer';
+import type { NextConfig } from 'next';
 
-const isDev = env.NODE_ENV !== "production";
+const isDev = env.NODE_ENV !== 'production';
 
 const shouldCache = (nextConfig: NextConfig): NextConfig => {
   if (isDev) {
@@ -16,7 +16,7 @@ const shouldCache = (nextConfig: NextConfig): NextConfig => {
   }
   return {
     ...nextConfig,
-    cacheHandler: require.resolve("./cache-handler.mjs"),
+    cacheHandler: require.resolve('./cache-handler.mjs'),
     experimental: {
       ...nextConfig.experimental,
     },
@@ -25,11 +25,11 @@ const shouldCache = (nextConfig: NextConfig): NextConfig => {
 
 const shouldPwa = async (nextConfig: NextConfig): Promise<NextConfig> => {
   if (!isDev) {
-    const withSerwist = (await import("@serwist/next")).default({
+    const withSerwist = (await import('@serwist/next')).default({
       // Note: This is only an example. If you use Pages Router,
       // use something else that works, such as "service-worker/index.ts".
-      swSrc: "app/sw.ts",
-      swDest: "public/sw.js",
+      swSrc: 'app/sw.ts',
+      swDest: 'public/sw.js',
     });
     return withSerwist(nextConfig);
   }
@@ -45,7 +45,7 @@ const withImageSizes = (nextConfig: NextConfig): NextConfig => {
         remotePatterns: [
           ...(nextConfig?.images?.remotePatterns ?? []),
           {
-            hostname: "*",
+            hostname: '*',
           },
         ],
       },
@@ -58,12 +58,12 @@ const withImageSizes = (nextConfig: NextConfig): NextConfig => {
       remotePatterns: [
         ...(nextConfig?.images?.remotePatterns ?? []),
         {
-          protocol: "https",
-          hostname: "*.vaam.com",
+          protocol: 'https',
+          hostname: '*.vaam.com',
         },
         {
-          protocol: "https",
-          hostname: "*.ssegning.me",
+          protocol: 'https',
+          hostname: '*.ssegning.me',
         },
       ],
     },
@@ -79,8 +79,8 @@ const withImageLoader = (nextConfig: NextConfig): NextConfig => {
     ...nextConfig,
     images: {
       ...nextConfig.images,
-      loader: "custom",
-      loaderFile: "./image-loader.mjs",
+      loader: 'custom',
+      loaderFile: './image-loader.mjs',
     },
   };
 };
@@ -93,7 +93,7 @@ const withWebpack = (nextConfig: NextConfig): NextConfig => {
     ...nextConfig,
     webpack: (config, context) => {
       config.optimization.splitChunks = {
-        chunks: "all",
+        chunks: 'all',
       };
       return nextConfig.webpack ? nextConfig.webpack(config, context) : config;
     },
@@ -107,8 +107,8 @@ const nextConfig: NextConfig = {
       16, 32, 48, 64, 72, 96, 128, 144, 152, 192, 256, 384, 512, 1024,
     ],
   },
-  output: "standalone",
-  transpilePackages: ["@simplewebauthn/browser"],
+  output: 'standalone',
+  transpilePackages: ['@simplewebauthn/browser'],
 };
 
 export default withPlugins(

@@ -7,7 +7,7 @@ import {
   VendorNameStep,
   VendorStepper,
 } from '@app/components/vendor';
-import { type Prisma } from '@prisma/client';
+import type { Prisma } from '@zenstackhq/runtime/models';
 import { Form, Formik, type FormikHelpers } from 'formik';
 import { useState } from 'react';
 import { z } from 'zod';
@@ -24,12 +24,11 @@ const contactInfoValidationSchema = z.object({
 const contactValidationSchema = z.object({
   type: z.enum(['All', 'Sales', 'Support', 'Billing']),
   contactInfo: contactInfoValidationSchema,
-  createdById: z.string().min(1, 'User ID is required for contact'),
 });
 
 const addressValidationSchema = z.object({
   street: z.string().optional(),
-  city: z.string().min(1, 'City is required'),
+  city: z.string().min(1, 'City is required').optional(),
   state: z.string().optional(),
   zip: z.string().optional(),
   country: z.string().min(1, 'Country is required'),
@@ -46,7 +45,6 @@ const addressValidationSchema = z.object({
 const locationValidationSchema = z.object({
   name: z.string().trim().min(1, 'Location name is required').default('Main'),
   address: addressValidationSchema,
-  createdById: z.string().min(1, 'User ID is required for location'),
 });
 
 const vendorCreationValidationSchema = z.object({
@@ -70,9 +68,9 @@ const vendorCreationValidationSchema = z.object({
 export type VendorFormValues = z.infer<typeof vendorCreationValidationSchema>;
 
 const getInitialValues = ({
-  userId,
   name,
-}: Record<'name' | 'userId', string>): VendorFormValues => ({
+  email,
+}: Record<'name' | 'userId' | 'email', string>): VendorFormValues => ({
   name: '',
   contacts: {
     createMany: {
@@ -80,11 +78,10 @@ const getInitialValues = ({
         {
           type: 'All',
           contactInfo: {
-            email: '',
+            email: email,
             phone: [''],
             name: name,
           },
-          createdById: userId,
         },
       ],
     },
@@ -103,7 +100,6 @@ const getInitialValues = ({
             latitude: 0,
             longitude: 0,
           },
-          createdById: userId,
         },
       ],
     },
@@ -112,7 +108,7 @@ const getInitialValues = ({
 
 type VendorCreationFormProps = {
   onSubmit: (values: Prisma.VendorCreateInput) => Promise<void>;
-  initialData: Record<'name' | 'userId', string>;
+  initialData: Record<'name' | 'userId' | 'email', string>;
 };
 
 export function VendorCreationForm({
@@ -133,6 +129,7 @@ export function VendorCreationForm({
         <VendorContactsStep
           userId={initialData.userId}
           name={initialData.name}
+          email={initialData.email}
         />
       ),
       validationSchema: vendorCreationValidationSchema.pick({ contacts: true }),
@@ -150,28 +147,7 @@ export function VendorCreationForm({
     values: VendorFormValues,
     actions: FormikHelpers<VendorFormValues>,
   ) => {
-    const vendorData: Prisma.VendorCreateInput = {
-      name: values.name,
-      contacts: {
-        createMany: {
-          data: values.contacts.createMany.data.map((contact) => ({
-            type: contact.type,
-            contactInfo: contact.contactInfo,
-            createdById: contact.createdById,
-          })),
-        },
-      },
-      locations: {
-        createMany: {
-          data: values.locations.createMany.data.map((loc) => ({
-            name: loc.name,
-            address: loc.address,
-            createdById: loc.createdById,
-          })),
-        },
-      },
-    };
-    await onSubmit(vendorData);
+    await onSubmit(values);
     actions.setSubmitting(false);
   };
 
@@ -183,15 +159,7 @@ export function VendorCreationForm({
       )}
       onSubmit={handleFormSubmit}
       enableReinitialize>
-      {({
-        isSubmitting,
-        handleSubmit,
-        isValid,
-        dirty,
-        validateForm,
-        values,
-        errors,
-      }) => (
+      {({ isSubmitting, handleSubmit, isValid, dirty, validateForm }) => (
         <Form
           onSubmit={handleSubmit}
           className='flex flex-col gap-6 md:flex-row'>
@@ -246,10 +214,6 @@ export function VendorCreationForm({
               )}
             </div>
           </div>
-
-          <pre className='overflow-x'>
-            {JSON.stringify({ values, dirty, isValid, errors }, null, 4)}
-          </pre>
         </Form>
       )}
     </Formik>

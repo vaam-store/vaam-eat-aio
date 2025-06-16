@@ -20,16 +20,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id          Int      @id @default(autoincrement())
-    name        String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    createdBy   User     @relation(fields: [createdById], references: [id])
-    createdById String   @omit // Audit field
-    @@index([name])
-}
-
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -59,43 +49,20 @@ model Session {
 }
 
 model User {
-    id                            String                  @id @default(cuid())
-    name                          String?
-    email                         String                  @unique
-    emailVerified                 DateTime?
-    image                         String?
-    accounts                      Account[]
-    sessions                      Session[]
-    posts                         Post[]
-    vendorMembership              VendorMembership[]
-    carts                         Cart[]
-    checkoutSessions              CheckoutSession[]
-    authenticator                 Authenticator[] @omit
-
-    order                         Order[]                 @relation("UserOrder")
-    createdByOrder                Order[]                 @relation("OrderCreatedBy") @omit
-    updatedByOrder                Order[]                 @relation("OrderUpdatedBy") @omit
-    // Relations for audit fields across different models - apply @omit
-    createdLocations              Location[]              @relation("LocationCreatedBy") @omit
-    updatedLocations              Location[]              @relation("LocationUpdatedBy") @omit
-    createdProducts               Product[]               @relation("ProductCreatedBy") @omit
-    updatedProducts               Product[]               @relation("ProductUpdatedBy") @omit
-    createdProductImages          ProductImage[]          @relation("ProductImageCreatedBy") @omit
-    updatedProductImages          ProductImage[]          @relation("ProductImageUpdatedBy") @omit
-    createdProductOptions         ProductOption[]         @relation("ProductOptionCreatedBy") @omit
-    updatedProductOptions         ProductOption[]         @relation("ProductOptionUpdatedBy") @omit
-    createdProductOptionValues    ProductOptionValue[]    @relation("ProductOptionValueCreatedBy") @omit
-    updatedProductOptionValues    ProductOptionValue[]    @relation("ProductOptionValueUpdatedBy") @omit
-    createdProductVariations      ProductVariation[]      @relation("ProductVariationCreatedBy") @omit
-    updatedProductVariations      ProductVariation[]      @relation("ProductVariationUpdatedBy") @omit
-    createdProductVariationStocks ProductVariationStock[] @relation("ProductVariationStockCreatedBy") @omit
-    updatedProductVariationStocks ProductVariationStock[] @relation("ProductVariationStockUpdatedBy") @omit
-    createdVendorPaymentMethods   VendorPaymentMethod[]   @relation("VendorPaymentMethodCreatedBy") @omit
-    updatedVendorPaymentMethods   VendorPaymentMethod[]   @relation("VendorPaymentMethodUpdatedBy") @omit
-    createdCoupons                Coupon[]                @relation("CouponCreatedBy") @omit
-    updatedCoupons                Coupon[]                @relation("CouponUpdatedBy") @omit
-    createdFulfillments           Fulfillment[]           @relation("FulfillmentCreatedBy") @omit
-    updatedFulfillments           Fulfillment[]           @relation("FulfillmentUpdatedBy") @omit
+    id               String             @id @default(cuid())
+    name             String?
+    email            String             @unique
+    emailVerified    DateTime?
+    image            String?
+    accounts         Account[]          @omit
+    sessions         Session[]          @omit
+    vendorMembership VendorMembership[] @omit
+    carts            Cart[]
+    checkoutSessions CheckoutSession[]
+    authenticator    Authenticator[]    @omit
+    order            Order[]            @relation("UserOrder")
+    createdAt        DateTime           @default(now())
+    updatedAt        DateTime           @updatedAt
 
     // everyone can signup, and user profile is also publicly readable
     @@allow('create', false)
@@ -105,17 +72,17 @@ model User {
 }
 
 model Authenticator {
-  id                   String  @id @default(cuid())
-  credentialID         String  @unique
-  userId               String
-  providerAccountId    String
-  credentialPublicKey  String
-  counter              Int
-  credentialDeviceType String
-  credentialBackedUp   Boolean
-  transports           String?
+    id                   String  @id @default(cuid())
+    credentialID         String  @unique
+    userId               String
+    providerAccountId    String
+    credentialPublicKey  String
+    counter              Int
+    credentialDeviceType String
+    credentialBackedUp   Boolean
+    transports           String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Reusable type for contact information
@@ -128,12 +95,12 @@ type ContactInfo {
 // Reusable type for address information, including geographical coordinates
 type Address {
     street    String?
-    city      String
+    city      String?
     state     String?
     zip       String?
     country   String
-    latitude  Decimal? // For geo-queries (requires raw query or PostGIS for advanced use)
-    longitude Decimal? // For geo-queries
+    latitude  Float? // For geo-queries (requires raw query or PostGIS for advanced use)
+    longitude Float? // For geo-queries
 }
 
 model Vendor {
@@ -246,18 +213,12 @@ model Location {
     products               Product[]               @relation("ProductPrimaryLocation") // Products mainly associated with this location
     vendorId               String                  // Location belongs to a vendor
     vendor                 Vendor                  @relation(fields: [vendorId], references: [id])
-    createdById            String                  @omit // Audit field
-    createdBy              User                    @relation("LocationCreatedBy", fields: [createdById], references: [id])
-    updatedById            String?                 @omit // Audit field
-    updatedBy              User?                   @relation("LocationUpdatedBy", fields: [updatedById], references: [id])
     createdAt              DateTime                @default(now())
     updatedAt              DateTime                @updatedAt
 
     @@map("locations")
     @@unique([vendorId, name]) // Name must be unique per vendor
     @@index([vendorId])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Read access is public for store locators. Staff can manage their own vendor's locations.
     @@allow('read', true) // Correct, public for read
@@ -288,11 +249,11 @@ model ProductCategory {
 }
 
 model ProductTag {
-    id          String    @id @default(cuid())
-    name        String    @map("name")
-    products    Product[] @relation("ProductTags")
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+    id        String    @id @default(cuid())
+    name      String    @map("name")
+    products  Product[] @relation("ProductTags")
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 
     @@map("product_tags")
     @@index([name])
@@ -322,10 +283,6 @@ model Product {
     vendor            Vendor             @relation(fields: [vendorId], references: [id])
     primaryLocationId String?
     primaryLocation   Location?          @relation("ProductPrimaryLocation", fields: [primaryLocationId], references: [id])
-    createdById       String             @omit // Audit field
-    createdBy         User               @relation("ProductCreatedBy", fields: [createdById], references: [id])
-    updatedById       String?            @omit // Audit field
-    updatedBy         User?              @relation("ProductUpdatedBy", fields: [updatedById], references: [id])
     createdAt         DateTime           @default(now())
     updatedAt         DateTime           @updatedAt
 
@@ -335,8 +292,6 @@ model Product {
     @@index([categoryId])
     @@index([vendorId])
     @@index([primaryLocationId])
-    @@index([createdById])
-    @@index([updatedById])
     @@index([status]) // Index for filtering by status
 
     // ACL: Read access conditional on product status. Staff can manage their own vendor's products.
@@ -359,18 +314,12 @@ model ProductImage {
 
     productVariationId String?
     productVariation   ProductVariation? @relation(fields: [productVariationId], references: [id])
-    createdById        String            @omit // Audit field
-    createdBy          User              @relation("ProductImageCreatedBy", fields: [createdById], references: [id])
-    updatedById        String?           @omit // Audit field
-    updatedBy          User?             @relation("ProductImageUpdatedBy", fields: [updatedById], references: [id])
     createdAt          DateTime          @default(now())
     updatedAt          DateTime          @updatedAt
 
     @@map("product_images")
     @@index([productId])
     @@index([productVariationId])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Everyone can read product images. Staff can manage their own vendor's product images.
     @@allow('read', true) // Correct, public for read
@@ -384,18 +333,12 @@ model ProductOption {
     productId   String
     product     Product              @relation(fields: [productId], references: [id])
     values      ProductOptionValue[]
-    createdById String               @omit // Audit field
-    createdBy   User                 @relation("ProductOptionCreatedBy", fields: [createdById], references: [id])
-    updatedById String?              @omit // Audit field
-    updatedBy   User?                @relation("ProductOptionUpdatedBy", fields: [updatedById], references: [id])
     createdAt   DateTime             @default(now())
     updatedAt   DateTime             @updatedAt
 
     @@map("product_options")
     @@unique([productId, name]) // A product cannot have two options with the same name
     @@index([productId])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Everyone can read product options. Staff can manage their own vendor's product options.
     @@allow('read', true) // Correct, public for read
@@ -410,18 +353,12 @@ model ProductOptionValue {
     productOption     ProductOption      @relation(fields: [productOptionId], references: [id])
     // Many-to-many relationship with ProductVariation to define a variation's characteristics
     productVariations ProductVariation[] @relation("ProductVariationOptionValues")
-    createdById       String             @omit // Audit field
-    createdBy         User               @relation("ProductOptionValueCreatedBy", fields: [createdById], references: [id])
-    updatedById       String?            @omit // Audit field
-    updatedBy         User?              @relation("ProductOptionValueUpdatedBy", fields: [updatedById], references: [id])
     createdAt         DateTime           @default(now())
     updatedAt         DateTime           @updatedAt
 
     @@map("product_option_values")
     @@unique([productOptionId, value]) // An option cannot have two identical values for the same option type
     @@index([productOptionId])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Everyone can read product option values. Staff can manage their own vendor's product option values.
     @@allow('read', true) // Correct, public for read
@@ -443,10 +380,6 @@ model ProductVariation {
     images          ProductImage[]
     stocks          ProductVariationStock[]
     cartItems       CartItem[]
-    createdById     String                  @omit // Audit field
-    createdBy       User                    @relation("ProductVariationCreatedBy", fields: [createdById], references: [id])
-    updatedById     String?                 @omit // Audit field
-    updatedBy       User?                   @relation("ProductVariationUpdatedBy", fields: [updatedById], references: [id])
     createdAt       DateTime                @default(now())
     updatedAt       DateTime                @updatedAt
 
@@ -454,8 +387,6 @@ model ProductVariation {
     @@unique([productId, sku]) // SKU unique per product, allowing different products to have same SKU if needed, but not common. If global unique, remove productId from @@unique.
     @@index([productId])
     @@index([sku])
-    @@index([createdById])
-    @@index([updatedById])
     @@index([status])
 
     // ACL: Read access conditional on variation status. Staff can manage their own vendor's product variations.
@@ -474,10 +405,6 @@ model ProductVariationStock {
     productVariation   ProductVariation @relation(fields: [productVariationId], references: [id])
     locationId         String
     location           Location         @relation(fields: [locationId], references: [id])
-    createdById        String           @omit // Audit field
-    createdBy          User             @relation("ProductVariationStockCreatedBy", fields: [createdById], references: [id])
-    updatedById        String?          @omit // Audit field
-    updatedBy          User?            @relation("ProductVariationStockUpdatedBy", fields: [updatedById], references: [id])
     createdAt          DateTime         @default(now())
     updatedAt          DateTime         @updatedAt
 
@@ -485,8 +412,6 @@ model ProductVariationStock {
     @@unique([productVariationId, locationId]) // A variation can have only one stock entry per location
     @@index([productVariationId])
     @@index([locationId])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Read access conditional on the associated product variation being public OR vendor staff. Staff can manage their own vendor's stocks.
     @@allow('read', this.productVariation.status == PUBLIC || (auth().id != null && this.productVariation.product.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
@@ -549,18 +474,12 @@ model VendorPaymentMethod {
     accountData        Json?                 // Data related to the connected account (e.g., Stripe account ID, secret keys - sensitive, handle with care)
     accountId          String?               // External account ID (e.g., Stripe Account ID)
     checkoutSessions   CheckoutSession[]
-    createdById        String            @omit // Audit field
-    createdBy          User              @relation("VendorPaymentMethodCreatedBy", fields: [createdById], references: [id])
-    updatedById        String?           @omit // Audit field
-    updatedBy          User?             @relation("VendorPaymentMethodUpdatedBy", fields: [updatedById], references: [id])
     createdAt          DateTime          @default(now())
     updatedAt          DateTime          @updatedAt
 
     @@map("vendor_payment_methods")
     @@unique([vendorId, name]) // A vendor can't have two payment methods with the same name
     @@index([vendorId])
-    @@index([createdById])
-    @@index([updatedById])
     @@index([type])
 
     // ACL: Public can read, Vendor Staff/Admin can manage their payment methods.
@@ -581,10 +500,6 @@ model Coupon {
     vendor           Vendor?            @relation(fields: [vendorId], references: [id])
     checkoutSessions CheckoutSession[]
     orders           Order[]
-    createdById      String             @omit // Audit field
-    createdBy        User               @relation("CouponCreatedBy", fields: [createdById], references: [id])
-    updatedById      String?            @omit // Audit field
-    updatedBy        User?              @relation("CouponUpdatedBy", fields: [updatedById], references: [id])
     createdAt        DateTime           @default(now())
     updatedAt        DateTime           @updatedAt
 
@@ -592,8 +507,6 @@ model Coupon {
     @@index([vendorId])
     @@index([code])
     @@index([expiresAt])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Public can read active, non-vendor-specific coupons. Vendor staff can manage their own.
     @@allow('read', (this.isActive == true && (this.expiresAt == null || this.expiresAt >= now())) || (auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')]))
@@ -646,10 +559,6 @@ model Order {
     fulfillments         Fulfillment[]
     checkoutSessionId    String?          @unique // Optional link to the original checkout session (if not deleted immediately)
     checkoutSession      CheckoutSession? @relation(fields: [checkoutSessionId], references: [id])
-    createdById          String           @omit // Audit field
-    createdBy            User             @relation("OrderCreatedBy", fields: [createdById], references: [id]) // Assuming user creates, not staff
-    updatedById          String?          @omit // Audit field
-    updatedBy            User?            @relation("OrderUpdatedBy", fields: [updatedById], references: [id])
     createdAt            DateTime         @default(now())
     updatedAt            DateTime         @updatedAt
     coupon               Coupon?          @relation(fields: [couponId], references: [id])
@@ -659,8 +568,6 @@ model Order {
     @@index([userId])
     @@index([vendorId])
     @@index([status])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Users can read their own orders. Vendor staff/admin can read/manage orders for their vendor.
     @@allow('read', auth().id == this.userId || (auth().id != null && this.vendor.members?[userId == auth().id]))
@@ -697,18 +604,12 @@ model Fulfillment {
     shippedDate     DateTime?
     deliveredDate   DateTime?
     items           FulfillmentItem[] // Which specific order items are part of this fulfillment
-    createdById     String            @omit // Audit field
-    createdBy       User              @relation("FulfillmentCreatedBy", fields: [createdById], references: [id])
-    updatedById     String?           @omit // Audit field
-    updatedBy       User?             @relation("FulfillmentUpdatedBy", fields: [updatedById], references: [id])
     createdAt       DateTime          @default(now())
     updatedAt       DateTime          @updatedAt
 
     @@map("fulfillments")
     @@index([orderId])
     @@index([status])
-    @@index([createdById])
-    @@index([updatedById])
 
     // ACL: Customers can read fulfillments of their orders. Vendor staff can manage fulfillments for their vendor.
     @@allow('read', auth().id == this.order.userId || (auth().id != null && this.order.vendor.members?[userId == auth().id]))

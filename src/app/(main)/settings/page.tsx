@@ -18,7 +18,7 @@ export default function SettingsPage() {
           />
           <SettingNavigationItem
             href='/settings/kyc'
-            title='KYC (Email Setup)'
+            title='Email Setup'
             description='Verify your email for full access'
             icon={<Mail />}
           />

@@ -3,7 +3,7 @@
 import { VendorCreationForm } from '@app/components/vendor';
 import { api } from '@app/trpc/react';
 import { handleTrpcError } from '@app/utils/error-handler';
-import { type Prisma } from '@prisma/client';
+import type { Prisma } from '@zenstackhq/runtime/models';
 import { useSession } from 'next-auth/react';
 
 export default function VendorCreatePage() {
@@ -34,7 +34,11 @@ export default function VendorCreatePage() {
       <h1 className='mb-4 text-2xl font-bold'>Create New Vendor</h1>
       <VendorCreationForm
         onSubmit={handleSubmit}
-        initialData={{ userId: data.user.id, name: data.user.name ?? '' }}
+        initialData={{
+          userId: data.user.id,
+          name: data.user.name ?? '',
+          email: data.user?.email ?? '',
+        }}
       />
       {createVendorMutation.isError && (
         <p className='text-error mt-2'>

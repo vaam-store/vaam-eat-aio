@@ -10,7 +10,6 @@ RUN \
   --mount=type=bind,source=package.json,target=/app/package.json \
   corepack enable && corepack prepare yarn@4.9.2 --activate
 
-
 FROM base AS deps
 
 RUN \
@@ -21,11 +20,11 @@ RUN \
   --mount=type=cache,target=/app/node_modules \
   yarn install --immutable \
   && cp -R /app/node_modules /app/deps \
+  && cp -R /app/prisma /app/prisma-gen \
   && cp -R /app/generated /app/dep-gen
 
 # Rebuild the source code only when needed
 FROM base AS builder
-
 
 # This is mandatory and definitive
 ENV NODE_ENV=production
@@ -42,6 +41,7 @@ ENV NEXT_PUBLIC_EMGR_CDN="https://emgr.ssegning.com/api/images/resize"
 ENV NEXT_PUBLIC_EMGR_APP_URL="https://eat.vaam.store"
 
 COPY --from=deps /app/deps ./node_modules
+COPY --from=deps /app/prisma-gen ./prisma
 COPY --from=deps /app/dep-gen ./generated
 
 RUN \

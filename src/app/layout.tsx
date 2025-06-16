@@ -14,6 +14,8 @@ import { ThemeProvider } from 'next-themes';
 import type { PropsWithChildren } from 'react';
 import { Toaster } from 'react-hot-toast';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Vaam EAT',
   description: 'Eat healthy from Anywhere',
