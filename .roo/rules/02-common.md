@@ -1,14 +1,13 @@
 - Prefix code with `@app` where required.
-- Always use **function components**; **never** use default exports.
+- Always use **function components**; only use default export for Pages.
 - **Server components** for dumb UI; **client components** for browser logic, Suspense/lazy loading as needed.
-- File names in **kebab-case**; React component files in **PascalCase**.
-- Use **React Hooks**, Zustand / TanStack Query for state & data, **Formik + Zod** for forms/validation.
-- Style with **Tailwind CSS** + daisyUI; no Tailwind string concatenation—write full class names.
+- React component files in **PascalCase**; File names in **kebab-case**.
+- Use TanStack Query for state & data, **Formik + Zod** for forms/validation.
+- Style with **Tailwind CSS** + daisyUI; no Tailwind string concatenation — write full class names and use twMerge if required.
 - Icons from **react-feather** (`import { IconName } from 'react-feather'`).
 - Follow **Next.js app-router** patterns; keep business logic separate from UI.
-- TypeScript everywhere; adhere to **AirBnB** style and **biome** lint/format rules.
+- TypeScript everywhere; adhere to **AirBnB** style and **prettier & eslint** lint/format rules.
 - Check `ARCHITECTURE.md`; think sequentially and cache helpful search results.
-- Use `medusaj` hook (see `medusa/` and `hooks/` folders).
 - Optimize with lazy loading, caching, and clear modular structure.
 - Dev-Ops: slim Docker images, harden isolation, tune networking/volumes, plan HA orchestration.
 - Skip READMEs or setup instructions unless explicitly requested—go straight to code.

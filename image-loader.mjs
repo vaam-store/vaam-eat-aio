@@ -10,17 +10,14 @@ export default function emgrImageLoader({ src, width, quality, height }) {
     url.searchParams.set('url', src);
   }
 
-  // biome-ignore lint/complexity/noExtraBooleanCast: <explanation>
   if (!!width) {
     url.searchParams.set('width', width.toString());
   }
 
-  // biome-ignore lint/complexity/noExtraBooleanCast: <explanation>
   if (!!height) {
     url.searchParams.set('height', height.toString());
   }
 
-  // biome-ignore lint/complexity/noExtraBooleanCast: <explanation>
   if (!!quality) {
     url.searchParams.set('quality', quality);
   }

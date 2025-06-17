@@ -89,7 +89,6 @@ export function Pagination({
       {pageNumbers.map((page, index) =>
         typeof page === 'number' ? (
           <Button
-            // biome-ignore lint/suspicious/noArrayIndexKey: Index is fine for pagination items
             key={`${page}-${index}`}
             type='button'
             variant={currentPage === page ? 'fill' : 'outline'}
@@ -102,7 +101,6 @@ export function Pagination({
         ) : (
           <Button
             as='span'
-            // biome-ignore lint/suspicious/noArrayIndexKey: Index is fine for pagination items
             key={`ellipsis-${index}`}
             variant='outline'
             disabled

@@ -1,132 +1,164 @@
 # Architecture Overview
 
-This is a food delivery app.
+## Project Overview
 
-## High-Level System Architecture
+`vaam-eat-aio` is a multi‑tenant food‑delivery platform built with **Next.js 15** (App Router). The stack is deliberately type‑safe end‑to‑end, combining **tRPC + ZenStack + Prisma** on the backend and React Server/Client Components on the frontend. **TanStack Query** handles all server‑state caching, while **Zustand** provides lightweight client‑state management. Tailwind CSS with daisyUI provides theming, and **localforage** is used by Zustand’s `persist` middleware for robust offline storage. Redis, PostgreSQL, and S3‑compatible storage back critical infrastructure.
 
-The vaam-eat-aio project is a Next.js application using the app-router, React Server/Client Components, and Tailwind CSS with daisyUI. The backend involves tRPC, ZenStack, Prisma, PostgreSQL, Redis, S3-compatible storage, and SMTP email.
+## High‑Level System Architecture
 
 ### Frontend
 
-- Next.js app-router
-- React Server/Client Components
-- Tailwind CSS with daisyUI
+* **Next.js 15 App Router** with React Server & Client Components
+* **TanStack Query** for server/remote state (fed by auto‑generated tRPC hooks)
+* **Zustand** (`persist` + `localforage`) for UI/session & other client‑only state
+* **Streaming** via `Suspense` / `use` for data‑heavy pages
+* **Tailwind CSS** + **daisyUI** for design system
 
 ### Backend
 
-- tRPC for API
-- ZenStack for access control and field-level security
-- Prisma for database interactions
-- PostgreSQL as the database
-- Redis for caching
-- S3-compatible storage for file storage
-- SMTP email for email notifications
+* **tRPC** for API layer (routers grouped by domain under `src/app/api`)
+* **ZenStack** for declarative access‑control & field‑level security
+* **Prisma** ORM for DB access (single `db` instance per request)
+* **PostgreSQL** as primary relational store
+* **Redis** (or Upstash) for caching & pub/sub
+* **S3‑compatible** object storage
+* **SMTP** for transactional e‑mail
 
-### API/Data Flow
+### API / Data Flow
 
-- tRPC routers handle API requests
-- Schema-driven types ensure type safety
-- Prisma Client is used for database access
+1. Client invokes type‑safe hooks generated from tRPC procedures (`useQuery`, `useMutation`, `useInfiniteQuery`) which under the hood are native **TanStack Query** hooks.
+2. **TanStack Query** caches, deduplicates and re‑fetches server data; its query keys may include values read synchronously from **Zustand**.
+3. tRPC router executes Prisma queries/mutations (wrapped in `prisma.$transaction([...])` when multi‑step).
+4. **ZenStack** enforces row‑ & field‑level policies transparently.
+5. Responses are streamed to React components with `Suspense` when beneficial.
+6. **Zustand** stores (e.g. cart) trigger query invalidations or refetches via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()`—never by duplicating server data.
+7. Redis layer optionally caches expensive reads; cache is updated or invalidated with optimistic mutations.
 
 ### Infrastructure
 
-- Docker for containerization
-- Vercel for deployment
-- Serverless architecture
+* **Docker‑compose** for local development
+* **Vercel** serverless deployment targets (Edge & Node runtimes)
+* **CI** with GitHub Actions: lint, type‑check, test, migrate DB, build, preview deploy
+* **Serverless architecture** with per‑request multitenant context resolved from `cookies().get()` tenant id
+* **Prisma Migrations** committed under VCS
 
 ## Project Structure
 
-The project follows a well-organized directory structure:
-
-```
+```text
 vaam-eat-aio/
-├── docs/                  # Documentation files
-│   └── res/               # Resource documentation (ToS, Privacy, FAQ)
-├── public/                # Static assets
-├── src/                   # Main application code
-│   ├── app/               # Next.js app router pages
-│   │   ├── (auth)/        # Authentication routes
-│   │   ├── (checkout)/    # Checkout flow routes
-│   │   ├── (main)/        # Main application routes
-│   │   │   ├── @modal/    # Modal route interceptors
-│   │   │   ├── cart/      # Shopping cart pages
-│   │   │   ├── orders/    # Order management
-│   │   │   ├── res/       # Resource pages
-│   │   │   ├── search/    # Search functionality
-│   │   │   ├── settings/  # User settings
-│   │   │   └── v/         # Vendor-specific pages
-│   │   ├── (product)/     # Product-specific routes
-│   │   ├── (vendor)/      # Vendor management routes
-│   │   └── api/           # API routes
-│   │       ├── auth/      # Authentication API
-│   │       └── trpc/      # tRPC API endpoints
-│   ├── components/        # Reusable React components
-│   │   ├── app/           # Application-specific components
-│   │   ├── auth/          # Authentication components
-│   │   ├── button/        # Button components
-│   │   ├── cart/          # Shopping cart components
-│   │   ├── container/     # Layout containers
-│   │   ├── home/          # Homepage components
-│   │   ├── list-block/    # List block components
-│   │   ├── list-item/     # List item components
-│   │   ├── modal/         # Modal components
-│   │   ├── navigation/    # Navigation components
-│   │   ├── network-status/# Network status components
-│   │   ├── orders/        # Order-related components
-│   │   ├── search/        # Search components
-│   │   ├── section/       # Section components
-│   │   ├── settings/      # Settings components
-│   │   ├── text/          # Text components
-│   │   └── theme-toggle/  # Theme toggle components
-│   ├── hooks/             # Custom React hooks
-│   ├── server/            # Server-side code
-│   │   ├── api/           # API handlers
-│   │   │   └── routers/   # tRPC routers
-│   │   ├── auth/          # Authentication logic
-│   │   ├── email/         # Email functionality
-│   │   ├── md/            # Markdown processing
-│   │   └── s3/            # S3 storage integration
-│   ├── styles/            # Global styles
-│   ├── trpc/              # tRPC client setup
-│   └── utils/             # Utility functions
-└── [config files]         # Various configuration files
+├── docs/
+│   └── res/             # Legal & help docs (ToS, Privacy, FAQ)
+├── public/              # Static assets
+├── prisma/              # Prisma & ZModel schemas, migrations
+├── src/
+│   ├── app/             # Next.js app‑router route groups
+│   │   ├── (auth)/
+│   │   ├── (checkout)/
+│   │   ├── (main)/
+│   │   │   ├── @modal/
+│   │   │   ├── cart/
+│   │   │   ├── orders/
+│   │   │   ├── res/
+│   │   │   ├── search/
+│   │   │   ├── settings/
+│   │   │   └── v/
+│   │   ├── (product)/
+│   │   ├── (vendor)/
+│   │   └── api/         # tRPC & auth endpoints
+│   │       ├── auth/
+│   │       └── trpc/
+│   ├── components/      # Reusable components (strict TS, no default exports)
+│   ├── hooks/           # Custom React hooks
+│   ├── server/          # Server utilities (db, s3, email…)
+│   ├── stores/          # Zustand stores (cart, ui, filters …)
+│   ├── styles/          # Global stylesheets
+│   ├── trpc/            # Client helpers auto‑generated by tRPC
+│   └── utils/           # General utilities (e.g., showErrorToast)
+└── ...
 ```
 
 ### Key Directories
 
-- **app/**: Contains all Next.js pages using the app router pattern with route groups for different sections of the application.
-- **components/**: Houses all reusable React components organized by functionality.
-- **server/**: Contains server-side code including API handlers, authentication, and external service integrations.
-- **hooks/**: Custom React hooks for shared client-side logic.
-- **trpc/**: tRPC client configuration for type-safe API calls.
+* **app/** – route groups with co‑located loading/error components and metadata generators
+* **components/** – atomic to feature‑level React components, split into Server vs Client where necessary
+* **server/** – pure server‑side helpers: database, S3, email, markdown, etc.
+* **stores/** – **Zustand** client‑state stores persisted via `localforage`; no server data duplication
+* **generated/** && **prisma/** – `schema.prisma`, `schema.zmodel`, generated client, migrations
 
-## Component/Module Structure and Conventions
+## Engineering Guidelines & Coding Checklist (Next.js 15 · tRPC · ZenStack · Prisma)
 
-- File/folder organization follows Next.js app-router patterns
-- React components are organized into separate files and folders
-- Components are split into server and client components
-- State and data management use React Hooks, Zustand, and TanStack Query
-- Forms and validation use Formik and Zod
-- Styling uses Tailwind CSS and daisyUI
+* **Routing / Components**
 
-### Key Conventions
+  * Next.js **App Router** with prudent Server / Client split; *Server components* for presentational UI, *Client components* for interactive logic, `Suspense` & streaming where valuable.
+  * Prefix route imports with **`@app`** alias when required.
+  * React **function components** everywhere; **default export *only* in `src/app/**` Page files**, otherwise use named exports.
+  * Component files live in `PascalCase.tsx`; auxiliary files (hooks, utils, routes) use **kebab‑case**.
 
-- Strict TypeScript usage
-- AirBnB and biome linting rules are followed
-- No default exports are used
-- Function components are used exclusively
+* **Data & State Layer**
 
-## Distinctive Architectural Decisions and Best Practices
+  * Domain‑based **tRPC routers** in `src/app/api`, named exports.
+  * Derive hooks (`useQuery`, `useMutation`, `useInfiniteQuery`) straight from tRPC helpers—no wrappers. tRPC exported from `@app/trpc/server` for server APIs & `@app/trpc/react` for client APIs.
+  * **TanStack Query** manages all server/remote data; set `staleTime`, `gcTime`, etc. per query type.
+  * **Zustand** (with `persist` & `localforage` storage) is reserved for UI/session & other client‑only state (cart, modals, filters, websocket status). **Never mirror TanStack Query data into Zustand**.
+  * Compose TanStack Query keys from required Zustand values; invalidate via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()` after mutations.
+  * **ZenStack** policies enforce row‑ & field‑level ACL.
+  * Multi‑step mutations are wrapped in `prisma.$transaction([...])` and exposed as a single RPC.
+  * **Cursor‑based pagination** (`cursor`, `take`) + `useInfiniteQuery`; return `nextCursor`.
+  * **Optimistic UI** via tRPC mutation lifecycle (`onMutate`, `onError`, `onSettled`).
 
-- Security: ZenStack is used for access control and field-level security
-- Optimistic UI: tRPC mutation options are used for optimistic updates
-- Caching: Redis is used for caching expensive reads
-- Database: Prisma Client is used for database interactions, with a single instance per request for multitenancy and row-level security
+* **Types & Validation**
 
-## Code Quality and Convention Adherence
+  * Schema‑driven types flow: **ZModel → Prisma schema → tRPC infer → component props**.
+  * Forms use **Formik + Zod** for schema validation.
 
-Recent "small things" fixes demonstrate adherence to code quality and conventions, including:
+* **Styling & UI**
 
-- Code hygiene improvements
-- Linting rule updates
-- Naming convention consistency
+  * **Tailwind CSS** + **daisyUI**; write full class strings—no template concatenation; use `twMerge()` if merging unavoidable.
+  * Icons from **react‑feather** (`import { IconName } from 'react-feather'`).
+
+* **Caching & Revalidation**
+
+  * `revalidatePath()` inside server actions, `getSSGHelpers()` for static routes.
+  * **Redis / Upstash** caches expensive reads; invalidate on optimistic mutation settle.
+
+* **Testing**
+
+  * Unit: **jest** + in‑memory SQLite for routers.
+  * Component: **@testing-library/react** + **MSW** to stub tRPC.
+
+* **Database Ops**
+
+  * Migrations via `prisma migrate`; generated SQL committed to VCS.
+
+* **Quality Gates**
+
+  * TypeScript **strict** mode, **AirBnB + prettier + eslint** rules.
+  * Always propagate errors via `showErrorToast` (`src/utils/error-handler.ts`).
+
+* **DevOps**
+
+  * Slim, multi‑stage **Docker** images; hardened isolation, tuned networking & volumes; plan HA orchestration (K8s).
+
+* **Meta**
+
+  * Avoid README/setup prose unless explicitly asked—focus on code & components.
+  * Consult and keep this **ARCHITECTURE.md** up to date; think sequentially and cache helpful search results.
+
+## Distinctive Architectural Decisions
+
+| Concern                | Decision                                                                                                                                           |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Security**           | ZenStack integrates with Prisma to enforce row‑ & field‑level access control before any query leaves the server                                    |
+| **State Management**   | **TanStack Query** exclusively owns server‑state; **Zustand** (persisted with `localforage`) owns UI/session state; no duplication between the two |
+| **Optimistic Updates** | All mutations declare optimistic cache updates via tRPC’s mutation lifecycle hooks                                                                 |
+| **Caching Strategy**   | In‑memory cache on the client (+ TanStack Query) and Redis edge cache on the server for expensive joins                                            |
+| **Streaming**          | Critical above‑the‑fold sections stream in chunks; non‑critical widgets load with `Suspense` fallback                                              |
+| **Database**           | Single Prisma client tied to tenant‑scoped connection string; queries use RLS policies authored in ZenStack                                        |
+
+## Code Quality & Continuous Improvement
+
+The project maintains **green CI** on every commit. Recent “small‑things” PRs show:
+
+* Removal of leftover default exports
+* Consistent file and folder naming (`kebab‑case`)
+* Performance regression tests for cart calculations

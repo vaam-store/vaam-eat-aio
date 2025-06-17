@@ -12,7 +12,7 @@ const zenRouter = createRouter();
  */
 export const appRouter = createTRPCRouter({
   upload: uploadRouter,
-  user: userRouter, // Add the new user router
+  user: userRouter,
   zen: zenRouter,
 });
 
