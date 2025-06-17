@@ -1,0 +1,51 @@
+{{- if .Values.maildev.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-maildev
+  labels:
+    {{- include "vaam-eat-aio.labels" . | nindent 4 }}
+    app.kubernetes.io/component: maildev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "vaam-eat-aio.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: maildev
+  template:
+    metadata:
+      labels:
+        {{- include "vaam-eat-aio.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: maildev
+    spec:
+      serviceAccountName: {{ include "vaam-eat-aio.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: maildev
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.maildev.image.registry }}/{{ .Values.maildev.image.repository }}:{{ .Values.maildev.image.tag }}"
+          imagePullPolicy: {{ .Values.maildev.image.pullPolicy }}
+          ports:
+            - name: web
+              containerPort: 1080
+              protocol: TCP
+            - name: smtp
+              containerPort: 1025
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.maildev.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

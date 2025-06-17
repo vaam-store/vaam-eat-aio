@@ -1,0 +1,19 @@
+{{- if and .Values.minio.enabled .Values.minio.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-minio-pvc
+  labels:
+    {{- include "vaam-eat-aio.minio.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- range .Values.minio.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.minio.persistence.size | quote }}
+  {{- if .Values.global.storageClass }}
+  storageClassName: {{ .Values.global.storageClass | quote }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,46 @@
+apiVersion: v2
+name: vaam-eat-aio
+description: A Helm chart for VAAM Eat All-in-One application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - vaam
+  - eat
+  - food
+  - marketplace
+home: https://github.com/vaam-eat/vaam-eat-aio
+sources:
+  - https://github.com/vaam-eat/vaam-eat-aio
+maintainers:
+  - name: VAAM Team
+    email: team@vaam.com
+dependencies:
+  - name: common
+    repository: oci://registry-1.docker.io/bitnamicharts
+    tags:
+      - bitnami-common
+    version: 2.x.x
+    condition: common.enabled
+  - name: postgresql
+    version: "*"
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: postgresql.enabled
+  - name: minio
+    version: "*"
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: minio.enabled
+  - name: redis
+    version: "*"
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: redis.enabled
+  - name: jaeger
+    version: "*"
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: jaeger.enabled
+  - name: adminer
+    version: "*"
+    repository: https://startechnica.github.io/apps
+    condition: adminer.enabled
+annotations:
+  category: Application

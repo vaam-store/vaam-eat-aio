@@ -1,0 +1,23 @@
+{{- if .Values.maildev.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-maildev
+  labels:
+    {{- include "vaam-eat-aio.labels" . | nindent 4 }}
+    app.kubernetes.io/component: maildev
+spec:
+  type: {{ .Values.maildev.service.type }}
+  ports:
+    - port: {{ .Values.maildev.service.ports.web }}
+      targetPort: web
+      protocol: TCP
+      name: web
+    - port: {{ .Values.maildev.service.ports.smtp }}
+      targetPort: smtp
+      protocol: TCP
+      name: smtp
+  selector:
+    {{- include "vaam-eat-aio.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: maildev
+{{- end }}

@@ -1,0 +1,17 @@
+{{- if .Values.api.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-api
+  labels:
+    {{- include "vaam-eat-aio.api.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.api.service.type }}
+  ports:
+    - port: {{ .Values.api.service.ports.http }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "vaam-eat-aio.api.selectorLabels" . | nindent 4 }}
+{{- end }}

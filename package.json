@@ -114,6 +114,6 @@
   },
   "packageManager": "yarn@4.9.1",
   "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
+    "**/{ts,tsx}": "prettier --write --ignore-unknown"
   }
 }

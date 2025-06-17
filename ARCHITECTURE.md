@@ -1,5 +1,7 @@
 # Architecture Overview
 
+This is a food delivery app.
+
 ## High-Level System Architecture
 
 The vaam-eat-aio project is a Next.js application using the app-router, React Server/Client Components, and Tailwind CSS with daisyUI. The backend involves tRPC, ZenStack, Prisma, PostgreSQL, Redis, S3-compatible storage, and SMTP email.
@@ -38,8 +40,6 @@ The project follows a well-organized directory structure:
 
 ```
 vaam-eat-aio/
-├── companions/            # Companion services
-│   └── migrations/        # Database migration scripts
 ├── docs/                  # Documentation files
 │   └── res/               # Resource documentation (ToS, Privacy, FAQ)
 ├── public/                # Static assets

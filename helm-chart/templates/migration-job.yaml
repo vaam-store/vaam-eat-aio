@@ -1,0 +1,47 @@
+{{- if .Values.migration.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-migration
+  labels:
+    {{- include "vaam-eat-aio.labels" . | nindent 4 }}
+    app.kubernetes.io/component: migration
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "vaam-eat-aio.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: migration
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "vaam-eat-aio.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: migration
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.migration.image.registry }}{{ if .Values.migration.image.registry }}/{{ end }}{{ .Values.migration.image.repository }}:{{ .Values.migration.image.tag }}"
+          imagePullPolicy: {{ .Values.migration.image.pullPolicy }}
+          env:
+            - name: DATABASE_URL
+              value: {{ .Values.migration.env.DATABASE_URL | quote }}
+          resources:
+            {{- toYaml .Values.migration.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

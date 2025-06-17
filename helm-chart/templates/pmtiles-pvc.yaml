@@ -1,0 +1,21 @@
+---
+{{- if and .Values.extractPmtiles.enabled .Values.extractPmtiles.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-pmtiles-pvc
+  labels:
+    {{- include "vaam-eat-aio.labels" . | nindent 4 }}
+    app.kubernetes.io/component: pmtiles
+spec:
+  accessModes:
+    {{- range .Values.extractPmtiles.persistence.accessModes }}
+    - {{ . | quote }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.extractPmtiles.persistence.size | quote }}
+  {{- if .Values.global.storageClass }}
+  storageClassName: {{ .Values.global.storageClass | quote }}
+  {{- end }}
+{{- end }}

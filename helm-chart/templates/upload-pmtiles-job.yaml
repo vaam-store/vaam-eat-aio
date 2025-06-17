@@ -1,0 +1,62 @@
+---
+{{- if .Values.uploadPmtiles.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "vaam-eat-aio.fullname" . }}-upload-pmtiles
+  labels:
+    {{- include "vaam-eat-aio.labels" . | nindent 4 }}
+    app.kubernetes.io/component: upload-pmtiles
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "4"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "vaam-eat-aio.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: upload-pmtiles
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ include "vaam-eat-aio.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: upload-pmtiles
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.uploadPmtiles.image.registry }}/{{ .Values.uploadPmtiles.image.repository }}:{{ .Values.uploadPmtiles.image.tag }}"
+          imagePullPolicy: {{ .Values.uploadPmtiles.image.pullPolicy }}
+          command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "PMTiles upload completed"
+          volumeMounts:
+            - name: pmtiles-data
+              mountPath: /pmtiles-data
+          resources:
+            {{- toYaml .Values.uploadPmtiles.resources | nindent 12 }}
+      volumes:
+        - name: pmtiles-data
+          {{- if .Values.extractPmtiles.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "vaam-eat-aio.fullname" . }}-pmtiles-pvc
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

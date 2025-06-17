@@ -328,13 +328,13 @@ model ProductImage {
 }
 
 model ProductOption {
-    id          String               @id @default(cuid())
-    name        String               @map("name") // e.g., "Color", "Size", "Material"
-    productId   String
-    product     Product              @relation(fields: [productId], references: [id])
-    values      ProductOptionValue[]
-    createdAt   DateTime             @default(now())
-    updatedAt   DateTime             @updatedAt
+    id        String               @id @default(cuid())
+    name      String               @map("name") // e.g., "Color", "Size", "Material"
+    productId String
+    product   Product              @relation(fields: [productId], references: [id])
+    values    ProductOptionValue[]
+    createdAt DateTime             @default(now())
+    updatedAt DateTime             @updatedAt
 
     @@map("product_options")
     @@unique([productId, name]) // A product cannot have two options with the same name
