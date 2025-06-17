@@ -50,3 +50,6 @@ prisma
 
 .yarn
 .idea
+
+*.tgz
+test.{yaml,yml}

@@ -35,53 +35,53 @@ The command removes all the Kubernetes components associated with the chart and 
 | Name                      | Description                                     | Value |
 | ------------------------- | ----------------------------------------------- | ----- |
 | `global.imageRegistry`    | Global Docker image registry                    | `""`  |
-| `global.imagePullSecrets` | Global Docker registry secret names as an array| `[]`  |
-| `global.storageClass`     | Global StorageClass for Persistent Volume(s)   | `""`  |
+| `global.imagePullSecrets` | Global Docker registry secret names as an array | `[]`  |
+| `global.storageClass`     | Global StorageClass for Persistent Volume(s)    | `""`  |
 
 ### Common parameters
 
-| Name               | Description                                        | Value |
-| ------------------ | -------------------------------------------------- | ----- |
-| `commonLabels`     | Labels to add to all deployed objects             | `{}`  |
-| `commonAnnotations`| Annotations to add to all deployed objects        | `{}`  |
+| Name                | Description                                | Value |
+| ------------------- | ------------------------------------------ | ----- |
+| `commonLabels`      | Labels to add to all deployed objects      | `{}`  |
+| `commonAnnotations` | Annotations to add to all deployed objects | `{}`  |
 
 ### PostgreSQL parameters
 
-| Name                                    | Description                                               | Value                    |
-| --------------------------------------- | --------------------------------------------------------- | ------------------------ |
-| `postgresql.enabled`                    | Enable PostgreSQL subchart                               | `true`                   |
-| `postgresql.auth.username`              | Name for a custom user to create                         | `vaam-eat`               |
-| `postgresql.auth.password`              | Password for the custom user to create                   | `vaam-eat-password`      |
-| `postgresql.auth.database`              | Name for a custom database to create                     | `vaam-eat`               |
-| `postgresql.persistence.enabled`        | Enable PostgreSQL Primary data persistence using PVC    | `true`                   |
-| `postgresql.persistence.size`           | PVC Storage Request for PostgreSQL volume                | `8Gi`                    |
+| Name                             | Description                                          | Value               |
+| -------------------------------- | ---------------------------------------------------- | ------------------- |
+| `postgresql.enabled`             | Enable PostgreSQL subchart                           | `true`              |
+| `postgresql.auth.username`       | Name for a custom user to create                     | `vaam-eat`          |
+| `postgresql.auth.password`       | Password for the custom user to create               | `vaam-eat-password` |
+| `postgresql.auth.database`       | Name for a custom database to create                 | `vaam-eat`          |
+| `postgresql.persistence.enabled` | Enable PostgreSQL Primary data persistence using PVC | `true`              |
+| `postgresql.persistence.size`    | PVC Storage Request for PostgreSQL volume            | `8Gi`               |
 
 ### Redis parameters
 
-| Name                                    | Description                                               | Value                    |
-| --------------------------------------- | --------------------------------------------------------- | ------------------------ |
-| `redis.enabled`                         | Enable Redis subchart                                    | `true`                   |
-| `redis.persistence.enabled`            | Enable Redis data persistence using PVC                  | `true`                   |
-| `redis.persistence.size`               | PVC Storage Request for Redis volume                     | `1Gi`                    |
+| Name                        | Description                             | Value  |
+| --------------------------- | --------------------------------------- | ------ |
+| `redis.enabled`             | Enable Redis subchart                   | `true` |
+| `redis.persistence.enabled` | Enable Redis data persistence using PVC | `true` |
+| `redis.persistence.size`    | PVC Storage Request for Redis volume    | `1Gi`  |
 
 ### MinIO parameters
 
-| Name                                    | Description                                               | Value                    |
-| --------------------------------------- | --------------------------------------------------------- | ------------------------ |
-| `minio.enabled`                         | Enable MinIO subchart                                    | `true`                   |
-| `minio.auth.rootUser`                   | MinIO root username                                      | `minio`                  |
-| `minio.auth.rootPassword`               | MinIO root password                                      | `minio123`               |
-| `minio.persistence.enabled`            | Enable MinIO data persistence using PVC                  | `true`                   |
-| `minio.persistence.size`               | PVC Storage Request for MinIO volume                     | `10Gi`                   |
+| Name                        | Description                             | Value      |
+| --------------------------- | --------------------------------------- | ---------- |
+| `minio.enabled`             | Enable MinIO subchart                   | `true`     |
+| `minio.auth.rootUser`       | MinIO root username                     | `minio`    |
+| `minio.auth.rootPassword`   | MinIO root password                     | `minio123` |
+| `minio.persistence.enabled` | Enable MinIO data persistence using PVC | `true`     |
+| `minio.persistence.size`    | PVC Storage Request for MinIO volume    | `10Gi`     |
 
 ### API parameters
 
-| Name                                    | Description                                               | Value                    |
-| --------------------------------------- | --------------------------------------------------------- | ------------------------ |
-| `api.enabled`                           | Enable API deployment                                    | `true`                   |
-| `api.replicaCount`                      | Number of API replicas to deploy                        | `1`                      |
-| `api.image.repository`                  | API image repository                                     | `vaam-eat-api`           |
-| `api.image.tag`                         | API image tag                                            | `latest`                 |
+| Name                   | Description                      | Value          |
+| ---------------------- | -------------------------------- | -------------- |
+| `api.enabled`          | Enable API deployment            | `true`         |
+| `api.replicaCount`     | Number of API replicas to deploy | `1`            |
+| `api.image.repository` | API image repository             | `vaam-eat-api` |
+| `api.image.tag`        | API image tag                    | `latest`       |
 
 ## Configuration and installation details
 
@@ -147,3 +147,4 @@ kubectl logs <pod-name>
 
 # Describe a resource for more details
 kubectl describe <resource-type> <resource-name>
+```

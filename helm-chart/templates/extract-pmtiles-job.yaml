@@ -1,3 +1,4 @@
+---
 {{- if .Values.extractPmtiles.enabled }}
 apiVersion: batch/v1
 kind: Job

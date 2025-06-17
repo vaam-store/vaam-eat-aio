@@ -1,3 +1,4 @@
+---
 {{- if .Values.minioInit.enabled }}
 apiVersion: batch/v1
 kind: Job

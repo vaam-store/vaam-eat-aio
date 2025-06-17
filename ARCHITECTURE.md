@@ -8,21 +8,21 @@
 
 ### Frontend
 
-* **Next.js 15 App Router** with React Server & Client Components
-* **TanStack Query** for server/remote state (fed by auto‑generated tRPC hooks)
-* **Zustand** (`persist` + `localforage`) for UI/session & other client‑only state
-* **Streaming** via `Suspense` / `use` for data‑heavy pages
-* **Tailwind CSS** + **daisyUI** for design system
+- **Next.js 15 App Router** with React Server & Client Components
+- **TanStack Query** for server/remote state (fed by auto‑generated tRPC hooks)
+- **Zustand** (`persist` + `localforage`) for UI/session & other client‑only state
+- **Streaming** via `Suspense` / `use` for data‑heavy pages
+- **Tailwind CSS** + **daisyUI** for design system
 
 ### Backend
 
-* **tRPC** for API layer (routers grouped by domain under `src/app/api`)
-* **ZenStack** for declarative access‑control & field‑level security
-* **Prisma** ORM for DB access (single `db` instance per request)
-* **PostgreSQL** as primary relational store
-* **Redis** (or Upstash) for caching & pub/sub
-* **S3‑compatible** object storage
-* **SMTP** for transactional e‑mail
+- **tRPC** for API layer (routers grouped by domain under `src/app/api`)
+- **ZenStack** for declarative access‑control & field‑level security
+- **Prisma** ORM for DB access (single `db` instance per request)
+- **PostgreSQL** as primary relational store
+- **Redis** (or Upstash) for caching & pub/sub
+- **S3‑compatible** object storage
+- **SMTP** for transactional e‑mail
 
 ### API / Data Flow
 
@@ -36,11 +36,11 @@
 
 ### Infrastructure
 
-* **Docker‑compose** for local development
-* **Vercel** serverless deployment targets (Edge & Node runtimes)
-* **CI** with GitHub Actions: lint, type‑check, test, migrate DB, build, preview deploy
-* **Serverless architecture** with per‑request multitenant context resolved from `cookies().get()` tenant id
-* **Prisma Migrations** committed under VCS
+- **Docker‑compose** for local development
+- **Vercel** serverless deployment targets (Edge & Node runtimes)
+- **CI** with GitHub Actions: lint, type‑check, test, migrate DB, build, preview deploy
+- **Serverless architecture** with per‑request multitenant context resolved from `cookies().get()` tenant id
+- **Prisma Migrations** committed under VCS
 
 ## Project Structure
 
@@ -79,70 +79,70 @@ vaam-eat-aio/
 
 ### Key Directories
 
-* **app/** – route groups with co‑located loading/error components and metadata generators
-* **components/** – atomic to feature‑level React components, split into Server vs Client where necessary
-* **server/** – pure server‑side helpers: database, S3, email, markdown, etc.
-* **stores/** – **Zustand** client‑state stores persisted via `localforage`; no server data duplication
-* **generated/** && **prisma/** – `schema.prisma`, `schema.zmodel`, generated client, migrations
+- **app/** – route groups with co‑located loading/error components and metadata generators
+- **components/** – atomic to feature‑level React components, split into Server vs Client where necessary
+- **server/** – pure server‑side helpers: database, S3, email, markdown, etc.
+- **stores/** – **Zustand** client‑state stores persisted via `localforage`; no server data duplication
+- **generated/** && **prisma/** – `schema.prisma`, `schema.zmodel`, generated client, migrations
 
 ## Engineering Guidelines & Coding Checklist (Next.js 15 · tRPC · ZenStack · Prisma)
 
-* **Routing / Components**
+- **Routing / Components**
 
-  * Next.js **App Router** with prudent Server / Client split; *Server components* for presentational UI, *Client components* for interactive logic, `Suspense` & streaming where valuable.
-  * Prefix route imports with **`@app`** alias when required.
-  * React **function components** everywhere; **default export *only* in `src/app/**` Page files**, otherwise use named exports.
-  * Component files live in `PascalCase.tsx`; auxiliary files (hooks, utils, routes) use **kebab‑case**.
+  - Next.js **App Router** with prudent Server / Client split; _Server components_ for presentational UI, _Client components_ for interactive logic, `Suspense` & streaming where valuable.
+  - Prefix route imports with **`@app`** alias when required.
+  - React **function components** everywhere; **default export _only_ in `src/app/**` Page files\*\*, otherwise use named exports.
+  - Component files live in `PascalCase.tsx`; auxiliary files (hooks, utils, routes) use **kebab‑case**.
 
-* **Data & State Layer**
+- **Data & State Layer**
 
-  * Domain‑based **tRPC routers** in `src/app/api`, named exports.
-  * Derive hooks (`useQuery`, `useMutation`, `useInfiniteQuery`) straight from tRPC helpers—no wrappers. tRPC exported from `@app/trpc/server` for server APIs & `@app/trpc/react` for client APIs.
-  * **TanStack Query** manages all server/remote data; set `staleTime`, `gcTime`, etc. per query type.
-  * **Zustand** (with `persist` & `localforage` storage) is reserved for UI/session & other client‑only state (cart, modals, filters, websocket status). **Never mirror TanStack Query data into Zustand**.
-  * Compose TanStack Query keys from required Zustand values; invalidate via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()` after mutations.
-  * **ZenStack** policies enforce row‑ & field‑level ACL.
-  * Multi‑step mutations are wrapped in `prisma.$transaction([...])` and exposed as a single RPC.
-  * **Cursor‑based pagination** (`cursor`, `take`) + `useInfiniteQuery`; return `nextCursor`.
-  * **Optimistic UI** via tRPC mutation lifecycle (`onMutate`, `onError`, `onSettled`).
+  - Domain‑based **tRPC routers** in `src/app/api`, named exports.
+  - Derive hooks (`useQuery`, `useMutation`, `useInfiniteQuery`) straight from tRPC helpers—no wrappers. tRPC exported from `@app/trpc/server` for server APIs & `@app/trpc/react` for client APIs.
+  - **TanStack Query** manages all server/remote data; set `staleTime`, `gcTime`, etc. per query type.
+  - **Zustand** (with `persist` & `localforage` storage) is reserved for UI/session & other client‑only state (cart, modals, filters, websocket status). **Never mirror TanStack Query data into Zustand**.
+  - Compose TanStack Query keys from required Zustand values; invalidate via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()` after mutations.
+  - **ZenStack** policies enforce row‑ & field‑level ACL.
+  - Multi‑step mutations are wrapped in `prisma.$transaction([...])` and exposed as a single RPC.
+  - **Cursor‑based pagination** (`cursor`, `take`) + `useInfiniteQuery`; return `nextCursor`.
+  - **Optimistic UI** via tRPC mutation lifecycle (`onMutate`, `onError`, `onSettled`).
 
-* **Types & Validation**
+- **Types & Validation**
 
-  * Schema‑driven types flow: **ZModel → Prisma schema → tRPC infer → component props**.
-  * Forms use **Formik + Zod** for schema validation.
+  - Schema‑driven types flow: **ZModel → Prisma schema → tRPC infer → component props**.
+  - Forms use **Formik + Zod** for schema validation.
 
-* **Styling & UI**
+- **Styling & UI**
 
-  * **Tailwind CSS** + **daisyUI**; write full class strings—no template concatenation; use `twMerge()` if merging unavoidable.
-  * Icons from **react‑feather** (`import { IconName } from 'react-feather'`).
+  - **Tailwind CSS** + **daisyUI**; write full class strings—no template concatenation; use `twMerge()` if merging unavoidable.
+  - Icons from **react‑feather** (`import { IconName } from 'react-feather'`).
 
-* **Caching & Revalidation**
+- **Caching & Revalidation**
 
-  * `revalidatePath()` inside server actions, `getSSGHelpers()` for static routes.
-  * **Redis / Upstash** caches expensive reads; invalidate on optimistic mutation settle.
+  - `revalidatePath()` inside server actions, `getSSGHelpers()` for static routes.
+  - **Redis / Upstash** caches expensive reads; invalidate on optimistic mutation settle.
 
-* **Testing**
+- **Testing**
 
-  * Unit: **jest** + in‑memory SQLite for routers.
-  * Component: **@testing-library/react** + **MSW** to stub tRPC.
+  - Unit: **jest** + in‑memory SQLite for routers.
+  - Component: **@testing-library/react** + **MSW** to stub tRPC.
 
-* **Database Ops**
+- **Database Ops**
 
-  * Migrations via `prisma migrate`; generated SQL committed to VCS.
+  - Migrations via `prisma migrate`; generated SQL committed to VCS.
 
-* **Quality Gates**
+- **Quality Gates**
 
-  * TypeScript **strict** mode, **AirBnB + prettier + eslint** rules.
-  * Always propagate errors via `showErrorToast` (`src/utils/error-handler.ts`).
+  - TypeScript **strict** mode, **AirBnB + prettier + eslint** rules.
+  - Always propagate errors via `showErrorToast` (`src/utils/error-handler.ts`).
 
-* **DevOps**
+- **DevOps**
 
-  * Slim, multi‑stage **Docker** images; hardened isolation, tuned networking & volumes; plan HA orchestration (K8s).
+  - Slim, multi‑stage **Docker** images; hardened isolation, tuned networking & volumes; plan HA orchestration (K8s).
 
-* **Meta**
+- **Meta**
 
-  * Avoid README/setup prose unless explicitly asked—focus on code & components.
-  * Consult and keep this **ARCHITECTURE.md** up to date; think sequentially and cache helpful search results.
+  - Avoid README/setup prose unless explicitly asked—focus on code & components.
+  - Consult and keep this **ARCHITECTURE.md** up to date; think sequentially and cache helpful search results.
 
 ## Distinctive Architectural Decisions
 
@@ -159,6 +159,6 @@ vaam-eat-aio/
 
 The project maintains **green CI** on every commit. Recent “small‑things” PRs show:
 
-* Removal of leftover default exports
-* Consistent file and folder naming (`kebab‑case`)
-* Performance regression tests for cart calculations
+- Removal of leftover default exports
+- Consistent file and folder naming (`kebab‑case`)
+- Performance regression tests for cart calculations

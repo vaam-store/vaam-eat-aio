@@ -3,7 +3,7 @@ name: vaam-eat-aio
 description: A Helm chart for VAAM Eat All-in-One application
 type: application
 version: 0.1.0
-appVersion: "1.0.0"
+appVersion: '1.0.0'
 keywords:
   - vaam
   - eat
@@ -23,23 +23,23 @@ dependencies:
     version: 2.x.x
     condition: common.enabled
   - name: postgresql
-    version: "*"
+    version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: minio
-    version: "*"
+    version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: minio.enabled
   - name: redis
-    version: "*"
+    version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
   - name: jaeger
-    version: "*"
+    version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: jaeger.enabled
   - name: adminer
-    version: "*"
+    version: '*'
     repository: https://startechnica.github.io/apps
     condition: adminer.enabled
 annotations:
