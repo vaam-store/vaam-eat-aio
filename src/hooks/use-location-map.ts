@@ -278,6 +278,8 @@ export function useLocationMap({
     country,
     disabled,
     shouldFitToArea,
+    pmtilesBaseUrl,
+    pmtilesBucket,
   ]);
 
   const handleAreaChange = (newArea: string) => {

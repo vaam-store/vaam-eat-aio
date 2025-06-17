@@ -1,5 +1,5 @@
 import { Button } from '@app/components/button';
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { ContactItem } from '@app/components/vendor/contact-item';
 import { ErrorDisplay } from '@app/components/vendor/error-display';
 import { type VendorFormValues } from '@app/components/vendor/vendor-creation-form';
@@ -12,17 +12,11 @@ interface VendorContactsStepProps {
   email: string;
 }
 
-export function VendorContactsStep({
-  userId,
-  name,
-  email,
-}: VendorContactsStepProps) {
+export function VendorContactsStep({ name, email }: VendorContactsStepProps) {
   const { values, errors, touched } = useFormikContext<VendorFormValues>();
   return (
     <div className='space-y-4'>
-      <Text bold className='text-xl'>
-        Vendor Contacts
-      </Text>
+      <Title>Vendor Contacts</Title>
       <p className='text-base-content opacity-70'>
         Manage vendor contact information.
       </p>
@@ -41,7 +35,6 @@ export function VendorContactsStep({
                 push({
                   type: 'All',
                   contactInfo: { email, phone: [''], name },
-                  createdById: userId,
                 })
               }
               aria-label='Add contact'>

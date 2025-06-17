@@ -1,22 +1,16 @@
 import { Button } from '@app/components/button';
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { ErrorDisplay } from '@app/components/vendor/error-display';
 import { LocationItem } from '@app/components/vendor/location-item';
 import { type VendorFormValues } from '@app/components/vendor/vendor-creation-form';
 import { FieldArray, getIn, useFormikContext } from 'formik';
 import { Plus } from 'react-feather';
 
-interface VendorLocationsStepProps {
-  userId: string;
-}
-
-export function VendorLocationsStep({ userId }: VendorLocationsStepProps) {
+export function VendorLocationsStep() {
   const { values, errors, touched } = useFormikContext<VendorFormValues>();
   return (
     <div className='space-y-4'>
-      <Text bold className='text-xl'>
-        Vendor Locations
-      </Text>
+      <Title>Vendor Locations</Title>
       <p className='text-base-content opacity-70'>
         Define the physical locations associated with your vendor. For each
         location, you will need to:
@@ -49,7 +43,6 @@ export function VendorLocationsStep({ userId }: VendorLocationsStepProps) {
                     latitude: 0,
                     longitude: 0,
                   },
-                  createdById: userId,
                 })
               }
               aria-label='Add location'>

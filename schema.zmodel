@@ -99,8 +99,8 @@ type Address {
     state     String?
     zip       String?
     country   String
-    latitude  Float? // For geo-queries (requires raw query or PostGIS for advanced use)
-    longitude Float? // For geo-queries
+    latitude  Decimal? // For geo-queries (requires raw query or PostGIS for advanced use)
+    longitude Decimal? // For geo-queries
 }
 
 model Vendor {

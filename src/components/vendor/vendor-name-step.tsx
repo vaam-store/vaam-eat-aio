@@ -1,12 +1,10 @@
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { ErrorMessage, Field } from 'formik';
 
 export function VendorNameStep() {
   return (
     <div className='space-y-4'>
-      <Text bold className='text-xl'>
-        Vendor Information
-      </Text>
+      <Title>Vendor Information</Title>
       <p className='text-base-content opacity-70'>
         Start by providing the basic details for your new vendor.
       </p>

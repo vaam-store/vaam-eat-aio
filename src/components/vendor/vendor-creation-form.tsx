@@ -8,6 +8,7 @@ import {
   VendorStepper,
 } from '@app/components/vendor';
 import type { Prisma } from '@zenstackhq/runtime/models';
+import Decimal from 'decimal.js';
 import { Form, Formik, type FormikHelpers } from 'formik';
 import { useState } from 'react';
 import { z } from 'zod';
@@ -26,20 +27,49 @@ const contactValidationSchema = z.object({
   contactInfo: contactInfoValidationSchema,
 });
 
+// Custom Zod schema for Decimal.js numbers
+// It attempts to convert any input to a Decimal instance.
+// If the conversion fails, it adds a Zod issue.
+const zDecimal = z
+  .any()
+  .transform((value, ctx) => {
+    try {
+      return new Decimal(value);
+    } catch (e: any) {
+      // If Decimal.js constructor throws an error, it's an invalid decimal value
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Invalid decimal value: ${e}`,
+      });
+      return z.NEVER; // Signal to Zod that the transformation failed
+    }
+  })
+  // After transformation, ensure the value is indeed an instance of Decimal
+  .refine((val) => val instanceof Decimal, {
+    message: 'Value must be a Decimal instance after validation.',
+  });
+
 const addressValidationSchema = z.object({
   street: z.string().optional(),
   city: z.string().min(1, 'City is required').optional(),
   state: z.string().optional(),
   zip: z.string().optional(),
   country: z.string().min(1, 'Country is required'),
-  latitude: z.coerce.number({
-    required_error: 'Latitude is required',
-    invalid_type_error: 'Latitude must be a number',
-  }),
-  longitude: z.coerce.number({
-    required_error: 'Longitude is required',
-    invalid_type_error: 'Longitude must be a number',
-  }),
+  latitude: zDecimal.refine(
+    (val) => {
+      // Validate latitude range: -90 to 90
+      return val.gte(-90) && val.lte(90);
+    },
+    { message: 'Latitude must be between -90 and 90' },
+  ),
+  // Use the custom zDecimal schema for longitude
+  longitude: zDecimal.refine(
+    (val) => {
+      // Validate longitude range: -180 to 180
+      return val.gte(-180) && val.lte(180);
+    },
+    { message: 'Longitude must be between -180 and 180' },
+  ),
 });
 
 const locationValidationSchema = z.object({
@@ -97,8 +127,8 @@ const getInitialValues = ({
             state: '',
             zip: '',
             country: '',
-            latitude: 0,
-            longitude: 0,
+            latitude: Decimal(0),
+            longitude: Decimal(0),
           },
         },
       ],
@@ -136,7 +166,7 @@ export function VendorCreationForm({
     },
     {
       title: 'Locations',
-      component: <VendorLocationsStep userId={initialData.userId} />,
+      component: <VendorLocationsStep />,
       validationSchema: vendorCreationValidationSchema.pick({
         locations: true,
       }),

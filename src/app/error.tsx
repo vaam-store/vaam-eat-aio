@@ -2,7 +2,7 @@
 
 import { Button } from '@app/components/button';
 import { Section } from '@app/components/section';
-import { Text } from '@app/components/text';
+import { Text, Title } from '@app/components/text';
 import {
   ErrorCategory,
   ErrorSeverity,
@@ -38,9 +38,9 @@ export default function Error({
   return (
     <Section as='main'>
       <div className='flex flex-col items-center justify-center gap-6 py-12 text-center'>
-        <Text as='h1' size='5xl' bold className='text-error'>
+        <Title as='h1' size='5xl' className='text-error'>
           Oops! Something went wrong.
-        </Text>
+        </Title>
         <Text size='lg' className='text-base-content/80'>
           We&apos;ve encountered an unexpected issue. Our team has been
           notified.

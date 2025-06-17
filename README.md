@@ -2,7 +2,8 @@
 
 ## Next steps
 
-- Ensure the `NEXT_PUBLIC_` is not used anymore, or used only at very specific spots.
+- Ensure vendor creation shall work
+-
 
 ## Good to know
 

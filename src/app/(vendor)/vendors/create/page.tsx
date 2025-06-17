@@ -17,7 +17,7 @@ export default function VendorCreatePage() {
 
   const handleSubmit = async (values: Prisma.VendorCreateInput) => {
     await createVendorMutation.mutateAsync({
-      data: { ...values, createdById: data?.user?.id } as any, // Ensure createdById is passed
+      data: { ...values },
     });
   };
 

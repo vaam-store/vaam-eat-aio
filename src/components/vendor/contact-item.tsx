@@ -1,5 +1,5 @@
 import { Button } from '@app/components/button';
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { ContactInfoFields } from '@app/components/vendor/contact-info-fields';
 import { ErrorDisplay } from '@app/components/vendor/error-display';
 import { Field } from 'formik';
@@ -17,7 +17,7 @@ export function ContactItem({ index, remove }: ContactItemProps) {
     <div className='card card-border'>
       <div className='card-body'>
         <div className='flex items-center justify-between'>
-          <Text bold>Contact #{index + 1}</Text>
+          <Title>Contact #{index + 1}</Title>
           <Button
             type='button'
             shape='circle'

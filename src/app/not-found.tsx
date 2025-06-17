@@ -2,7 +2,7 @@
 
 import { Button } from '@app/components/button';
 import { Section } from '@app/components/section';
-import { Text } from '@app/components/text';
+import { Text, Title } from '@app/components/text';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Corrected import
 import { ArrowLeft, Home } from 'react-feather';
@@ -13,9 +13,9 @@ export default function NotFound() {
   return (
     <Section as='main'>
       <div className='flex min-h-[calc(100vh-200px)] flex-col items-center justify-center gap-4 py-12 text-center'>
-        <Text as='h1' size='6xl' bold className='text-primary'>
+        <Title as='h1' heading className='text-primary'>
           404
-        </Text>
+        </Title>
         <Text as='h2' size='4xl' bold>
           Page Not Found
         </Text>

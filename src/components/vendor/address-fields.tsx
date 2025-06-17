@@ -1,4 +1,4 @@
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { CountryRegionSelector } from '@app/components/vendor/country-region-selector';
 import { LocationSelection } from '@app/components/vendor/location-selection';
 import { type VendorFormValues } from '@app/components/vendor/vendor-creation-form';
@@ -36,9 +36,7 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
     <div className='mt-3'>
       {/* Step 1: Country and Region Selection */}
       <div className='mb-4'>
-        <Text bold className='mb-2'>
-          Step 1: Select Country and Region
-        </Text>
+        <Title className='mb-2'>Step 1: Select Country and Region</Title>
         <CountryRegionSelector
           locationIndex={locationIndex}
           onSelectionComplete={handleCountryRegionComplete}
@@ -48,9 +46,7 @@ export function AddressFields({ locationIndex }: AddressFieldsProps) {
       {/* Step 2: Location Selection (only shown after country/region are selected) */}
       {countryRegionSelected && (
         <div className='mt-4'>
-          <Text bold className='mb-2'>
-            Step 2: Select Location
-          </Text>
+          <Title className='mb-2'>Step 2: Select Location</Title>
           <LocationSelection
             locationIndex={locationIndex}
             country={country}

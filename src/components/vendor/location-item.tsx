@@ -1,5 +1,5 @@
 import { Button } from '@app/components/button';
-import { Text } from '@app/components/text';
+import { Title } from '@app/components/text';
 import { CountryRegionSelector } from '@app/components/vendor/country-region-selector';
 import { ErrorDisplay } from '@app/components/vendor/error-display';
 import { LocationSelection } from '@app/components/vendor/location-selection';
@@ -36,7 +36,7 @@ export function LocationItem({ index, remove }: LocationItemProps) {
     <div className='card card-border'>
       <div className='card-body'>
         <div className='flex items-center justify-between'>
-          <Text bold>Location #{index + 1}</Text>
+          <Title>Location #{index + 1}</Title>
           <Button
             type='button'
             shape='circle'
@@ -63,9 +63,7 @@ export function LocationItem({ index, remove }: LocationItemProps) {
 
         {/* Step 1: Country and Region Selection */}
         <div className='mt-4'>
-          <Text bold className='mb-2'>
-            Step 1: Select Country and Region
-          </Text>
+          <Title className='mb-2'>Step 1: Select Country and Region</Title>
           <CountryRegionSelector
             locationIndex={index}
             onSelectionComplete={handleCountryRegionComplete}
@@ -75,9 +73,7 @@ export function LocationItem({ index, remove }: LocationItemProps) {
         {/* Step 2: Location Selection (only shown after country/region are selected) */}
         {countryRegionSelected && (
           <div className='mt-4'>
-            <Text bold className='mb-2'>
-              Step 2: Select Location
-            </Text>
+            <Title className='mb-2'>Step 2: Select Location</Title>
             <LocationSelection
               locationIndex={index}
               country={country}
