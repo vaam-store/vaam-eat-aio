@@ -134,6 +134,14 @@ services:
     depends_on:
       postgres:
         condition: service_started
+      minio:
+        condition: service_started
+      tracking:
+        condition: service_started
+      maildev:
+        condition: service_started
+      redis:
+        condition: service_started
       migration:
         condition: service_completed_successfully
     deploy:
@@ -173,6 +181,7 @@ services:
       EMAIL_FROM: noreply@example.com
 
       APP_URL: http://localhost:16000
+      NEXTAUTH_URL: http://localhost:16000
 
       EMGR_CDN: http://localhost:3000/api/images/resize
 
@@ -181,7 +190,8 @@ services:
       dockerfile: Dockerfile
       target: migration
     depends_on:
-      - postgres
+      postgres:
+        condition: service_started
     deploy:
       resources:
         limits:

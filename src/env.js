@@ -35,6 +35,7 @@ export const env = createEnv({
 
     EMGR_CDN: z.string().url().optional(),
     APP_URL: z.string().url(),
+    NEXTAUTH_URL: z.string().url(),
   },
 
   /**
@@ -79,6 +80,7 @@ export const env = createEnv({
 
     EMGR_CDN: process.env.EMGR_CDN,
     APP_URL: process.env.APP_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
 
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL:
       process.env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL,
