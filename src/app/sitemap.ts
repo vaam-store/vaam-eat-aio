@@ -4,37 +4,37 @@ import type { MetadataRoute } from 'next';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}`,
+      url: `${env.APP_URL}`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/res/faq`,
+      url: `${env.APP_URL}/res/faq`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/res/tos`,
+      url: `${env.APP_URL}/res/tos`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/res/contact`,
+      url: `${env.APP_URL}/res/contact`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/res/privacy`,
+      url: `${env.APP_URL}/res/privacy`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.3,
     },
     {
-      url: `${env.NEXT_PUBLIC_EMGR_APP_URL}/search`,
+      url: `${env.APP_URL}/search`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.5,

@@ -1,13 +1,10 @@
-import { env } from '@app/env';
 import { useGeolocation } from '@app/hooks/use-geolocation';
 import { layers, namedFlavor } from '@protomaps/basemaps';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { env } from 'next-runtime-env';
 import { Protocol } from 'pmtiles';
 import { useEffect, useRef, useState } from 'react';
-
-const pmtilesBaseUrl = env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL;
-const pmtilesBucket = env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET;
 
 interface UseLocationMapProps {
   initialLocation?: { lat: number; lng: number };
@@ -29,6 +26,9 @@ export function useLocationMap({
   country,
   disabled = false,
 }: UseLocationMapProps) {
+  const pmtilesBaseUrl = env('NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL');
+  const pmtilesBucket = env('NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET');
+
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -315,7 +315,7 @@ export function useLocationMap({
             sources: {
               protomaps: {
                 type: 'vector',
-                url: `pmtiles://${env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL}/vaam-eat/maps/${newArea}.pmtiles`,
+                url: `pmtiles://${pmtilesBaseUrl}/vaam-eat/maps/${newArea}.pmtiles`,
               },
             },
             layers: layers('protomaps', namedFlavor('light'), { lang: 'en' }),

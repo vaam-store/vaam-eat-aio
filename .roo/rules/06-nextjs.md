@@ -1,9 +1,10 @@
 # NextJS v15
+
 - Next.js + tRPC + ZenStack + Prisma – coding checklist
 - Use Next.js app router with proper server/client component split; stream data with Suspense where helpful.
 - Organise tRPC routers by domain inside @app/api folder; named exports only, no default exports.
 - Derive React hooks (useQuery, useMutation, useInfiniteQuery) directly from tRPC procedure helpers—no extra wrappers.
-- Keep all Prisma Client calls inside tRPC routers or server/** utilities; never from client components.
+- Keep all Prisma Client calls inside tRPC routers or server/\*\* utilities; never from client components.
 - Enforce access control & field‑level rules through ZenStack ZModel; generate the guarded Prisma Client (@zenstackhq/runtime) and use it in place of raw Prisma.
 - Maintain a single db instance per request via Next.js cookies().get() context helper to support multitenancy & row‑level security.
 - Prefer schema‑driven types:• ZModel ➜ Prisma schema ➜ tRPC inferProcedureOutput ➜ component props.No manual type duplication.

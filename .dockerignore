@@ -1,6 +1,7 @@
 *
-!companions
+!.docker/migrations
 !docs
+!public
 !prisma/schema.prisma
 !src
 !.yarnrc.yml

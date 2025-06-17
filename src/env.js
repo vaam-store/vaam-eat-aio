@@ -7,6 +7,7 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    SKIP_ENV_VALIDATION: z.number().optional(),
     AUTH_SECRET:
       process.env.NODE_ENV === 'production'
         ? z.string()
@@ -31,6 +32,9 @@ export const env = createEnv({
     EMAIL_SERVER_USER: z.string(),
     EMAIL_SERVER_PASSWORD: z.string(),
     EMAIL_FROM: z.string(),
+
+    EMGR_CDN: z.string().url().optional(),
+    APP_URL: z.string().url(),
   },
 
   /**
@@ -41,10 +45,6 @@ export const env = createEnv({
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(),
 
-    NEXT_PUBLIC_EMGR_CDN: z.string().url().optional(),
-    NEXT_PUBLIC_EMGR_APP_URL: z.string().url().optional(),
-    NEXT_PUBLIC_APP_URL: z.string().url(),
-
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL: z.string().url(),
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET: z.string(),
   },
@@ -54,6 +54,8 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
+
     AUTH_SECRET: process.env.AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
@@ -75,9 +77,8 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,
     EMAIL_FROM: process.env.EMAIL_FROM,
 
-    NEXT_PUBLIC_EMGR_CDN: process.env.NEXT_PUBLIC_EMGR_CDN,
-    NEXT_PUBLIC_EMGR_APP_URL: process.env.NEXT_PUBLIC_EMGR_APP_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    EMGR_CDN: process.env.EMGR_CDN,
+    APP_URL: process.env.APP_URL,
 
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL:
       process.env.NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL,

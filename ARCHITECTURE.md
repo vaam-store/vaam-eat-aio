@@ -6,31 +6,31 @@ The vaam-eat-aio project is a Next.js application using the app-router, React Se
 
 ### Frontend
 
-* Next.js app-router
-* React Server/Client Components
-* Tailwind CSS with daisyUI
+- Next.js app-router
+- React Server/Client Components
+- Tailwind CSS with daisyUI
 
 ### Backend
 
-* tRPC for API
-* ZenStack for access control and field-level security
-* Prisma for database interactions
-* PostgreSQL as the database
-* Redis for caching
-* S3-compatible storage for file storage
-* SMTP email for email notifications
+- tRPC for API
+- ZenStack for access control and field-level security
+- Prisma for database interactions
+- PostgreSQL as the database
+- Redis for caching
+- S3-compatible storage for file storage
+- SMTP email for email notifications
 
 ### API/Data Flow
 
-* tRPC routers handle API requests
-* Schema-driven types ensure type safety
-* Prisma Client is used for database access
+- tRPC routers handle API requests
+- Schema-driven types ensure type safety
+- Prisma Client is used for database access
 
 ### Infrastructure
 
-* Docker for containerization
-* Vercel for deployment
-* Serverless architecture
+- Docker for containerization
+- Vercel for deployment
+- Serverless architecture
 
 ## Project Structure
 
@@ -102,30 +102,31 @@ vaam-eat-aio/
 
 ## Component/Module Structure and Conventions
 
-* File/folder organization follows Next.js app-router patterns
-* React components are organized into separate files and folders
-* Components are split into server and client components
-* State and data management use React Hooks, Zustand, and TanStack Query
-* Forms and validation use Formik and Zod
-* Styling uses Tailwind CSS and daisyUI
+- File/folder organization follows Next.js app-router patterns
+- React components are organized into separate files and folders
+- Components are split into server and client components
+- State and data management use React Hooks, Zustand, and TanStack Query
+- Forms and validation use Formik and Zod
+- Styling uses Tailwind CSS and daisyUI
 
 ### Key Conventions
 
-* Strict TypeScript usage
-* AirBnB and biome linting rules are followed
-* No default exports are used
-* Function components are used exclusively
+- Strict TypeScript usage
+- AirBnB and biome linting rules are followed
+- No default exports are used
+- Function components are used exclusively
 
 ## Distinctive Architectural Decisions and Best Practices
 
-* Security: ZenStack is used for access control and field-level security
-* Optimistic UI: tRPC mutation options are used for optimistic updates
-* Caching: Redis is used for caching expensive reads
-* Database: Prisma Client is used for database interactions, with a single instance per request for multitenancy and row-level security
+- Security: ZenStack is used for access control and field-level security
+- Optimistic UI: tRPC mutation options are used for optimistic updates
+- Caching: Redis is used for caching expensive reads
+- Database: Prisma Client is used for database interactions, with a single instance per request for multitenancy and row-level security
 
 ## Code Quality and Convention Adherence
 
 Recent "small things" fixes demonstrate adherence to code quality and conventions, including:
-* Code hygiene improvements
-* Linting rule updates
-* Naming convention consistency
+
+- Code hygiene improvements
+- Linting rule updates
+- Naming convention consistency

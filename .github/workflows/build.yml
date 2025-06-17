@@ -28,13 +28,11 @@ jobs:
           - migration
         include:
           - target: main
-            name: 'Main'
+            name: Main
             suffix: ''
-            dockerfile: 'Dockerfile'
           - target: migration
-            name: 'Migration'
+            name: Migration
             suffix: '-migrations'
-            dockerfile: 'companions/migrations/Dockerfile'
 
     steps:
       # Checkout the repository code
@@ -96,7 +94,7 @@ jobs:
         if: github.event_name != 'pull_request'
         with:
           context: .
-          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
           push: 'true'
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

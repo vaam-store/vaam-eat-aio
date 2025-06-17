@@ -30,15 +30,8 @@ FROM base AS builder
 ENV NODE_ENV=production
 ENV SKIP_ENV_VALIDATION=1
 
-# This is mandatory but not definitive
-ENV S3_ENDPOINT="localhost"
-ENV S3_PORT="19000"
-ENV S3_SCHEME="https"
-ENV S3_BUCKET="vaam-eat"
-ENV S3_CDN_URL="https://some.cdn.com"
-
-ENV NEXT_PUBLIC_EMGR_CDN="https://emgr.ssegning.com/api/images/resize"
-ENV NEXT_PUBLIC_EMGR_APP_URL="https://eat.vaam.store"
+ENV NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL="https://miaou.com"
+ENV NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET="waff-waff"
 
 COPY --from=deps /app/deps ./node_modules
 COPY --from=deps /app/prisma-gen ./prisma
@@ -46,6 +39,7 @@ COPY --from=deps /app/dep-gen ./generated
 
 RUN \
   --mount=type=bind,source=./docs,target=/app/docs \
+  --mount=type=bind,source=./public,target=/app/public \
   --mount=type=bind,source=./schema.zmodel,target=/app/schema.zmodel \
   --mount=type=bind,source=./src,target=/app/src \
   --mount=type=bind,source=./eslint.config.js,target=/app/eslint.config.js \
@@ -64,17 +58,28 @@ RUN \
   && cp -R .next/static /app/final-static \
   && cp -R public /app/final-public
 
-FROM node:24-alpine
+FROM node:24-alpine as migration
+
+LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
+LABEL org.opencontainers.image.description="NextJS frontend for the VaamEAT"
+
+WORKDIR /app
+
+RUN yarn add prisma@6 \
+  && yarn cache clean
+
+COPY .docker/migrations/entrypoint.sh entrypoint.sh
+COPY --from=deps /app/prisma-gen ./prisma
+
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+
+FROM node:24-alpine as main
 
 LABEL maintainer="Stephane Segning <selastlambou@gmail.com>"
 LABEL org.opencontainers.image.description="NextJS frontend for the vaam-eat"
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN \
-  --mount=type=cache,target=/var/cache/apk,sharing=locked \
-  apk add libc6-compat
 
 #
 WORKDIR /app

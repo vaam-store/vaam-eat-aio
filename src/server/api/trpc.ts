@@ -35,7 +35,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
     db,
     prisma: enhance(db as any, { user: session?.user as any }),
     session,
-    emailTransporter, // Add the email transporter to the context
+    mailer: emailTransporter, // Add the email transporter to the context
     ...opts,
   };
 };

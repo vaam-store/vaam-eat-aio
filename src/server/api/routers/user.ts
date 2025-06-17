@@ -56,7 +56,7 @@ export const userRouter = createTRPCRouter({
     });
 
     // Construct the verification link
-    const verificationLink = `${env.NEXT_PUBLIC_APP_URL}/settings/verify-email?token=${token}`;
+    const verificationLink = `${env.APP_URL}/settings/verify-email?token=${token}`;
 
     // Render the email component to an HTML string
     const emailHtml = await appRender({
@@ -66,7 +66,7 @@ export const userRouter = createTRPCRouter({
 
     // Send the email
     await sendEmail(
-      ctx.emailTransporter,
+      ctx.mailer,
       env.EMAIL_FROM,
       userEmail,
       'Verify your email address',

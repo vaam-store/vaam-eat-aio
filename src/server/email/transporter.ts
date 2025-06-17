@@ -1,8 +1,8 @@
 import { env } from '@app/env';
 import nodemailer from 'nodemailer';
 
-const createTransporter = () => {
-  const transporter = nodemailer.createTransport({
+const createTransporter = () =>
+  nodemailer.createTransport({
     host: env.EMAIL_SERVER_HOST,
     port: env.EMAIL_SERVER_PORT,
     secure: env.EMAIL_SERVER_PORT === 465, // true for 465, false for other ports
@@ -11,18 +11,6 @@ const createTransporter = () => {
       pass: env.EMAIL_SERVER_PASSWORD,
     },
   });
-
-  // Verify connection configuration
-  transporter.verify((error, _success) => {
-    if (error) {
-      console.error('Nodemailer transporter verification failed:', error);
-    } else {
-      console.log('Nodemailer transporter is ready to send emails');
-    }
-  });
-
-  return transporter;
-};
 
 const globalForTransporter = globalThis as unknown as {
   transporter: ReturnType<typeof createTransporter> | undefined;
