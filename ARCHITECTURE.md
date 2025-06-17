@@ -92,7 +92,7 @@ vaam-eat-aio/
   - Next.js **App Router** with prudent Server / Client split; _Server components_ for presentational UI, _Client components_ for interactive logic, `Suspense` & streaming where valuable.
   - Prefix route imports with **`@app`** alias when required.
   - React **function components** everywhere; **default export _only_ in `src/app/**` Page files\*\*, otherwise use named exports.
-  - Component files live in `PascalCase.tsx`; auxiliary files (hooks, utils, routes) use **kebab‑case**.
+  - Component files live in `kebab-case.tsx` or `kebab-case.ts` if not tsx.
 
 - **Data & State Layer**
 

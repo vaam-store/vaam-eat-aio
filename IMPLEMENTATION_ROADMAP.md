@@ -73,7 +73,7 @@ _Define base folders and naming rules to enforce code organization._
 
 - [x] **Scaffold App Router segments** — create `(auth)`, `(vendor)`, `(checkout)`, `(product)`, `(main)`, and `api` groups.
 - [x] **Create base folders** — initialize `src/components`, `src/hooks`, `src/server`, `src/trpc`, and `prisma`.
-- [ ] **Enforce naming conventions** — use PascalCase for component files and kebab-case for helpers and routes.
+- [ ] **Enforce naming conventions** — use PascalCase for component and kebab-case for helpers and routes.
 
 ### 1.3 Database & Schema
 _Establish initial data models, migrations, seeds, and local dependencies._

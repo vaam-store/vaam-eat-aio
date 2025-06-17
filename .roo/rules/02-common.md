@@ -1,7 +1,7 @@
 - Prefix code with `@app` where required.
 - Always use **function components**; only use default export for Pages.
 - **Server components** for dumb UI; **client components** for browser logic, Suspense/lazy loading as needed.
-- React component files in **PascalCase**; File names in **kebab-case**.
+- React component in **PascalCase**; in **kebab-case** Files.
 - Use TanStack Query for state & data, **Formik + Zod** for forms/validation.
 - Style with **Tailwind CSS** + daisyUI; no Tailwind string concatenation — write full class names and use twMerge if required.
 - Icons from **react-feather** (`import { IconName } from 'react-feather'`).
