@@ -59,7 +59,7 @@ export default function EditProfilePage() {
         onSubmit={async (values, { setSubmitting }) => {
           try {
             if (!session?.user?.id) {
-              showErrorToast('User ID not found. Please try again.');
+              showErrorToast(null, 'User ID not found. Please try again.');
               setSubmitting(false);
               return;
             }

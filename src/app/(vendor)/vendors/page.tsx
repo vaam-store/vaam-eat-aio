@@ -9,7 +9,7 @@ export default function VendorsPage() {
   const { vendors } = useVendors({ where: { members: { some: {} } } });
 
   useEffect(() => {
-    const vendorId = vendors?.[0].id;
+    const vendorId = vendors?.[0]?.id;
     if (vendorId) {
       router.replace(`/vendors/${vendorId}`);
     } else if (vendors && vendors.length === 0) {
