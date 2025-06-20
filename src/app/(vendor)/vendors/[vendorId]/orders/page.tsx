@@ -1,11 +1,11 @@
 import { Title } from '@app/components/text/title';
 
-export default function OrdersListPage() {
+export default function SellingOrdersPage() {
   return (
     <div>
-      <Title>My Orders</Title>
-      <p>View your order history and track shipments.</p>
-      {/* TODO: Display list of orders with status, filtering, search */}
+      <Title>My Sales Orders</Title>
+      <p>Manage orders for products you have sold.</p>
+      {/* TODO: Display list of sales orders, status, actions */}
     </div>
   );
 }

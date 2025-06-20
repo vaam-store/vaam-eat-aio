@@ -54,7 +54,7 @@ export default function Error({
             <Text as='h3' size='lg' bold className='mb-2'>
               Error Details (Development Mode):
             </Text>
-            <pre className='bg-base-200 text-error-content overflow-x-auto rounded-lg p-4 text-sm'>
+            <pre className='bg-neutral text-neutral-content overflow-x-auto rounded-lg p-4 text-sm h-96'>
               {error.message}
               {error.digest && `\nDigest: ${error.digest}`}
               {error.stack && `\nStack: ${error.stack}`}

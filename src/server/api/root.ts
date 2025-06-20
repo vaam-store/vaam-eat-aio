@@ -1,5 +1,6 @@
 import { uploadRouter } from '@app/server/api/routers/upload';
 import { userRouter } from '@app/server/api/routers/user';
+import { vendorRouter } from '@app/server/api/routers/vendor';
 import { createCallerFactory, createTRPCRouter } from '@app/server/api/trpc';
 import { createRouter } from '@gen/routers';
 
@@ -13,6 +14,7 @@ const zenRouter = createRouter();
 export const appRouter = createTRPCRouter({
   upload: uploadRouter,
   user: userRouter,
+  vendor: vendorRouter,
   zen: zenRouter,
 });
 

@@ -1,18 +1,18 @@
-type OrderDetailPageProps = {
+type SellerOrderDetailPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
 
-export default async function OrderDetailPage({
+export default async function SellerOrderDetailPage({
   params,
-}: OrderDetailPageProps) {
+}: SellerOrderDetailPageProps) {
   const { id } = await params;
   return (
     <div>
-      <h1>Order Details: {id}</h1>
-      <p>Detailed information for order {id}.</p>
-      {/* TODO: Display order details, tracking info, support options */}
+      <h1>Sales Order Detail: {id}</h1>
+      <p>Details for sales order {id}.</p>
+      {/* TODO: Display sales order details, customer info, shipping status */}
     </div>
   );
 }

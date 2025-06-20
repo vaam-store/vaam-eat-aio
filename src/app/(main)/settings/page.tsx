@@ -1,11 +1,38 @@
+'use client';
+
 import { AuthWrapper } from '@app/components/auth/auth-wrapper';
 import { ListBlock } from '@app/components/list-block';
+import { ListItem } from '@app/components/list-item';
 import { SettingNavigationItem } from '@app/components/settings/setting-navigation-item';
 import { SettingShare } from '@app/components/settings/setting-share';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { Suspense } from 'react';
-import { Briefcase, Link2, List, Mail, Star, User } from 'react-feather';
+import {
+  ArrowRight,
+  Briefcase,
+  Link2,
+  List,
+  Mail,
+  Map,
+  Star,
+  User,
+} from 'react-feather';
 
 export default function SettingsPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const isEmailVerified = session?.user?.emailVerified !== null;
+
+  const handleVendorClick = () => {
+    if (isEmailVerified) {
+      router.push('/vendors');
+    } else {
+      router.push('/settings/kyc');
+    }
+  };
+
   return (
     <Suspense>
       <AuthWrapper>
@@ -29,6 +56,12 @@ export default function SettingsPage() {
             icon={<List />}
           />
           <SettingNavigationItem
+            href='/settings/cache'
+            title='Offline Map Cache'
+            description='Manage offline map downloads for your region'
+            icon={<Map />}
+          />
+          <SettingNavigationItem
             href='/settings/starred'
             title='Starred Products / Vendors'
             description='View your starred products and vendors'
@@ -38,11 +71,14 @@ export default function SettingsPage() {
 
         <ListBlock title='Miscellanous' className='mt-4'>
           <SettingShare />
-          <SettingNavigationItem
-            href='/settings/vendor-management'
+          <ListItem
+            as='button'
+            type='button'
             title='Vendor Management'
             description='Manage your vendor accounts and products'
             icon={<Briefcase />}
+            endIcon={<ArrowRight className='text-primary' />}
+            onClick={handleVendorClick}
           />
         </ListBlock>
 

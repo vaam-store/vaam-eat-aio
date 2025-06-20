@@ -107,7 +107,7 @@ model Vendor {
     id             String                @id @default(cuid())
     enabled        Boolean               @default(false)
     name           String?
-    contacts       VendorContact[] // Multiple contacts for a vendor
+    contacts       VendorContact[]
     members        VendorMembership[]
     products       Product[]
     locations      Location[]
@@ -310,7 +310,7 @@ model ProductImage {
     productId          String
     product            Product?          @relation("ProductImages", fields: [productId], references: [id])
 
-    thumbnailProductId String            @unique
+    thumbnailProductId String?           @unique
     thumbnailProduct   Product?          @relation("ProductThumbnail", fields: [thumbnailProductId], references: [id])
 
     productVariationId String?

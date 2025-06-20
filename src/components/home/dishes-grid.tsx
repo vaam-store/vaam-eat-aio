@@ -4,10 +4,10 @@ import { useProducts } from '@app/hooks/use-products';
 import Image from 'next/image';
 
 export function DishesGrid() {
-  const { data } = useProducts();
+  const { products } = useProducts();
   return (
     <div className='ld:grid-cols-4 grid grid-cols-1 gap-4 md:grid-cols-2'>
-      {data.map((product) => (
+      {products.map((product) => (
         <div key={product.id} className='card image-full bg-base-200'>
           {product.thumbnail?.url && (
             <figure>

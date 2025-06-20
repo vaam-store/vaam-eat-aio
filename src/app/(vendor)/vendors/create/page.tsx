@@ -1,24 +1,28 @@
 'use client';
 
+import { Title } from '@app/components/text';
 import { VendorCreationForm } from '@app/components/vendor';
 import { api } from '@app/trpc/react';
 import { handleTrpcError } from '@app/utils/error-handler';
 import type { Prisma } from '@zenstackhq/runtime/models';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function VendorCreatePage() {
   const { data } = useSession();
+  const router = useRouter();
 
-  const createVendorMutation = api.zen.vendor.create.useMutation({
+  const createVendorMutation = api.vendor.create.useMutation({
     onError: (error) => {
       handleTrpcError(error, 'Failed to create vendor. Please try again.');
     },
   });
 
   const handleSubmit = async (values: Prisma.VendorCreateInput) => {
-    await createVendorMutation.mutateAsync({
-      data: { ...values },
+    const result = await createVendorMutation.mutateAsync({
+      data: values,
     });
+    router.push(`/vendors/${result.id}`);
   };
 
   if (!data) {
@@ -31,7 +35,9 @@ export default function VendorCreatePage() {
 
   return (
     <>
-      <h1 className='mb-4 text-2xl font-bold'>Create New Vendor</h1>
+      <Title size='2xl' className='mb-4'>
+        Create New Vendor
+      </Title>
       <VendorCreationForm
         onSubmit={handleSubmit}
         initialData={{

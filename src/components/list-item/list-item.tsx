@@ -1,54 +1,49 @@
-import Link from 'next/link';
-import React from 'react';
+import React, {
+  type ComponentPropsWithoutRef,
+  type ElementType,
+  type RefObject,
+} from 'react';
+import { twMerge } from 'tailwind-merge';
 import { Text } from '../text';
 
-interface ListItemProps {
-  title: string;
-  description?: string;
+interface ListItemOwnProps {
+  title?: string;
+  description?: string | React.ReactNode;
   icon?: React.ReactNode;
   endIcon?: React.ReactNode;
-  href?: string;
-  onClick?: () => void;
 }
 
-export const ListItem: React.FC<ListItemProps> = ({
+export type ListItemProps<As extends ElementType = 'a'> = ListItemOwnProps &
+  ComponentPropsWithoutRef<As> & {
+    as?: As;
+    ref?: RefObject<As>;
+  };
+
+export function ListItem<As extends ElementType = 'a'>({
   title,
+  as,
+  className,
   description,
   icon,
   endIcon,
-  href,
-  onClick,
-}) => {
-  const commonProps = {
-    className: 'list-row items-center',
-    onClick: onClick,
-  };
-
-  if (href) {
-    return (
-      <Link href={href} {...commonProps}>
-        {icon}
-        <div className='flex-grow'>
-          <Text className='font-bold'>{title}</Text>
-          {description && (
-            <Text className='text-opacity-70 text-sm'>{description}</Text>
-          )}
-        </div>
-        {endIcon}
-      </Link>
-    );
-  }
+  ...props
+}: ListItemProps<As>) {
+  const Component = as ?? 'a';
 
   return (
-    <button type='button' {...commonProps}>
+    <Component
+      className={twMerge('list-row items-center', className)}
+      {...props}>
       {icon}
-      <div className='flex-grow'>
+      <div className='flex-grow text-left'>
         <Text className='font-bold'>{title}</Text>
         {description && (
           <Text className='text-opacity-70 text-sm'>{description}</Text>
         )}
       </div>
       {endIcon}
-    </button>
+    </Component>
   );
-};
+}
+
+ListItem.defaultProps = { title: '' };

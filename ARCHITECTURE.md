@@ -8,11 +8,13 @@
 
 ### Frontend
 
-- **Next.js 15 App Router** with React Server & Client Components
-- **TanStack Query** for server/remote state (fed by auto‑generated tRPC hooks)
+- **Next.js 15 App Router** with React Server & Client Components
+- **TanStack Query** for server/remote state (fed by auto‑generated tRPC hooks)
 - **Zustand** (`persist` + `localforage`) for UI/session & other client‑only state
 - **Streaming** via `Suspense` / `use` for data‑heavy pages
-- **Tailwind CSS** + **daisyUI** for design system
+- **Tailwind CSS** + **daisyUI** for design system
+- **MapLibre + protomaps** for interactive maps with offline download capabilities
+- **PMTiles format** for efficient regional map storage and retrieval
 
 ### Backend
 
@@ -34,13 +36,41 @@
 6. **Zustand** stores (e.g. cart) trigger query invalidations or refetches via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()`—never by duplicating server data.
 7. Redis layer optionally caches expensive reads; cache is updated or invalidated with optimistic mutations.
 
+### Offline Map Architecture
+
+The platform enables users to download regional maps for offline use, significantly improving search performance and reducing data consumption:
+
+```mermaid
+flowchart TD
+    A[User Selects Region] --> B[Download PMTiles]
+    B --> C[Store in IndexedDB via localforage]
+    C --> D[MapLibre Renders Offline]
+    D --> E[Faster Search Results Display]
+
+    F[Online Map Request] --> G{Offline Tiles Available?}
+    G -->|Yes| D
+    G -->|No| H[Fetch from Server]
+    H --> I[Cache for Future Use]
+    I --> D
+```
+
+**Key Components:**
+
+- **Regional Downloads**: Users can selectively download map regions based on managed countries/areas data
+- **PMTiles Storage**: Efficient vector tile format stored locally via `localforage` in IndexedDB
+- **Hybrid Rendering**: MapLibre seamlessly switches between offline and online tile sources
+- **Performance Benefits**: Offline maps eliminate network latency for map rendering and search result overlays
+- **Data Conservation**: Reduces bandwidth usage for frequent map interactions and location-based searches
+
 ### Infrastructure
 
 - **Docker‑compose** for local development
 - **Vercel** serverless deployment targets (Edge & Node runtimes)
-- **CI** with GitHub Actions: lint, type‑check, test, migrate DB, build, preview deploy
+- **CI** with GitHub Actions: lint, type‑check, test, migrate DB, build, preview deploy
 - **Serverless architecture** with per‑request multitenant context resolved from `cookies().get()` tenant id
 - **Prisma Migrations** committed under VCS
+- **MinIO S3‑compatible storage** for PMTiles map data serving
+- **Regional PMTiles** organized by managed countries for selective offline downloads
 
 ## Project Structure
 
@@ -97,10 +127,11 @@ vaam-eat-aio/
 - **Data & State Layer**
 
   - Domain‑based **tRPC routers** in `src/app/api`, named exports.
-  - Derive hooks (`useQuery`, `useMutation`, `useInfiniteQuery`) straight from tRPC helpers—no wrappers. tRPC exported from `@app/trpc/server` for server APIs & `@app/trpc/react` for client APIs.
-  - **TanStack Query** manages all server/remote data; set `staleTime`, `gcTime`, etc. per query type.
-  - **Zustand** (with `persist` & `localforage` storage) is reserved for UI/session & other client‑only state (cart, modals, filters, websocket status). **Never mirror TanStack Query data into Zustand**.
-  - Compose TanStack Query keys from required Zustand values; invalidate via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()` after mutations.
+  - Derive hooks (`useQuery`, `useMutation`, `useInfiniteQuery`) straight from tRPC helpers—no wrappers. tRPC exported from `@app/trpc/server` for server APIs & `@app/trpc/react` for client APIs.
+  - **TanStack Query** manages all server/remote data; set `staleTime`, `gcTime`, etc. per query type.
+  - **Zustand** (with `persist` & `localforage` storage) is reserved for UI/session & other client‑only state (cart, modals, filters, websocket status, **offline map preferences**). **Never mirror TanStack Query data into Zustand**.
+  - **Offline map tiles** are stored directly in IndexedDB via `localforage`, separate from both TanStack Query and Zustand state management.
+  - Compose TanStack Query keys from required Zustand values; invalidate via `queryClient.invalidateQueries` or `utils.<namespace>.<proc>.invalidate()` after mutations.
   - **ZenStack** policies enforce row‑ & field‑level ACL.
   - Multi‑step mutations are wrapped in `prisma.$transaction([...])` and exposed as a single RPC.
   - **Cursor‑based pagination** (`cursor`, `take`) + `useInfiniteQuery`; return `nextCursor`.
@@ -146,14 +177,15 @@ vaam-eat-aio/
 
 ## Distinctive Architectural Decisions
 
-| Concern                | Decision                                                                                                                                           |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Security**           | ZenStack integrates with Prisma to enforce row‑ & field‑level access control before any query leaves the server                                    |
-| **State Management**   | **TanStack Query** exclusively owns server‑state; **Zustand** (persisted with `localforage`) owns UI/session state; no duplication between the two |
-| **Optimistic Updates** | All mutations declare optimistic cache updates via tRPC’s mutation lifecycle hooks                                                                 |
-| **Caching Strategy**   | In‑memory cache on the client (+ TanStack Query) and Redis edge cache on the server for expensive joins                                            |
-| **Streaming**          | Critical above‑the‑fold sections stream in chunks; non‑critical widgets load with `Suspense` fallback                                              |
-| **Database**           | Single Prisma client tied to tenant‑scoped connection string; queries use RLS policies authored in ZenStack                                        |
+| Concern                | Decision                                                                                                                                                    |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Security**           | ZenStack integrates with Prisma to enforce row‑ & field‑level access control before any query leaves the server                                             |
+| **State Management**   | **TanStack Query** exclusively owns server‑state; **Zustand** (persisted with `localforage`) owns UI/session state; no duplication between the two          |
+| **Optimistic Updates** | All mutations declare optimistic cache updates via tRPC's mutation lifecycle hooks                                                                          |
+| **Caching Strategy**   | In‑memory cache on the client (+ TanStack Query) and Redis edge cache on the server for expensive joins                                                     |
+| **Streaming**          | Critical above‑the‑fold sections stream in chunks; non‑critical widgets load with `Suspense` fallback                                                       |
+| **Database**           | Single Prisma client tied to tenant‑scoped connection string; queries use RLS policies authored in ZenStack                                                 |
+| **Offline Maps**       | Users can download regional PMTiles for offline use; MapLibre seamlessly switches between offline/online sources to accelerate search and reduce data usage |
 
 ## Code Quality & Continuous Improvement
 

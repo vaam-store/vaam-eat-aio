@@ -22,3 +22,4 @@
   - @app/components/network-status
   - @app/components/section
   - @app/components/text
+    and before using them, check their usage first.

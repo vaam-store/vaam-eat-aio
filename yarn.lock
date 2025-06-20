@@ -1309,9 +1309,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@prisma/client@npm:^6.5.0":
-  version: 6.9.0
-  resolution: "@prisma/client@npm:6.9.0"
+"@prisma/client@npm:^6.10.1":
+  version: 6.10.1
+  resolution: "@prisma/client@npm:6.10.1"
   peerDependencies:
     prisma: "*"
     typescript: ">=5.1.0"
@@ -1320,7 +1320,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 10c0/4877d9d0f93ca404c066ce0536f4c2180a8a16a2b0ade8f15df9dd5286c74db55c5a99f4632f13b32045b966cb5f01e010806edda865aa22bbb0aef65f8b6e9f
+  checksum: 10c0/f6f7b1c43c45d7c73a46b55df17a3c5de2ec30eeb7463fcd9b45e5d67036c5c9059e762aa99a536bc212f8aff836bfd0f674c995ab07a5cb3a92ac56dc82d173
   languageName: node
   linkType: hard
 
@@ -7532,6 +7532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nanoid@npm:^5.1.5":
+  version: 5.1.5
+  resolution: "nanoid@npm:5.1.5"
+  bin:
+    nanoid: bin/nanoid.js
+  checksum: 10c0/e6004f1ad6c7123eeb037062c4441d44982037dc043aabb162457ef6986e99964ba98c63c975f96c547403beb0bf95bc537bd7bf9a09baf381656acdc2975c3c
+  languageName: node
+  linkType: hard
+
 "napi-postinstall@npm:^0.2.2":
   version: 0.2.4
   resolution: "napi-postinstall@npm:0.2.4"
@@ -10698,7 +10707,7 @@ __metadata:
     "@next/bundle-analyzer": "npm:^15.3.3"
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/api-logs": "npm:^0.202.0"
-    "@prisma/client": "npm:^6.5.0"
+    "@prisma/client": "npm:^6.10.1"
     "@protomaps/basemaps": "npm:^5.4.1"
     "@react-email/components": "npm:^0.0.42"
     "@react-email/render": "npm:^1.1.2"
@@ -10738,6 +10747,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     maplibre-gl: "npm:^5.6.0"
     minio: "npm:^8.0.5"
+    nanoid: "npm:^5.1.5"
     next: "npm:^15.3.3"
     next-auth: "npm:5.0.0-beta.28"
     next-compose-plugins: "npm:^2.2.1"

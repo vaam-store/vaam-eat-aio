@@ -154,7 +154,7 @@ function formatErrorMessage(categorizedError: CategorizedError): string {
 
 export const showErrorToast = (
   error: unknown,
-  defaultMessage = 'An unexpected error occurred.',
+  message: string,
   options?: {
     severity?: ErrorSeverity;
     category?: ErrorCategory;
@@ -174,7 +174,7 @@ export const showErrorToast = (
 
   const displayMessage = formatErrorMessage({
     ...categorized,
-    message: categorized.message || defaultMessage, // Ensure message is not empty
+    message: message ?? categorized.message,
     category: finalCategory,
     severity: finalSeverity,
   });
