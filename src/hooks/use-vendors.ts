@@ -40,11 +40,13 @@ export function useVendors({ where }: UseVendors) {
   return {
     ...result,
     vendors: vendors as unknown as Array<
-      Prisma.VendorGetPayload<{
-        include: {
-          contacts: true;
-        };
-      }>
+      Required<
+        Prisma.VendorGetPayload<{
+          include: {
+            contacts: true;
+          };
+        }>
+      >
     >,
   };
 }

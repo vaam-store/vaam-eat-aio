@@ -16,7 +16,6 @@ export function VendorStepper({ currentStep, formSteps }: VendorStepperProps) {
           className={twMerge('step', index <= currentStep && 'step-primary')}>
           <span className='step-icon'>
             <CheckSquare
-              size={20}
               className={twMerge(
                 index <= currentStep && 'text-primary-content',
                 index > currentStep && 'text-base-content opacity-50',

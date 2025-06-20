@@ -12,6 +12,14 @@ hr {
 
 .list > .list-row {
   svg {
-    @apply mr-4 size-5;
+    @apply mr-4 size-4;
+  }
+}
+
+.step {
+  .step-icon {
+    svg {
+      @apply size-4;
+    }
   }
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { Section } from '@app/components/section';
 import {
   ProductCreateForm,
   type ProductCreateFormValues,
@@ -51,5 +52,9 @@ export default function AddNewProductPage() {
     }
   };
 
-  return <ProductCreateForm onSubmit={handleSubmit} vendorId={vendorId} />;
+  return (
+    <Section className='max-w-lg!'>
+      <ProductCreateForm onSubmit={handleSubmit} vendorId={vendorId} />
+    </Section>
+  );
 }

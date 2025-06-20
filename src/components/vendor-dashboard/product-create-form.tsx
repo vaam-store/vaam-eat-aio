@@ -2,7 +2,10 @@
 
 import { Button } from '@app/components/button';
 import { Form, Formik, type FormikHelpers } from 'formik';
+import { nanoid } from 'nanoid';
 import { useState } from 'react';
+import { Home, Image, MapPin, Settings, Shuffle } from 'react-feather';
+import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import { Step1BasicInfo } from './product-create-form/step-1-basic-info';
@@ -19,10 +22,7 @@ const productImageSchema = z.object({
 
 const productCreateSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  slug: z
-    .string()
-    .min(1, 'Slug is required')
-    .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens'),
+  slug: z.string().min(1, 'Slug is required'),
   description: z.string().optional(),
   price: z
     .number({ invalid_type_error: 'Price must be a number' })
@@ -106,7 +106,7 @@ type ProductCreateFormProps = {
 
 const getInitialValues = (): ProductCreateFormValues => ({
   name: '',
-  slug: '',
+  slug: nanoid(),
   description: '',
   price: 0,
   available: true,
@@ -155,83 +155,89 @@ const getInitialValues = (): ProductCreateFormValues => ({
   },
 });
 
+const steps = [
+  {
+    Icon: Home,
+    title: 'Start',
+    component: Step1BasicInfo,
+    validationSchema: productCreateSchema.pick({
+      name: true,
+      slug: true,
+      description: true,
+      price: true,
+      available: true,
+    }),
+  },
+  {
+    Icon: Image,
+    title: 'Categorization & Media',
+    component: Step2Media,
+    validationSchema: productCreateSchema.pick({
+      category: true,
+      tags: true,
+      images: true,
+      thumbnail: true,
+    }),
+  },
+  {
+    Icon: MapPin,
+    title: 'Primary Location',
+    component: Step3PrimaryLocation,
+    validationSchema: productCreateSchema.pick({
+      primaryLocation: true,
+    }),
+  },
+  {
+    Icon: Settings,
+    title: 'Options',
+    component: Step4Options,
+    validationSchema: productCreateSchema.pick({
+      options: true,
+    }),
+  },
+  {
+    Icon: Shuffle,
+    title: 'Variations',
+    component: Step5Variations,
+    validationSchema: productCreateSchema
+      .pick({
+        variations: true,
+        // We also need 'options' in the context of this step's validation for the refine function
+        options: true,
+      })
+      .refine(
+        (data) => {
+          // If there are options and all options have at least one value, then variations array must not be empty.
+          if (
+            data.options &&
+            Array.isArray(data.options?.createMany?.data) &&
+            data.options.createMany.data.length > 0 &&
+            data.options.createMany.data.every(
+              (opt) => opt.values && opt.values.length > 0,
+            )
+          ) {
+            return (
+              Array.isArray(data.variations?.createMany?.data) &&
+              data.variations.createMany.data.length > 0
+            );
+          }
+          // If no options, or some options have no values, then variations are not strictly required at this stage.
+          return true;
+        },
+        {
+          message:
+            'At least one variation is required if all defined options have values. Try auto-generating variations.',
+          path: ['variations'], // Show the error under the variations field array
+        },
+      ),
+  },
+];
+
+// TODO this form get reset from one step to the next one
 export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
   onSubmit,
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
-
-  const steps = [
-    {
-      title: 'Basic Information & Pricing',
-      component: Step1BasicInfo,
-      validationSchema: productCreateSchema.pick({
-        name: true,
-        slug: true,
-        description: true,
-        price: true,
-        available: true,
-      }),
-    },
-    {
-      title: 'Categorization & Media',
-      component: Step2Media,
-      validationSchema: productCreateSchema.pick({
-        category: true,
-        tags: true,
-        images: true,
-        thumbnail: true,
-      }),
-    },
-    {
-      title: 'Primary Location',
-      component: Step3PrimaryLocation,
-      validationSchema: productCreateSchema.pick({
-        primaryLocation: true,
-      }),
-    },
-    {
-      title: 'Options',
-      component: Step4Options,
-      validationSchema: productCreateSchema.pick({
-        options: true,
-      }),
-    },
-    {
-      title: 'Variations',
-      component: Step5Variations,
-      validationSchema: productCreateSchema
-        .pick({
-          variations: true,
-          // We also need 'options' in the context of this step's validation for the refine function
-          options: true,
-        })
-        .refine(
-          (data) => {
-            // If there are options and all options have at least one value, then variations array must not be empty.
-            if (
-              data.options &&
-              Array.isArray(data.options?.createMany?.data) &&
-              data.options.createMany.data.length > 0 &&
-              data.options.createMany.data.every(
-                (opt) => opt.values && opt.values.length > 0,
-              )
-            ) {
-              return (
-                Array.isArray(data.variations?.createMany?.data) &&
-                data.variations.createMany.data.length > 0
-              );
-            }
-            // If no options, or some options have no values, then variations are not strictly required at this stage.
-            return true;
-          },
-          {
-            message:
-              'At least one variation is required if all defined options have values. Try auto-generating variations.',
-            path: ['variations'], // Show the error under the variations field array
-          },
-        ),
-    },
-  ];
 
   const CurrentStepComponent = steps[currentStep]!.component;
 
@@ -244,77 +250,98 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
   };
 
   return (
-    <div className='card border bg-base-100'>
-      <Formik
-        initialValues={getInitialValues()}
-        validationSchema={toFormikValidationSchema(
-          steps[currentStep]!.validationSchema as any,
-        )}
-        onSubmit={handleFormSubmit}
-        enableReinitialize>
-        {({ isSubmitting, handleSubmit, isValid, dirty, validateForm }) => (
-          <Form onSubmit={handleSubmit} className='card-body'>
-            {/* Stepper Titles - Can be enhanced later */}
-            <ul className='steps w-full mb-6'>
-              {steps.map((step, index) => (
-                <li
-                  key={step.title}
-                  className={`step ${index <= currentStep ? 'step-primary' : ''}`}>
-                  {step.title}
-                </li>
-              ))}
-            </ul>
+    <Formik
+      initialValues={getInitialValues()}
+      validationSchema={toFormikValidationSchema(
+        steps[currentStep]!.validationSchema as any,
+      )}
+      onSubmit={handleFormSubmit}
+      enableReinitialize>
+      {({
+        isSubmitting,
+        handleSubmit,
+        isValid,
+        dirty,
+        validateForm,
+        values,
+        errors,
+      }) => (
+        <Form onSubmit={handleSubmit}>
+          {/* Stepper Titles - Can be enhanced later */}
+          <ul className='steps w-full mb-6'>
+            {steps.map((step, index) => (
+              <li
+                key={step.title}
+                className={twMerge(
+                  'step',
+                  index <= currentStep && 'step-primary',
+                )}>
+                <span className='step-icon'>
+                  <step.Icon
+                    className={twMerge(
+                      index <= currentStep && 'text-primary-content',
+                      index > currentStep && 'text-base-content opacity-50',
+                    )}
+                  />
+                </span>
+                <span className='hidden md:block'>{step.title}</span>
+              </li>
+            ))}
+          </ul>
 
-            {/* Render current step component */}
-            <CurrentStepComponent />
+          {/* Render current step component */}
+          <CurrentStepComponent />
 
-            <div className='mt-6 flex justify-between pt-4'>
-              {currentStep > 0 && (
-                <Button
-                  type='button'
-                  variant='outline'
-                  color='primary'
-                  onClick={() => setCurrentStep((prev) => prev - 1)}>
-                  Previous
-                </Button>
-              )}
-              <div />
-              {/* Spacer */}
-              {currentStep < steps.length - 1 && (
-                <Button
-                  type='button'
-                  color='primary'
-                  onClick={async () => {
-                    const errors = await validateForm();
-                    const currentStepSchema =
-                      steps[currentStep]!.validationSchema;
-                    const currentStepFields = Object.keys(
-                      (currentStepSchema as z.ZodObject<any, any>).shape,
-                    );
-                    const hasErrorsInCurrentStep = currentStepFields.some(
-                      (field) => errors[field as keyof ProductCreateFormValues],
-                    );
+          <div className='mt-6 flex justify-between pt-4'>
+            {currentStep > 0 && (
+              <Button
+                type='button'
+                variant='outline'
+                color='primary'
+                onClick={() => setCurrentStep((prev) => prev - 1)}>
+                Previous
+              </Button>
+            )}
+            <div />
+            {/* Spacer */}
+            {currentStep < steps.length - 1 && (
+              <Button
+                type='button'
+                color='primary'
+                onClick={async () => {
+                  const errors = await validateForm();
+                  const currentStepSchema =
+                    steps[currentStep]!.validationSchema;
+                  const currentStepFields = Object.keys(
+                    (currentStepSchema as z.ZodObject<any, any>).shape,
+                  );
+                  const hasErrorsInCurrentStep = currentStepFields.some(
+                    (field) => errors[field as keyof ProductCreateFormValues],
+                  );
 
-                    if (!hasErrorsInCurrentStep) {
-                      // Check if current step fields are valid
-                      setCurrentStep((prev) => prev + 1);
-                    }
-                  }}>
-                  Next
-                </Button>
-              )}
-              {currentStep === steps.length - 1 && (
-                <Button
-                  type='submit'
-                  color='primary'
-                  disabled={isSubmitting || !isValid || !dirty}>
-                  Create Product
-                </Button>
-              )}
-            </div>
-          </Form>
-        )}
-      </Formik>
-    </div>
+                  if (!hasErrorsInCurrentStep) {
+                    // Check if current step fields are valid
+                    setCurrentStep((prev) => prev + 1);
+                  }
+                }}>
+                Next
+              </Button>
+            )}
+            {currentStep === steps.length - 1 && (
+              <Button
+                type='submit'
+                color='primary'
+                disabled={isSubmitting || !isValid || !dirty}>
+                Create Product
+              </Button>
+            )}
+          </div>
+
+          <pre className='bg-base-200 mt-8 p-2 h-80 rounded-xl overflow-scroll'>
+            {JSON.stringify({ values, errors, dirty }, null, 8)}
+          </pre>
+        </Form>
+      )}
+    </Formik>
   );
 };

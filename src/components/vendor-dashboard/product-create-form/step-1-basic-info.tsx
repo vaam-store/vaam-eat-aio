@@ -49,28 +49,11 @@ const TextAreaField: React.FC<{ name: string; label: string }> = ({
   );
 };
 
-const CheckboxField: React.FC<{ name: string; label: string }> = ({
-  name,
-  label,
-}) => {
-  const [field] = useField(name);
-  return (
-    <div className='form-control'>
-      <label className='label cursor-pointer'>
-        <span className='label-text font-semibold'>{label}</span>
-        <input {...field} type='checkbox' className='toggle toggle-primary' />
-      </label>
-    </div>
-  );
-};
-
 export const Step1BasicInfo: React.FC = () => (
   <div className='space-y-4'>
     <TextField name='name' label='Name' />
-    <TextField name='slug' label='Slug' />
     <TextAreaField name='description' label='Description' />
     <TextField name='price' label='Price' type='number' />
-    <CheckboxField name='available' label='Available' />
     {/* Status field has been removed; status is always 'DRAFT' */}
   </div>
 );

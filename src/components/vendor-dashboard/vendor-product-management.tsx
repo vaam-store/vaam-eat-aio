@@ -1,11 +1,11 @@
 import { Button } from '@app/components/button';
 import { ListBlock } from '@app/components/list-block';
 import { ListItem } from '@app/components/list-item/list-item';
-import { Section } from '@app/components/section';
 import { Text } from '@app/components/text';
 import { Title } from '@app/components/text/title';
 import { useProducts } from '@app/hooks/use-products';
 import Link from 'next/link';
+import { Plus } from 'react-feather';
 
 interface VendorProductManagementProps {
   vendorId: string;
@@ -23,17 +23,24 @@ export function VendorProductManagement({
   });
 
   return (
-    <Section className='mb-8 border border-base-300 rounded-box p-6'>
-      <Title as='h2' className='mb-4'>
+    <div className='mb-8 border border-base-300 rounded-box p-6'>
+      <Title as='h2' size='lg' className='mb-4 opacity-70'>
         Product Management
       </Title>
       <div className='flex justify-between items-center mb-4'>
         <Text as='h3' className='text-lg font-semibold'>
           Your Products
         </Text>
-        <Link href={`/vendors/${vendorId}/selling/products/new`} passHref>
-          <Button color='primary'>Add New Product</Button>
-        </Link>
+
+        <Button
+          shape='circle'
+          variant='soft'
+          color='primary'
+          as={Link}
+          href={`/vendors/${vendorId}/products/new`}
+          passHref>
+          <Plus />
+        </Button>
       </div>
       <ListBlock title='Product List'>
         {products.length === 0 ? (
@@ -63,6 +70,6 @@ export function VendorProductManagement({
           ))
         )}
       </ListBlock>
-    </Section>
+    </div>
   );
 }

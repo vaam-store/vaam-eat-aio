@@ -1,7 +1,6 @@
 import { Button } from '@app/components/button';
 import { ListBlock } from '@app/components/list-block';
 import { ListItem } from '@app/components/list-item/list-item';
-import { Section } from '@app/components/section';
 import { Text } from '@app/components/text';
 import { Title } from '@app/components/text/title';
 import { useOrders } from '@app/hooks/use-orders';
@@ -14,8 +13,8 @@ interface VendorOrdersViewProps {
 export function VendorOrdersView({ vendorId }: VendorOrdersViewProps) {
   const { orders } = useOrders({ where: { vendor: { id: vendorId } } });
   return (
-    <Section className='border border-base-300 rounded-box p-6'>
-      <Title as='h2' className='mb-4'>
+    <div className='border border-base-300 rounded-box p-6'>
+      <Title as='h2' className='mb-4 opacity-70'>
         Orders View
       </Title>
       <Text as='h3' className='text-lg font-semibold mb-4'>
@@ -41,6 +40,6 @@ export function VendorOrdersView({ vendorId }: VendorOrdersViewProps) {
           ))
         )}
       </ListBlock>
-    </Section>
+    </div>
   );
 }

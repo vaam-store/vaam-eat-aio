@@ -38,7 +38,7 @@ export function ListItem<As extends ElementType = 'a'>({
       <div className='flex-grow text-left'>
         <Text className='font-bold'>{title}</Text>
         {description && (
-          <Text className='text-opacity-70 text-sm'>{description}</Text>
+          <Text className='opacity-70 text-sm'>{description}</Text>
         )}
       </div>
       {endIcon}
