@@ -93,7 +93,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vymalo/ui-preset": "^2.0.3",
-    "@zenstackhq/trpc": "^2.15.1",
+    "@zenstackhq/trpc": "^2.16.0",
     "autoprefixer": "^10.4.21",
     "cssnano": "^7.0.7",
     "eslint": "^9.23.0",
