@@ -15,7 +15,7 @@ valueFrom:
   {{ $value | nindent 2 }}
 {{ else }}
 name: {{ $key }}
-value: {{ $value }}
+value: {{ $value | quote }}
 {{ end }}
 {{ end }}
 {{- end -}}
