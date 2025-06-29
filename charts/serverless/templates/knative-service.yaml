@@ -13,23 +13,23 @@ spec:
     spec:
       containers:
         - image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
-          {{- with .Values.env }}
+          {{ with .Values.env }}
           env:
           {{ range $k, $v := . }}
-            - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) }}
-          {{- end }}
-          {{- end }}
+            - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) | nindent 14 }}
+          {{ end }}
+          {{ end }}
 
           {{ with .Values.ports }}
           ports:
             {{ range $k, $v := . }}
             - name: {{ include "common.tplvalues.render" ( dict "value" $k "context" $ ) }}
-              containerPort: {{ include "common.tplvalues.render" ( dict "value" $v "context" $ ) }}
+              containerPort: {{ include "common.tplvalues.render" ( dict "value" $v.port "context" $ ) }}
             {{ end }}
           {{ end }}
 
           {{ with .Values.resources }}
-          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) }}
+          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 14 }}
           {{ end }}
               
 

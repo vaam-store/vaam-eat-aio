@@ -5,13 +5,14 @@ Params:.
 - value - Dict - Required.
 */}}
 {{- define "common.env" -}}
-{{- $key := include "common.tplvalues.render" ( dict "value" .key "context" .context ) -}}
-{{- $value := include "common.tplvalues.render" ( dict "value" .value "context" .context ) -}}
+{{ $key := include "common.tplvalues.render" ( dict "value" .key "context" .context ) -}}
+{{ $value := include "common.tplvalues.render" ( dict "value" .value "context" .context ) -}}
 
-{{- if or ( kindIs "int" $value ) ( kindIs "string" $value ) -}}
-{{ $key }}: {{ $value }}
-{{- else -}}
-{{ $key }}: 
+name: {{ $key }}
+{{ if or ( kindIs "int" $value ) ( kindIs "string" $value ) }}
+value: {{ $value }}
+{{ else }}
+valueFrom:
   {{ $value }}
-{{- end -}}
+{{ end }}
 {{- end -}}

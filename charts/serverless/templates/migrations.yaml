@@ -21,15 +21,15 @@ spec:
           image: {{ include "common.images.image" (dict "imageRoot" .image "global" $.Values.global) }}
           imagePullPolicy: {{ .image.pullPolicy }}
 
-          {{- with .env }}
+          {{ with .env }}
           env:
           {{ range $k, $v := . }}
-          - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) }}
-          {{- end }}
-          {{- end }}
+          - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) | nindent 14 }}
+          {{ end }}
+          {{ end }}
 
           {{ with .resources }}
-          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) }}
+          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 14 }}
           {{ end }}
 {{ end -}}
 {{ end -}}
