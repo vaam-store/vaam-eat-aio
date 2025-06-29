@@ -1,0 +1,35 @@
+---
+{{- with .Values.migration }}
+{{- if .enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "common.names.fullname" $ }}
+  namespace: {{ include "common.names.namespace" $ }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: {{ include "common.images.image" (dict "imageRoot" .image "global" $.Values.global) }}
+          imagePullPolicy: {{ .image.pullPolicy }}
+
+          {{- with .env }}
+          env:
+          {{ range $k, $v := . }}
+          - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) }}
+          {{- end }}
+          {{- end }}
+
+          {{ with .resources }}
+          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) }}
+          {{ end }}
+{{ end -}}
+{{ end -}}

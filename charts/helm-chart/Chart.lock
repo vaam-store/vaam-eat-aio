@@ -1,21 +1,24 @@
 dependencies:
+- name: app-template
+  repository: https://bjw-s-labs.github.io/helm-charts
+  version: 4.1.1
 - name: common
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 2.31.3
 - name: postgresql
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 16.7.12
+  version: 16.7.13
 - name: minio
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 17.0.5
+  version: 17.0.6
 - name: redis
   repository: oci://registry-1.docker.io/bitnamicharts
-  version: 21.2.4
+  version: 21.2.5
 - name: jaeger
   repository: oci://registry-1.docker.io/bitnamicharts
   version: 5.1.22
 - name: adminer
   repository: https://startechnica.github.io/apps
   version: 0.1.8
-digest: sha256:f13274383c92960e9eb51d109b86e4a0f84f7f576e49679d60ac48f1c51a8859
-generated: "2025-06-17T15:40:19.503664+02:00"
+digest: sha256:ec628f1f02fe0d0cc6c00bac722350881c969783078bbdd7e716be9348bdb8e9
+generated: "2025-06-21T21:11:28.781361+02:00"

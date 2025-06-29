@@ -1,0 +1,36 @@
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" $ }}
+  namespace: {{ include "common.names.namespace" $ }}
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/class: hpa.autoscaling.knative.dev
+        autoscaling.knative.dev/metric: cpu
+    spec:
+      containers:
+        - image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+          {{- with .Values.env }}
+          env:
+          {{ range $k, $v := . }}
+            - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) }}
+          {{- end }}
+          {{- end }}
+
+          {{ with .Values.ports }}
+          ports:
+            {{ range $k, $v := . }}
+            - name: {{ include "common.tplvalues.render" ( dict "value" $k "context" $ ) }}
+              containerPort: {{ include "common.tplvalues.render" ( dict "value" $v "context" $ ) }}
+            {{ end }}
+          {{ end }}
+
+          {{ with .Values.resources }}
+          resources: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) }}
+          {{ end }}
+              
+
+            

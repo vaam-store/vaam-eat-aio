@@ -1,0 +1,140 @@
+global:
+  imageRegistry: ""
+  ## e.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: [ ]
+  defaultStorageClass: ""
+  ## Security parameters
+  ##
+  security:
+    ## @param global.security.allowInsecureImages Allows skipping image verification
+    allowInsecureImages: false
+  ## Compatibility adaptations for Kubernetes platforms
+  ##
+  compatibility:
+    ## Compatibility adaptations for Openshift
+    ##
+    openshift:
+      ## @param global.compatibility.openshift.adaptSecurityContext Adapt the securityContext sections of the deployment to make them compatible with Openshift restricted-v2 SCC: remove runAsUser, runAsGroup and fsGroup and let the platform use their allowed default IDs. Possible values: auto (apply if the detected running cluster is Openshift), force (perform the adaptation always), disabled (do not perform adaptation)
+      ##
+      adaptSecurityContext: auto
+
+db:
+  enabled: false
+  instances: 2
+  storage:
+    size: 5Gi
+    storageClass: lg-fixed
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "1"
+    limits:
+      memory: "1Gi"
+      cpu: "2"
+
+
+image:
+  registry: ghcr.io
+  repository: vaam-store/vaam-eat-aio
+  tag: ""
+  digest: ""
+  ## Specify a imagePullPolicy
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## e.g:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: [ ]
+  ## Set to true if you would like to see extra information on logs
+  ##
+  debug: false
+
+env:
+  DATABASE_URL:
+    secretRef:
+      name: '{{ include "common.names.fullname" $ }}-pg-app'
+      key: uri
+  
+  AUTH_SECRET: "t\|6|y-some.fake=z_p"
+  
+  S3_ENDPOINT: s3-minio.s3.svc.cluster.local
+  S3_ACCESS_KEY: minio
+  S3_SECRET_KEY: minio123
+  S3_PORT: 9000
+  S3_SCHEME: http  
+  S3_BUCKET: vaam-eat
+  S3_CDN_URL: https://s3.ssegning.me
+
+  NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL: 'http://minio:9000'
+  NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET: 'vaam-eat'
+  
+  OTEL_EXPORTER_OTLP_ENDPOINT: 'http://tempo.monitoring.svc.cluster.local:4318'
+  OTEL_EXPORTER_OTLP_PROTOCOL: 'http'
+  
+  REDIS_URL: 'redis://redis-master:6379'
+  REDIS_PREFIX: 'eat:vaam:store_'
+  
+  EMAIL_SERVER_HOST: 'maildev'
+  EMAIL_SERVER_PORT: '1025'
+  EMAIL_SERVER_USER: ~
+  EMAIL_SERVER_PASSWORD: ~
+  EMAIL_FROM: 'noreply@example.com'
+  
+  APP_URL: 'http://localhost:3000'
+  NEXTAUTH_URL: 'http://localhost:3000'
+  EMGR_CDN: 'http://localhost:3000/api/images/resize'
+  
+ports:
+  http:
+    port: 3000
+    
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+    
+migration:
+  enabled: true
+  image:
+    registry: ghcr.io
+    repository: vaam-store/vaam-eat-migration
+    tag: ""
+    digest: ""
+    ## Specify a imagePullPolicy
+    ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+    ##
+    pullPolicy: IfNotPresent
+    ## Optionally specify an array of imagePullSecrets.
+    ## Secrets must be manually created in the namespace.
+    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+    ## e.g:
+    ## pullSecrets:
+    ##   - myRegistryKeySecretName
+    ##
+    pullSecrets: [ ]
+    ## Set to true if you would like to see extra information on logs
+    ##
+    debug: false
+  env:
+    DATABASE_URL:
+      secretRef:
+        name: '{{ include "common.names.fullname" $ }}-pg-app'
+        key: uri
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 256Mi

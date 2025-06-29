@@ -16,31 +16,59 @@ maintainers:
   - name: VAAM Team
     email: team@vaam.com
 dependencies:
+  - name: app-template
+    repository: https://bjw-s-labs.github.io/helm-charts
+    version: '*'
+    alias: app
+    tags:
+      - app
+        
   - name: common
     repository: oci://registry-1.docker.io/bitnamicharts
     tags:
       - bitnami-common
     version: 2.x.x
     condition: common.enabled
+    
   - name: postgresql
     version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
+    tags:
+      - postgresql
+      - database
+        
   - name: minio
     version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: minio.enabled
+    tags:
+      - s3
+      - minio
+        
   - name: redis
     version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: redis.enabled
+    tags:
+      - cache
+      - redis
+        
   - name: jaeger
     version: '*'
     repository: oci://registry-1.docker.io/bitnamicharts
     condition: jaeger.enabled
+    tags:
+      - otel
+      - jaeger
+        
   - name: adminer
     version: '*'
     repository: https://startechnica.github.io/apps
     condition: adminer.enabled
+    tags:
+      - adminer
+      - admin
+        
 annotations:
   category: Application
