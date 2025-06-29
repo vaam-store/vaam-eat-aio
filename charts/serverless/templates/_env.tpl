@@ -9,10 +9,10 @@ Params:.
 {{ $value := include "common.tplvalues.render" ( dict "value" .value "context" .context ) -}}
 
 name: {{ $key }}
-{{ if or ( kindIs "int" $value ) ( kindIs "string" $value ) }}
-value: {{ $value }}
-{{ else }}
+{{ if and (not ( kindIs "int" .value )) (not ( kindIs "string" .value )) }}
 valueFrom:
-  {{ $value }}
+  {{ $value | nindent 2 }}
+{{ else if or ( kindIs "int" $value ) ( kindIs "string" $value ) }}
+value: {{ $value }}
 {{ end }}
 {{- end -}}

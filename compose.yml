@@ -168,7 +168,7 @@ services:
 
       # https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/#endpoint-configuration
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tracking:4318
-      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_PROTOCOL: http
 
       REDIS_URL: redis://redis:6379
       REDIS_PREFIX: 'eat:vaam:store_'

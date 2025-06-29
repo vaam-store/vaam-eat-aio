@@ -84,7 +84,7 @@ api:
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BASE_URL: 'http://minio:9000'
     NEXT_PUBLIC_MAPS_PMTILES_MINIO_BUCKET: 'vaam-eat'
     OTEL_EXPORTER_OTLP_ENDPOINT: 'http://jaeger-collector:4318'
-    OTEL_EXPORTER_OTLP_PROTOCOL: 'grpc'
+    OTEL_EXPORTER_OTLP_PROTOCOL: 'http'
     REDIS_URL: 'redis://redis-master:6379'
     REDIS_PREFIX: 'eat:vaam:store_'
     EMAIL_SERVER_HOST: 'maildev'
