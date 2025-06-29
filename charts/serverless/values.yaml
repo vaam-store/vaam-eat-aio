@@ -89,7 +89,7 @@ env:
   EMGR_CDN: 'http://localhost:3000/api/images/resize'
 
 ports:
-  http1:
+  http1: # kservice requirements
     port: 3000
 
 resources:
