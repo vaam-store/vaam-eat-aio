@@ -35,7 +35,7 @@
     "@serwist/next": "^9.0.15",
     "@simplewebauthn/browser": "v9",
     "@simplewebauthn/server": "v9",
-    "@t3-oss/env-nextjs": "^0.12.0",
+    "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.69.0",
     "@trpc/client": "^11.0.0",
     "@trpc/react-query": "^11.4.1",
