@@ -16,7 +16,9 @@ spec:
           {{ with .Values.env }}
           env:
           {{ range $k, $v := . }}
-            - {{ include "common.env" (dict "key" $k "value" $v "context" $ ) | nindent 14 }}
+            {{ with include "common.env" (dict "key" $k "value" $v "context" $ ) }}
+            - {{ . | nindent 14 }}
+            {{ end }}
           {{ end }}
           {{ end }}
 

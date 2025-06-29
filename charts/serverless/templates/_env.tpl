@@ -8,11 +8,20 @@ Params:.
 {{ $key := include "common.tplvalues.render" ( dict "value" .key "context" .context ) -}}
 {{ $value := include "common.tplvalues.render" ( dict "value" .value "context" .context ) -}}
 
+{{ if .value  }}
+{{ if not (include "common.inline.value" (dict "value" .value)) }}
 name: {{ $key }}
-{{ if and (not ( kindIs "int" .value )) (not ( kindIs "string" .value )) }}
 valueFrom:
   {{ $value | nindent 2 }}
-{{ else if or ( kindIs "int" $value ) ( kindIs "string" $value ) }}
+{{ else }}
+name: {{ $key }}
 value: {{ $value }}
+{{ end }}
+{{ end }}
+{{- end -}}
+
+{{- define "common.inline.value" -}}
+{{ if or ( kindIs "int" .value ) ( kindIs "string" .value ) ( kindIs "float64" .value ) }}
+true
 {{ end }}
 {{- end -}}

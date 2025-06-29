@@ -64,7 +64,7 @@ env:
   S3_ENDPOINT: s3-minio.s3.svc.cluster.local
   S3_ACCESS_KEY: minio
   S3_SECRET_KEY: minio123
-  S3_PORT: 9000
+  S3_PORT: "9000"
   S3_SCHEME: http
   S3_BUCKET: vaam-eat
   S3_CDN_URL: https://s3.ssegning.me
