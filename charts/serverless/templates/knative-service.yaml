@@ -11,6 +11,7 @@ spec:
       annotations: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 8 }}
       {{ end }}
     spec:
+      {{ include "common.images.renderPullSecrets" (dict "images" (list .Values.image .Values.migration.image ) "context" $) | nindent 6 }}
       containers:
         - image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
           {{ with .Values.env }}

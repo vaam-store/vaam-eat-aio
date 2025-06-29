@@ -16,6 +16,7 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      {{ include "common.images.renderPullSecrets" (dict "images" (list $.Values.image .image ) "context" $) | nindent 6 }}
       containers:
         - name: migrate
           image: {{ include "common.images.image" (dict "imageRoot" .image "global" $.Values.global) }}
