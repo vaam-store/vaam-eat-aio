@@ -4,13 +4,12 @@ kind: Service
 metadata:
   name: {{ include "common.names.fullname" $ }}
   namespace: {{ include "common.names.namespace" $ }}
-  labels:
-    {{ with .Values.labels }}
-    labels: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 6 }}
-    {{ end }}
-    {{ with .Values.annotations }}
-    annotations: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 6 }}
-    {{ end }}
+  {{ with .Values.labels }}
+  labels: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 4 }}
+  {{ end }}
+  {{ with .Values.annotations }}
+  annotations: {{ include "common.tplvalues.render" ( dict "value" . "context" $ ) | nindent 4 }}
+  {{ end }}
     
 spec:
   template:
