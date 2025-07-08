@@ -7,7 +7,7 @@ export default function CreateVendorLayout({
   return (
     <>
       <VendorHeader />
-      <div id='root-vendor'>{children}</div>
+      <div id='create-vendor'>{children}</div>
     </>
   );
 }

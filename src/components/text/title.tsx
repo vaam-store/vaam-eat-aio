@@ -32,7 +32,7 @@ export function Title<As extends ElementType = 'h1'>({
       as={Component}
       size={size}
       bold
-      className={twMerge(heading && 'heading-title', 'font-chivo', className)}
+      className={twMerge(heading && 'heading-title', 'font-nunito', className)}
       {...props}>
       {children}
     </Text>

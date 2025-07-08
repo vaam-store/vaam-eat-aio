@@ -1,5 +1,6 @@
 'use client';
 
+import { Section } from '@app/components/section';
 import { Title } from '@app/components/text';
 import { VendorCreationForm } from '@app/components/vendor';
 import { api } from '@app/trpc/react';
@@ -34,7 +35,7 @@ export default function VendorCreatePage() {
   }
 
   return (
-    <>
+    <Section className='py-4'>
       <Title size='2xl' className='mb-4'>
         Create New Vendor
       </Title>
@@ -51,6 +52,6 @@ export default function VendorCreatePage() {
           Error creating vendor: {createVendorMutation.error?.message}
         </p>
       )}
-    </>
+    </Section>
   );
 }

@@ -6,8 +6,8 @@ import { Facebook, Youtube } from 'react-feather';
 
 export function DefaultFooter() {
   return (
-    <div className='bg-neutral text-neutral-content'>
-      <Section className='py-4'>
+    <div className='bg-primary-content text-white'>
+      <Section className='pt-4'>
         <footer className='footer sm:footer-horizontal items-center'>
           <aside className='grid-flow-col items-center'>
             <span className='font-bold uppercase'>
@@ -24,6 +24,18 @@ export function DefaultFooter() {
               <Youtube />
             </Button>
           </nav>
+        </footer>
+      </Section>
+
+      <Section>
+        <div className='divider' />
+      </Section>
+
+      <Section className='md:pb-8'>
+        <footer className='footer flex flex-col md:flex-row items-center'>
+          <Link href='/res/privacy'>Privacy policy</Link>
+          <Link href='/res/tos'>Terms of Service</Link>
+          <Link href='/res/contact'>Contact</Link>
         </footer>
       </Section>
     </div>

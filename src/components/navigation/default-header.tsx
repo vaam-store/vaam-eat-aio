@@ -9,8 +9,8 @@ import { List, Settings, ShoppingCart } from 'react-feather';
 
 export function DefaultHeader() {
   return (
-    <div className='navbar border-base-300 bg-base-200 sticky top-0 z-10 border-b-1'>
-      <Section>
+    <Section className='sticky top-0 pt-4 z-10'>
+      <div className='navbar backdrop-blur-sm bg-base-300/50 px-4 rounded-2xl'>
         <div className='navbar-start'>
           <Text as={Link} href='/' bold className='heading-title text-xl'>
             <AppName />
@@ -46,7 +46,7 @@ export function DefaultHeader() {
             <LoginButton />
           </div>
         </div>
-      </Section>
-    </div>
+      </div>
+    </Section>
   );
 }

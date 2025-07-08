@@ -144,3 +144,12 @@ migration:
 redis:
   enabled: false
   fullnameOverride: redis
+
+domain:
+  enabled: false
+  name: miaou.waff.waff
+  tls: ~
+#    issuerRef:
+#      kind: ClusterIssuer
+#      name: self-signed-ca
+#      group: cert-manager.io

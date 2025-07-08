@@ -338,7 +338,7 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
           </div>
 
           <pre className='bg-base-200 mt-8 p-2 h-80 rounded-xl overflow-scroll'>
-            {JSON.stringify({ values, errors, dirty }, null, 8)}
+            {JSON.stringify({ values, errors, dirty }, null, 2)}
           </pre>
         </Form>
       )}
