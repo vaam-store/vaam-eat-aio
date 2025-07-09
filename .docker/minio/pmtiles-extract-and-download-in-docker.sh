@@ -37,7 +37,7 @@ done
 
 #─── user‑tweakable knobs ────────────────────────────────────────────────────────
 GO_PMTILES_VERSION=${GO_PMTILES_VERSION:-1.28.0}
-BASEMAP_URL=${BASEMAP_URL:-"https://build.protomaps.com/20250615.pmtiles"}
+BASEMAP_URL=${BASEMAP_URL:-"https://build.protomaps.com/20250630.pmtiles"}
 PMTILES_DATA_DIR=${PMTILES_DATA_DIR:-/pmtiles-data}
 SKIP_EXISTING=${SKIP_EXISTING:-false}
 CACHE_DIR=${PMTILES_CACHE_DIR:-/tmp/pmtiles-cache}

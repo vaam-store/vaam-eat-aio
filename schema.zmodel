@@ -137,7 +137,7 @@ model VendorContact {
     @@index([vendorId])
 
     // ACL: Vendor staff/admin can manage their contacts.
-    @@allow('read', auth().id != null && this.vendor.members?[userId == auth().id && (role == 'ADMIN' || role == 'STAFF')])
+    @@allow('read', true)
     @@allow('create', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
     @@allow('update,delete', auth().vendorMembership?[vendorId == this.vendorId && (role == 'ADMIN' || role == 'STAFF')])
 }
