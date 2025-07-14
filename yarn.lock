@@ -1501,14 +1501,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@protomaps/basemaps@npm:^5.4.1":
-  version: 5.4.1
-  resolution: "@protomaps/basemaps@npm:5.4.1"
+"@protomaps/basemaps@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "@protomaps/basemaps@npm:5.5.0"
   dependencies:
     tsx: "npm:^4.19.4"
   bin:
     generate_style: src/cli.ts
-  checksum: 10c0/69f85d81cb6cb6d4d66efe511aa63b3ea26329c70efe077b57119fb2e11bed131ea3e99a5a47df23763135b75fe25c559eb3b0e0546665294fc1e6956ce57da7
+  checksum: 10c0/1d604dd56c82bcf2b504f1be24d27b549975aadeef91cabd82204bb2f35f798d4db2f738b5ce3cbf49845700c4312e261d7dd0325adcb5c04f49b9a3fe514939
   languageName: node
   linkType: hard
 
@@ -10598,7 +10598,7 @@ __metadata:
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/api-logs": "npm:^0.202.0"
     "@prisma/client": "npm:^6.10.1"
-    "@protomaps/basemaps": "npm:^5.4.1"
+    "@protomaps/basemaps": "npm:^5.5.0"
     "@react-email/components": "npm:^0.1.1"
     "@react-email/render": "npm:^1.1.3"
     "@serwist/next": "npm:^9.0.15"
