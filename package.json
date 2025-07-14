@@ -114,7 +114,7 @@
     "tailwindcss": "^4.1.11",
     "tailwindcss-radix": "^4.0.2",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.0",
+    "typescript-eslint": "^8.36.0",
     "zenstack": "^2.16.0"
   },
   "packageManager": "yarn@4.9.1",
