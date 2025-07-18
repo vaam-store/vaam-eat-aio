@@ -67,7 +67,7 @@ const OptionsError: React.FC = () => {
   ) : null;
 };
 
-export const Step4Options: React.FC = () => {
+const Step4Options: React.FC = () => {
   const { values } = useFormikContext<ProductCreateFormValues>();
   const options = values.options.createMany.data;
 
@@ -153,3 +153,5 @@ export const Step4Options: React.FC = () => {
     </div>
   );
 };
+
+export default Step4Options;

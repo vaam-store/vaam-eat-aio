@@ -19,7 +19,7 @@ sources:
 
 maintainers:
   - name: VAAM Team
-    email: team@vaam.com
+    email: team@vaam.store
 
 dependencies:
   - name: common

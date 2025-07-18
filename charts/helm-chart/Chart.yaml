@@ -14,7 +14,7 @@ sources:
   - https://github.com/vaam-eat/vaam-eat-aio
 maintainers:
   - name: VAAM Team
-    email: team@vaam.com
+    email: team@vaam.store
 dependencies:
   - name: app-template
     repository: https://bjw-s-labs.github.io/helm-charts

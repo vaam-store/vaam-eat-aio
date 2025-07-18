@@ -31,7 +31,7 @@ const TextField: React.FC<{
   );
 };
 
-export const Step3PrimaryLocation: React.FC = () => (
+const Step3PrimaryLocation: React.FC = () => (
   <div className='space-y-4'>
     <TextField
       name='primaryLocation.create.data.name'
@@ -75,3 +75,5 @@ export const Step3PrimaryLocation: React.FC = () => (
     </div>
   </div>
 );
+
+export default Step3PrimaryLocation;

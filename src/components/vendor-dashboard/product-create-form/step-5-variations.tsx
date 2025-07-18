@@ -74,7 +74,7 @@ const VariationStatusField: React.FC<{ index: number }> = ({ index }) => (
   </select>
 );
 
-export const Step5Variations: React.FC = () => {
+const Step5Variations: React.FC = () => {
   const { values, setFieldValue } = useFormikContext<ProductCreateFormValues>();
   const options = useMemo(
     () => values.options?.createMany?.data || [],
@@ -224,3 +224,5 @@ export const Step5Variations: React.FC = () => {
     </div>
   );
 };
+
+export default Step5Variations;

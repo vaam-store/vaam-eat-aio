@@ -10,7 +10,7 @@ import {
 import type { Prisma } from '@zenstackhq/runtime/models';
 import Decimal from 'decimal.js';
 import { Form, Formik, type FormikHelpers } from 'formik';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 
@@ -181,9 +181,14 @@ export function VendorCreationForm({
     actions.setSubmitting(false);
   };
 
+  const initialValues = useMemo(
+    () => getInitialValues(initialData),
+    [initialData],
+  );
+
   return (
     <Formik
-      initialValues={getInitialValues(initialData)}
+      initialValues={initialValues}
       validationSchema={toFormikValidationSchema(
         formSteps[currentStep]!.validationSchema as any,
       )}

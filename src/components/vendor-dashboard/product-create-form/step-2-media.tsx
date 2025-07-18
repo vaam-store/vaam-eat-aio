@@ -188,7 +188,7 @@ const ThumbnailField: React.FC = () => {
   );
 };
 
-export const Step2Media: React.FC = () => (
+const Step2Media: React.FC = () => (
   <div className='space-y-4'>
     <CategoryField />
     <TagsField />
@@ -196,3 +196,5 @@ export const Step2Media: React.FC = () => (
     <ThumbnailField />
   </div>
 );
+
+export default Step2Media;

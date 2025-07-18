@@ -1,28 +1,31 @@
 'use client';
 
-import { useField } from 'formik';
-import React from 'react';
+import { ErrorMessage, Field } from 'formik';
+import React, { useId } from 'react';
 
 const TextField: React.FC<{ name: string; label: string; type?: string }> = ({
   name,
   label,
   type = 'text',
 }) => {
-  const [field, meta] = useField<any>(name);
+  const id = useId();
   return (
     <div>
       <label htmlFor={name} className='block font-semibold mb-1'>
         {label}
       </label>
-      <input
-        {...field}
+      <Field
+        id={id}
+        name={name}
         type={type}
         className='input input-bordered w-full'
-        id={name}
+        autoFocus
       />
-      {meta.touched && meta.error && (
-        <div className='text-error text-sm mt-1'>{meta.error}</div>
-      )}
+      <ErrorMessage
+        name={name}
+        component='div'
+        className='text-error mt-1 text-xs'
+      />
     </div>
   );
 };
@@ -31,29 +34,34 @@ const TextAreaField: React.FC<{ name: string; label: string }> = ({
   name,
   label,
 }) => {
-  const [field, meta] = useField<string>(name);
+  const id = useId();
   return (
     <div>
       <label htmlFor={name} className='block font-semibold mb-1'>
         {label}
       </label>
-      <textarea
-        {...field}
+      <Field
+        as='textarea'
+        id={id}
+        name={name}
         className='textarea textarea-bordered w-full min-h-[80px]'
-        id={name}
+        autoFocus
       />
-      {meta.touched && meta.error && (
-        <div className='text-error text-sm mt-1'>{meta.error}</div>
-      )}
+      <ErrorMessage
+        name={name}
+        component='div'
+        className='text-error mt-1 text-xs'
+      />
     </div>
   );
 };
 
-export const Step1BasicInfo: React.FC = () => (
+const Step1BasicInfo: React.FC = () => (
   <div className='space-y-4'>
     <TextField name='name' label='Name' />
     <TextAreaField name='description' label='Description' />
     <TextField name='price' label='Price' type='number' />
-    {/* Status field has been removed; status is always 'DRAFT' */}
   </div>
 );
+
+export default Step1BasicInfo;

@@ -59,11 +59,11 @@ const withImageSizes = (nextConfig: NextConfig): NextConfig => {
         ...(nextConfig?.images?.remotePatterns ?? []),
         {
           protocol: 'https',
-          hostname: '*.vaam.com',
+          hostname: 'eat.vaam.store',
         },
         {
           protocol: 'https',
-          hostname: '*.ssegning.me',
+          hostname: 's3.ssegning.me',
         },
       ],
     },

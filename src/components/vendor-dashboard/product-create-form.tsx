@@ -3,16 +3,26 @@
 import { Button } from '@app/components/button';
 import { Form, Formik, type FormikHelpers } from 'formik';
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import { Suspense, useMemo, useState } from 'react';
 import { Home, Image, MapPin, Settings, Shuffle } from 'react-feather';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
-import { Step1BasicInfo } from './product-create-form/step-1-basic-info';
-import { Step2Media } from './product-create-form/step-2-media';
-import { Step3PrimaryLocation } from './product-create-form/step-3-primary-location';
-import { Step4Options } from './product-create-form/step-4-options';
-import { Step5Variations } from './product-create-form/step-5-variations';
+
+const Step1BasicInfo = dynamic(
+  () => import('./product-create-form/step-1-basic-info'),
+);
+const Step2Media = dynamic(() => import('./product-create-form/step-2-media'));
+const Step3PrimaryLocation = dynamic(
+  () => import('./product-create-form/step-3-primary-location'),
+);
+const Step4Options = dynamic(
+  () => import('./product-create-form/step-4-options'),
+);
+const Step5Variations = dynamic(
+  () => import('./product-create-form/step-5-variations'),
+);
 
 // Zod schema for ProductImage
 const productImageSchema = z.object({
@@ -159,7 +169,7 @@ const steps = [
   {
     Icon: Home,
     title: 'Start',
-    component: Step1BasicInfo,
+    component: <Step1BasicInfo />,
     validationSchema: productCreateSchema.pick({
       name: true,
       slug: true,
@@ -171,7 +181,7 @@ const steps = [
   {
     Icon: Image,
     title: 'Categorization & Media',
-    component: Step2Media,
+    component: <Step2Media />,
     validationSchema: productCreateSchema.pick({
       category: true,
       tags: true,
@@ -182,7 +192,7 @@ const steps = [
   {
     Icon: MapPin,
     title: 'Primary Location',
-    component: Step3PrimaryLocation,
+    component: <Step3PrimaryLocation />,
     validationSchema: productCreateSchema.pick({
       primaryLocation: true,
     }),
@@ -190,7 +200,7 @@ const steps = [
   {
     Icon: Settings,
     title: 'Options',
-    component: Step4Options,
+    component: <Step4Options />,
     validationSchema: productCreateSchema.pick({
       options: true,
     }),
@@ -198,7 +208,7 @@ const steps = [
   {
     Icon: Shuffle,
     title: 'Variations',
-    component: Step5Variations,
+    component: <Step5Variations />,
     validationSchema: productCreateSchema
       .pick({
         variations: true,
@@ -239,7 +249,7 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const CurrentStepComponent = steps[currentStep]!.component;
+  const currentStepComponent = steps[currentStep]!.component;
 
   const handleFormSubmit = async (
     values: ProductCreateFormValues,
@@ -249,9 +259,11 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
     actions.setSubmitting(false);
   };
 
+  const initialValues = useMemo(getInitialValues, []);
+
   return (
     <Formik
-      initialValues={getInitialValues()}
+      initialValues={initialValues}
       validationSchema={toFormikValidationSchema(
         steps[currentStep]!.validationSchema as any,
       )}
@@ -289,8 +301,14 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
             ))}
           </ul>
 
-          {/* Render current step component */}
-          <CurrentStepComponent />
+          <Suspense
+            fallback={
+              <>
+                <div className='loading loading-lg' />
+              </>
+            }>
+            {currentStepComponent}
+          </Suspense>
 
           <div className='mt-6 flex justify-between pt-4'>
             {currentStep > 0 && (
@@ -319,7 +337,7 @@ export const ProductCreateForm: React.FC<ProductCreateFormProps> = ({
                     (field) => errors[field as keyof ProductCreateFormValues],
                   );
 
-                  if (!hasErrorsInCurrentStep) {
+                  if (!hasErrorsInCurrentStep && isValid) {
                     // Check if current step fields are valid
                     setCurrentStep((prev) => prev + 1);
                   }
