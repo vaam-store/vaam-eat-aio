@@ -1731,48 +1731,48 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redis/bloom@npm:5.5.6":
-  version: 5.5.6
-  resolution: "@redis/bloom@npm:5.5.6"
+"@redis/bloom@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@redis/bloom@npm:5.8.0"
   peerDependencies:
-    "@redis/client": ^5.5.6
-  checksum: 10c0/1e50b2c94000b15e9555409692738e6acba796a469a0163e0abf2d2e0bc82304cd52dc4c2ad4f56bcc169030694f0777ab589548f7a47c55f09e5237a81bff95
+    "@redis/client": ^5.8.0
+  checksum: 10c0/3f4f54b827225c393481d5da58c6fb252590376f8f1ff8819f98c41e2d9ae577f4adb68435854f78a29a3ca81f8cf58b2a5b2d9c74cc081e1e895739bfbbdf23
   languageName: node
   linkType: hard
 
-"@redis/client@npm:5.5.6":
-  version: 5.5.6
-  resolution: "@redis/client@npm:5.5.6"
+"@redis/client@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@redis/client@npm:5.8.0"
   dependencies:
     cluster-key-slot: "npm:1.1.2"
-  checksum: 10c0/92527c088410211aaa6038b38b4604bd930c9db3761603215b8ff025571f6ccdf6f93508c6de83b4e4caf76fedbf1e33ea0e72bfbe8a7bcff84d92f8b5d0af53
+  checksum: 10c0/ae28efb7cd7899784ebc41b21b547a256d597a7e8661c25146156be1cfa80ab0ffb838553a5702d0e42caa17ae9cc3d0aa7ae188483222440477233e7a46be3e
   languageName: node
   linkType: hard
 
-"@redis/json@npm:5.5.6":
-  version: 5.5.6
-  resolution: "@redis/json@npm:5.5.6"
+"@redis/json@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@redis/json@npm:5.8.0"
   peerDependencies:
-    "@redis/client": ^5.5.6
-  checksum: 10c0/142fc10510ab0392848662ea88244fa7d9cacbc8d746bd2dae4eb325227106a14e2f40256b790b2ded45c90bf9822fca2d5d4463e8e1a2176a1f6eff9f9666cb
+    "@redis/client": ^5.8.0
+  checksum: 10c0/47fe778d9c6a979a735bcdba39141eaa08f7d8678039771a00c1904117da7e5264666438c72c31deae2ab36168582b8f1c75ae2050a11756d2df6d0ed5f5eca9
   languageName: node
   linkType: hard
 
-"@redis/search@npm:5.5.6":
-  version: 5.5.6
-  resolution: "@redis/search@npm:5.5.6"
+"@redis/search@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@redis/search@npm:5.8.0"
   peerDependencies:
-    "@redis/client": ^5.5.6
-  checksum: 10c0/9f4516a23dcbb0bbcad3deecc9a39412bac24a1648eadccfae0c4710fc9f829728bbbe2774bfc2fe3bd8d61bd2e2c974183d3a37fa7c7f0a949a6c844da633c7
+    "@redis/client": ^5.8.0
+  checksum: 10c0/81a61e2796cc4d90bca56ee946f4885dbf9181aadcfc8719ce457af2c7ac97ce349e52456df96765364d0bbfd7a13744fcfb12e88e837baa58b56b96ab6a312e
   languageName: node
   linkType: hard
 
-"@redis/time-series@npm:5.5.6":
-  version: 5.5.6
-  resolution: "@redis/time-series@npm:5.5.6"
+"@redis/time-series@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@redis/time-series@npm:5.8.0"
   peerDependencies:
-    "@redis/client": ^5.5.6
-  checksum: 10c0/7a30965bfdb104de383cd9ccf11e7850fdb45721c9159628b8b787d892871821df40ac6e041eee6695bbcf150e536ba9900a1b6e68485f75f10e8cbbb374fb27
+    "@redis/client": ^5.8.0
+  checksum: 10c0/054325b643e8109bcff4ab26c2592279e3d3da25c5d19a5e9bb42d9c42011e487bf7edc94d34731ab36f0e082a4a612d85347763c9ad4da73df8c34faaca0b28
   languageName: node
   linkType: hard
 
@@ -8876,16 +8876,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:^5.5.6":
-  version: 5.5.6
-  resolution: "redis@npm:5.5.6"
+"redis@npm:^5.8.0":
+  version: 5.8.0
+  resolution: "redis@npm:5.8.0"
   dependencies:
-    "@redis/bloom": "npm:5.5.6"
-    "@redis/client": "npm:5.5.6"
-    "@redis/json": "npm:5.5.6"
-    "@redis/search": "npm:5.5.6"
-    "@redis/time-series": "npm:5.5.6"
-  checksum: 10c0/e9a9f92545524dc33fba41b8a966a66b4c0ffd99944b9dd45931e2fdbc312f996361f96d1fe83321b32faed3da5aff40027e57f7515f423c9249cb44142fe543
+    "@redis/bloom": "npm:5.8.0"
+    "@redis/client": "npm:5.8.0"
+    "@redis/json": "npm:5.8.0"
+    "@redis/search": "npm:5.8.0"
+    "@redis/time-series": "npm:5.8.0"
+  checksum: 10c0/b695f5f672dd5769fb0c2ba0df5d009aa65503dc62d882269ec860cef5907779647f4e84e900f8a20cc78d107e91b1f41afbc712329ea70fa56c62c152595371
   languageName: node
   linkType: hard
 
@@ -10658,7 +10658,7 @@ __metadata:
     react-dom: "npm:^19.0.0"
     react-feather: "npm:^2.0.10"
     react-hot-toast: "npm:^2.5.2"
-    redis: "npm:^5.5.6"
+    redis: "npm:^5.8.0"
     rehype-external-links: "npm:^3.0.0"
     rehype-highlight: "npm:^7.0.2"
     rehype-sanitize: "npm:^6.0.0"
